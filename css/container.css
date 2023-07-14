@@ -262,6 +262,9 @@
 }
 
 @media screen and (max-width:750px) {
+    .service{
+        padding: 0 60px;
+    }
     .service>div {
         display: flex;
         flex-direction: column !important;
@@ -272,6 +275,7 @@
     }
 
     .service>div .content {
-        padding: 0;
+        padding:0;
+        margin-bottom: 5px;
     }
 }
