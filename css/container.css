@@ -15,9 +15,9 @@
 }
 
 .main-container {
-    padding: 40px 0;
-    background: linear-gradient(blue, cyan);
-    margin-top: 30px;
+    padding-bottom: 40px;
+    background: white;
+    margin-top: 70px;
 }
 
 .main-container .contact-slogan {
@@ -52,7 +52,7 @@
 
 
 .main-container .contact-slogan .slogan {
-    color: white;
+    color: black;
     padding: 10px 0;
     font-size: 30px;
     transition: all .5s ease;
@@ -125,6 +125,7 @@
     transition: all .5s ease;
     cursor: pointer;
     text-decoration: none;
+    border: 1px solid black;
 }
 
 .room .room-order:hover {
