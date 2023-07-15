@@ -26,7 +26,7 @@
         rel='stylesheet'>
     <link rel="stylesheet" href="../static/css/inforoom.css">
     <body>
-        <div id="header"></div>
+        <div id="header" th:replace="@{menu.html}"></div>
         <div class="heading">thông tin phòng:</div>
         <div class="info-room">
             <div class="image-room">
@@ -71,7 +71,7 @@
                 <button type="submit" id="order-room" class="mt-3">Đặt Phòng</button>
             </div>
         </div>
-        <div id="footer"></div>
+        <div id="footer" th:replace="@{footer.html}"></div>
         <script
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>

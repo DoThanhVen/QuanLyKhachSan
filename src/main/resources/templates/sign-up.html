@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="../static/css/sign-up.css">
     </head>
     <body>
-        <div id="header"></div>
+        <div id="header" th:replace="@{menu.html}"></div>>
         <div id="sign-up">
             <div class="sign-up">
                 <div class="heading">ĐĂNG KÍ</div>
@@ -29,13 +29,13 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Đăng Kí</button>
                     <div class="mb-3 mt-4">
-                        Đã có tài khoản?<a onclick="redirectURL('sign-in.html')"> Đăng
+                        Đã có tài khoản?<a onclick="redirectURL('sign-in')"> Đăng
                             Nhập Ngay</a>
                     </div>
                 </form>
             </div>
         </div>
-        <div id="footer"></div>
+        <div id="footer" th:replace="@{footer.html}"></div>
         <script
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>

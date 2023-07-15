@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+onclick="redirectURL('infomation-room')"lang="en" xmlns="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +6,7 @@
         <link rel="stylesheet" href="../static/css/container.css">
     </head>
     <body>
-        <div id="header" th:replace="@{menu.html}"></div>
+        <div id="headeonclick="redirectURL('infomation-room')""></div>
         <div class="main-container">
             <div id="carouselExampleIndicators" class="carousel slide"
                 data-bs-ride="carousel">
@@ -69,7 +68,7 @@
             </div>
             <div id="room" class="p-5"></div>
             <div class="room">
-                <a href="infomation-room.html" class="room-order">
+                <a onclick="redirectURL('infomation-room')" class="room-order">
                     <div class="heading">
                         <i class="bi bi-house"></i>Thường Đơn
                     </div>
@@ -82,7 +81,7 @@
                     </div>
                     <button type="submit">Chi Tiết</button>
                 </a>
-                <a href="infomation-room.html" class="room-order">
+                <a onclick="redirectURL('infomation-room')" class="room-order">
                     <div class="heading">
                         <i class="bi bi-house"></i>Thường Đôi
                     </div>
@@ -95,7 +94,7 @@
                     </div>
                     <button type="submit">Chi Tiết</button>
                 </a>
-                <a href="infomation-room.html" class="room-order">
+                <a onclick="redirectURL('infomation-room')" class="room-order">
                     <div class="heading">
                         <i class='bx bxs-crown'></i>VIP Đơn
                     </div>
@@ -108,7 +107,7 @@
                     </div>
                     <button type="submit">Chi Tiết</button>
                 </a>
-                <a href="infomation-room.html" class="room-order">
+                <a onclick="redirectURL('infomation-room')" class="room-order">
                     <div class="heading">
                         <i class='bx bxs-crown'></i>VIP Đôi
                     </div>
@@ -202,10 +201,10 @@
                 </div>
             </div>
         </div>
-        <div id="footer" th:replace="@{footer.html}"></div>
+        <div id="footer"onclick="redirectURL('infomation-room')""></div>
         <script
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script>
+        <scr>
         //TYPING WORDS
         const textElement = document.getElementById('text-animation');
         const texts = ["cam kết về chất lượng", "lấy khách hàng làm trọng tâm", "lắng nghe ý kiến khách hàng", "toàn tâm toàn ý"];
@@ -242,6 +241,4 @@
         }
 
         animateText();
-    </script>
-    </body>
-</html>
+onclick="redirectURL('infomation-room')"
