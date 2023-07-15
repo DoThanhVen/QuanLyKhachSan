@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="../static/css/container.css">
     </head>
     <body>
-        <div id="header"></div>
+        <div id="header" th:replace="@{menu.html}"></div>
         <div class="main-container">
             <div id="carouselExampleIndicators" class="carousel slide"
                 data-bs-ride="carousel">
@@ -202,14 +202,10 @@
                 </div>
             </div>
         </div>
-        <div id="footer"></div>
+        <div id="footer" th:replace="@{footer.html}"></div>
         <script
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
-        $(function(){
-          $("#header").load("./menu.html"); 
-          $("#footer").load("./footer.html"); 
-        });
         //TYPING WORDS
         const textElement = document.getElementById('text-animation');
         const texts = ["cam kết về chất lượng", "lấy khách hàng làm trọng tâm", "lắng nghe ý kiến khách hàng", "toàn tâm toàn ý"];
