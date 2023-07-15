@@ -1,31 +1,32 @@
 package com.poly.Controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class PageController {
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String home() {
 		return "index";
 	}
-	@RequestMapping("/sign-in")
+	@GetMapping("/sign-in")
 	public String login() {
 		return "sign-in";
 	}
-	@RequestMapping("/sign-up")
+	@GetMapping("/sign-up")
 	public String signUp() {
 		return "sign-up";
 	}
-	@RequestMapping("/forgot-password")
+	@GetMapping("/forgot-password")
 	public String forgotPassword() {
 		return "forgot-password";
 	}
-	@RequestMapping("/infomation-room")
+	@GetMapping("/infomation-room")
 	public String infomationRoom() {
 		return "infomation-room";
 	}
-	@RequestMapping("/change-password")
+	@GetMapping("/change-password")
 	public String changePassword() {
 		return "change-password";
 	}
