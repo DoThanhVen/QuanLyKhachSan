@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        <link rel="stylesheet" href="static/css/menu.css">
+        <link th:href="@{|../css/menu.css|}" rel="stylesheet" />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -35,7 +35,7 @@
             </div>
         </div>
         <nav>
-            <a class="logo" onclick="redirectURL('index.html')">
+            <a class="logo" onclick="redirectURL('index')">
                 HOTEL
             </a>
             <ul class="menu">
