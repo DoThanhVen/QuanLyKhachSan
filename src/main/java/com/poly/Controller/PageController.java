@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
 	@GetMapping("/")
 	public String home() {
-		return "index";
+		return "user/index";
 	}
 	@GetMapping("/sign-in")
 	public String login() {
-		return "sign-in";
+		return "user/sign-in";
 	}
 	@GetMapping("/sign-up")
 	public String signUp() {
-		return "sign-up";
+		return "user/sign-up";
 	}
 	@GetMapping("/forgot-password")
 	public String forgotPassword() {
-		return "forgot-password";
+		return "user/forgot-password";
 	}
 	@GetMapping("/infomation-room")
 	public String infomationRoom() {
-		return "infomation-room";
+		return "user/infomation-room";
 	}
 	@GetMapping("/change-password")
 	public String changePassword() {
-		return "change-password";
+		return "user/change-password";
 	}
 }
