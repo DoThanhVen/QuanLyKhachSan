@@ -22,6 +22,10 @@ public class PageController {
 	public String forgotPassword() {
 		return "user/forgot-password";
 	}
+	@GetMapping("/forgot-password-finally")
+	public String forgotPasswordFinally() {
+		return "user/forgot-password-finally";
+	}
 	@GetMapping("/infomation-room")
 	public String infomationRoom() {
 		return "user/infomation-room";

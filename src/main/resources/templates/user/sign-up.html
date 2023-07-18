@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="/css/sign-up.css">
     </head>
     <body>
-        <div id="header" th:replace="@{menu.html}"></div>>
+        <div id="header" th:replace="@{user/menu}"></div>>
         <div id="sign-up">
             <div class="sign-up">
                 <div class="heading">ĐĂNG KÍ</div>
@@ -35,14 +35,10 @@
                 </form>
             </div>
         </div>
-        <div id="footer" th:replace="@{footer.html}"></div>
+        <div id="footer" th:replace="@{user/footer}"></div>
         <script
             src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
-        $(function(){
-          $("#header").load("./menu.html"); 
-          $("#footer").load("./footer.html"); 
-        });
         const inputs = document.querySelectorAll('.form-control');
         const labels = document.querySelectorAll('.form-label');
 

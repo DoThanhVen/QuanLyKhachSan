@@ -8,10 +8,11 @@
     font-size: 33px;
     color: blue;
     font-variant: small-caps;
+    margin-bottom: 20px;
 }
 
 #sign-up {
-    margin-top: 100px;
+    margin-top: 0px;
     padding: 30px 0 50px 0;
     border-bottom: 1px solid lightgrey;
 }
@@ -38,4 +39,37 @@
 
 .sign-up a {
     color: blue !important;
+}
+.login-normal{
+	margin:0 auto;
+	width:400px;
+    margin-top: 100px;
+    position: relative;
+}
+.login-normal button{
+	position: absolute;
+	left:50%;
+	bottom: 15%;
+    transform: translateX(-50%);
+}
+
+form .mb-3 {
+    position: relative;
+}
+
+form .mb-3 label {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    transition: all .5s ease;
+}
+
+form .mb-3 input:focus~label {
+    transform: translateY(-190%);
+    opacity: 1;
+}
+.sign-up-account{
+	margin-top: 70px;
 }
