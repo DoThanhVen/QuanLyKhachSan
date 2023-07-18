@@ -19,10 +19,10 @@
 	display: flex;
     justify-content: center;
 }
-#sign-up form .mb-3 button{
+#sign-up form .mb-3 a{
     width: 250px;
 }
-#sign-up form .mb-3 button i{
+#sign-up form .mb-3 a i{
     margin-right: 5px;
 }
 .sign-up-account {
