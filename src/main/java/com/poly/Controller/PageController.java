@@ -10,28 +10,43 @@ public class PageController {
 	public String home() {
 		return "user/index";
 	}
+
 	@GetMapping("/sign-in")
 	public String login() {
 		return "user/sign-in";
 	}
+
 	@GetMapping("/sign-up")
 	public String signUp() {
 		return "user/sign-up";
 	}
+
 	@GetMapping("/forgot-password")
 	public String forgotPassword() {
 		return "user/forgot-password";
 	}
+
 	@GetMapping("/forgot-password-finally")
 	public String forgotPasswordFinally() {
 		return "user/forgot-password-finally";
 	}
+
 	@GetMapping("/infomation-room")
 	public String infomationRoom() {
 		return "user/infomation-room";
 	}
+
 	@GetMapping("/change-password")
 	public String changePassword() {
 		return "user/change-password";
+	}
+
+	@GetMapping("/info-user")
+	public String infoUser() {
+		return "user/info-user";
+	}
+	@GetMapping("/order-history")
+	public String orderHistory() {
+		return "user/order-history";
 	}
 }
