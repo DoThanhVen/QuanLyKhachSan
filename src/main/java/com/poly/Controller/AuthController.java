@@ -13,23 +13,23 @@ public class AuthController {
 	@Autowired
 	UserDetailsServiceImpl service;
 
-//	@RequestMapping("/auth/login/form")
-//	public String form() {
-//		return "layout/login";
-//	}
-//
-//	@RequestMapping("/auth/login/success")
-//	public String success(Model model) {
-//		model.addAttribute("message", "Đăng nhập thành công");
-//		return "forward:/auth/login/form";
-//	}
-//
-//	@RequestMapping("/auth/login/error")
-//	public String error(Model model) {
-//		model.addAttribute("message", "Đăng nhập thất bại");
-//		return "forward:/auth/login/form";
-//	}
-//
+	@RequestMapping("/auth/login/form")
+	public String form() {
+		return "layout/login";
+	}
+
+	@RequestMapping("/auth/login/success")
+	public String success(Model model) {
+		model.addAttribute("message", "Đăng nhập thành công");
+		return "forward:/auth/login/form";
+	}
+
+	@RequestMapping("/auth/login/error")
+	public String error(Model model) {
+		model.addAttribute("message", "Đăng nhập thất bại");
+		return "forward:/auth/login/form";
+	}
+
 	@RequestMapping("/auth/logoff/success")
 	public String logout_success(Model model) {
 		model.addAttribute("message", "Đăng xuất thành công");

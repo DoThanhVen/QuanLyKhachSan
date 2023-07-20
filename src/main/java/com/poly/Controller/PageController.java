@@ -1,11 +1,13 @@
 package com.poly.Controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class PageController {
+	// CUSTOMER
 	@GetMapping("/")
 	public String home() {
 		return "user/index";
@@ -45,8 +47,40 @@ public class PageController {
 	public String infoUser() {
 		return "user/info-user";
 	}
+
 	@GetMapping("/order-history")
 	public String orderHistory() {
 		return "user/order-history";
+	}
+
+	// ADMIN
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping("/admin/index")
+	public String adminHome() {
+		return "admin/index";
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping("/admin/customer")
+	public String managerCustomr() {
+		return "admin/customer";
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping("/admin/type-room")
+	public String typeRoom() {
+		return "admin/type-room";
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping("/admin/service-room")
+	public String serviceRoom() {
+		return "admin/service-room";
+	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping("/admin/room")
+	public String managerRoom() {
+		return "admin/room";
 	}
 }

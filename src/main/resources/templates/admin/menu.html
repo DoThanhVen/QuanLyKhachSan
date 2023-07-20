@@ -36,29 +36,20 @@
 	<nav>
 		<a class="logo" onclick="redirectURL('/')"> HOTEL </a>
 		<ul class="menu">
-			<li class="menu-item"><a onclick="redirectURL('/')">Trang
+			<li class="menu-item"><a onclick="redirectURL('/admin/index')">Trang
 					Chủ</a></li>
-			<li class="menu-item"><a href="#service">Dịch Vụ</a></li>
-			<li class="menu-item"><a href="#room">Mẫu Phòng</a></li>
-			<li class="menu-item"><a href="#footer">Liên Hệ</a></li>
-			<li class="menu-item" th:if="${#request.isUserInRole('ADMIN')}"><a onclick="redirectURL('/admin/index')">Quản Trị</a></li>
+			<li class="menu-item"><a
+				onclick="redirectURL('/admin/customer')">Khách Hàng</a></li>
+			<li class="menu-item"><a
+				onclick="redirectURL('/admin/type-room')">Loại Phòng</a></li>
+			<li class="menu-item"><a
+				onclick="redirectURL('/admin/service-room')">Dịch Vụ Phòng</a></li>
+			<li class="menu-item"><a
+				onclick="redirectURL('/admin/room')">Quản Lý Phòng</a></li>
 		</ul>
-		<div class="contact">
-			<a th:unless="${#request.remoteUser}"
-				onclick="redirectURL('sign-up')" class="btn sign-in">Đăng Kí</a> <a
-				th:unless="${#request.remoteUser}" onclick="redirectURL('sign-in')"
-				class="btn sign-in">Đăng Nhập</a>
-		</div>
 		<div class="contact" th:if="${#request.remoteUser}">
 			<ul>
-				<li class="menu-item">[[${#request.remoteUser}]]
-					<ul class="sub-menu">
-						<li class="sub-menu-item"><a
-							onclick="redirectURL('info-user')">Thông Tin Cá Nhân</a></li>
-						<li class="sub-menu-item"><a
-							onclick="redirectURL('order-history')">Thông Tin Phòng</a></li>
-					</ul>
-				</li>
+				<li class="menu-item">[[${#request.remoteUser}]]</li>
 			</ul>
 			<a onclick="redirectURL('/auth/logoff')" class="btn sign-in">Đăng
 				Xuất</a>
@@ -105,16 +96,6 @@
                     window.location.href = url;
                 }, 2000);
             }
-			//Ẩn menu
-				var currentPath = window.location.pathname;
-				if (currentPath === '/sign-in' || currentPath === '/sign-up'
-						|| currentPath === '/forgot-password' || currentPath === '/forgot-password-finally'
-						|| currentPath === '/change-password' || currentPath === '/info-user' || currentPath === '/order-history') {
-							var ulElement = document.querySelector('.menu');
-							var menuElement = document.querySelector('.bx-list-ul');
-							ulElement.style.display = 'none';
-							menuElement.style.display = 'none';
-						}
         </script>
 </body>
 </html>
