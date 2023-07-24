@@ -3,6 +3,8 @@ package com.poly.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,20 +30,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private AccountDAO accountDAO;
 	@Autowired
 	BCryptPasswordEncoder pe;
+	@Autowired
+	HttpSession session;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Account account = accountDAO.findByUsername(username);
 		if (account == null) {
-			throw new UsernameNotFoundException("KHÔNG TỒN TẠI: " + username);
+			throw new UsernameNotFoundException("Không tìm thấy tài khoản với username: " + username);
+		} else {
+			List<GrantedAuthority> authorities = new ArrayList<>();
+			for (String role : account.getRole()) {
+				authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+			}
+			return new User(account.getUsername(), pe.encode(account.getPassword()), authorities);
 		}
-
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		for (String role : account.getRole()) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-		}
-
-		return new User(account.getUsername(), pe.encode(account.getPassword()), authorities);
 	}
 
 	public void loginFromOAuth2(OAuth2AuthenticationToken oauth2) {

@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 public class Account {
 	String username;
 	String password;
+	String cccd;
 	String fullname;
-	String email;
 	String[] role;
-	String repassword;
+	String address;
+	boolean gender;
 }
