@@ -3,13 +3,9 @@
 	<div class="modal-header" xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:th="http://www.thymeleaf.org">
 		<div>
-
-			<h4 class="modal-title">Thông tin phòng [[${id}]]</h4>
+			<h4 class="modal-title">Thông tin phòng [[*{idRoom}]]</h4>
 			<p>
-				Lúc nhận phòng:<b style="margin-left: 10px;">10:29 </b>
-			</p>
-			<p>
-				Ngày nhận phòng:<b style="margin-left: 10px;">26/7/2023</b>
+				Ngày nhận phòng:<b style="margin-left: 10px;">[[*{timeCheckInDate}]]</b>
 			</p>
 		</div>
 		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -18,35 +14,40 @@
 	<div class="modal-body">
 		<div>
 			<div class="row">
-				<div class="col ">
+				<div class="col">
 					<div class="form-group">
-						<label for="name"> Tên Khách nhận phòng: </label> <input
-							name="name" value="Nông Văn Đạt" class="form-group-item" />
+						<label for="name"> Tên khách hàng: </label> <input name="name"
+							th:value="${room.nameCustomer}" class="form-group-item" />
 					</div>
 					<div class="form-group">
 						<label for="phone"> Số điện thoại: </label> <input name="phone"
-							value="0793705739" class="form-group-item" />
+							th:value="${room.phoneCustomer}" class="form-group-item" />
 
 					</div>
 					<div class="form-group">
-						<label for="CCCD"> CCCD/CMND: </label> <input value="241849873"
-							name="CCCD" class="form-group-item" />
+						<label for="CCCD"> CCCD/CMND: </label> <input
+							th:value="${room.cccd}" name="CCCD" class="form-group-item" />
 					</div>
-
-
+					<div class="form-group">
+						<label for="numberPeople"> Số người: </label> <input
+							th:value="${room.numberPeople}" name="numberPeople" class="form-group-item" />
+					</div>
 				</div>
 				<div class="col">
 					<div class="form-service">
 						<div class="form-group-serviced">
 							<p>Dịch vụ đã chọn:</p>
-							<ul class="list-serviced">
-								<li class="list-serviced-item">1. Giặt ủi đồ</li>
+							<ul class="list-serviced" th:if="${room.service}"
+								th:each="service:${room.service}" th:object="${room}">
+								<li class="list-serviced-item" th:text="${service}"></li>
+							</ul>
+							<ul class="list-serviced" th:unless="${room.service}">
+								<li class="list-serviced-item">Không có dịch vụ</li>
 							</ul>
 						</div>
-						<div>
-								<p>Chọn thêm dịch vụ</p>
-								<input name="checkbox-service" type="checkbox"> <label
-									for="checkbox-service">Xe đưa đón sân bay</label>
+						<div th:if="${room.service}">
+							<input name="checkbox-service" type="checkbox"> <label
+								for="checkbox-service">Xe đưa đón sân bay</label>
 						</div>
 					</div>
 				</div>
@@ -57,7 +58,8 @@
 	<!-- Modal footer -->
 	<div class="modal-footer">
 		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"  class="btn btn-success">Lưu lại</button>
+		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
+			class="btn btn-success">Lưu lại</button>
 	</div>
 </form>
 

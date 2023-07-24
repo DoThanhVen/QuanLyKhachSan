@@ -29,105 +29,15 @@
 			<th:block th:text="${#session.removeAttribute('message')}"></th:block>
 		</div>
 		<div class="row">
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
+			<div class="col-3" th:each="room : ${rooms}"
+				th:object="${room.value}">
+				<a class="detail-room" 
+					th:href="@{|/admin/orders/detail-room/${room.key}|}">
 					<div class="detail-room-item">
-						<h3>Phòng 101</h3>
+						<h3>Phòng [[*{idRoom}]]</h3>
 					</div>
 				</a>
 			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 102</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 103</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 104</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 105</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 106</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 107</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 108</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 109</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 201</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 202</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 203</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 204</h3>
-					</div>
-				</a>
-			</div>
-			<div class="col-3">
-				<a class="detail-room" th:href="@{/admin/orders/detail-room/1}">
-					<div class="detail-room-item">
-						<h3>Phòng 205</h3>
-					</div>
-				</a>
-			</div>
-
 		</div>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
@@ -139,25 +49,28 @@
 	</div>
 </body>
 <script type="text/javascript">
-$(document).ready( function(){
-	$(".detail-room").on('click',function(e){
-		e.preventDefault();
-		$('#myModal').modal('show').find('.modal-content').load($(this).attr('href'))
-		})
+	$(document).ready(
+			function() {
+				$(".detail-room").on(
+						'click',
+						function(e) {
+							e.preventDefault();
+							$('#myModal').modal('show').find('.modal-content')
+									.load($(this).attr('href'))
+						})
 
-	$('#btn').on('click',function(){
-		$('#myModal').modal("show")
-		})
-	
-		
-})
+				$('#btn').on('click', function() {
+					$('#myModal').modal("show")
+				})
+
+			})
 </script>
 
 <script type="text/javascript">
 	const messageTimeOut = setTimeout(closeMessage, 3000)
-	
-	function closeMessage(){
-			$(".message").fadeOut();
-		}
+
+	function closeMessage() {
+		$(".message").fadeOut();
+	}
 </script>
 </html>
