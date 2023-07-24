@@ -13,4 +13,5 @@ public class Account {
 	String fullname;
 	String email;
 	String[] role;
+	String repassword;
 }
