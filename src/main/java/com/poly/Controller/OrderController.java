@@ -39,7 +39,7 @@ public class OrderController {
 	HttpServletRequest request;
 
 	@RequestMapping("/update/detail-room-serivce/{id}")
-	public String updateService(@PathVariable("id") int id, Model model) {
+	public String updateService(@PathVariable("id") String id, Model model) {
 		model.addAttribute("id", id);
 		HttpSession session = request.getSession();
 		session.setAttribute("message", "Sửa thành công phòng " + id);

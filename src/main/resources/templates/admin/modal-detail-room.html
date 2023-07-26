@@ -30,13 +30,14 @@
 					</div>
 					<div class="form-group">
 						<label for="numberPeople"> Số người: </label> <input
-							th:value="${room.numberPeople}" name="numberPeople" class="form-group-item" />
+							th:value="${room.numberPeople}" name="numberPeople"
+							class="form-group-item" />
 					</div>
 				</div>
 				<div class="col">
 					<div class="form-service">
 						<div class="form-group-serviced">
-							<p>Dịch vụ đã chọn:</p>
+							<p>Dịch vụ bạn đang sử dụng:</p>
 							<ul class="list-serviced" th:if="${room.service}"
 								th:each="service:${room.service}" th:object="${room}">
 								<li class="list-serviced-item" th:text="${service}"></li>

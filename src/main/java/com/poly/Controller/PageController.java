@@ -72,11 +72,6 @@ public class PageController {
 		return "admin/type-room";
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@GetMapping("/admin/service-room")
-	public String serviceRoom() {
-		return "admin/service-room";
-	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/room")

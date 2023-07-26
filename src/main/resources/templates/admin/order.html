@@ -17,29 +17,91 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js"
 	integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
 	crossorigin="anonymous"></script>
-
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="/css/order.css" type="text/css">
 </head>
 <body>
 	<div id="header" th:replace="@{admin/menu}"></div>
 	<div class="container" style="min-height: 460px">
 		<div class="message" th:if="${session.message}">
-			<h1>Thông báo</h1>
-			<p th:text="${session.message}"></p>
-			<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+			<div class="alert alert-success">
+				<strong>Sửa thành công!</strong> 
+			</div>
+			 <th:block th:text="${#session.removeAttribute('message')}"></th:block>
 		</div>
-		<div class="row">
-			<div class="col-3" th:each="room : ${rooms}"
-				th:object="${room.value}">
-				<a class="detail-room" 
-					th:href="@{|/admin/orders/detail-room/${room.key}|}">
-					<div class="detail-room-item">
-						<h3>Phòng [[*{idRoom}]]</h3>
+		<!--<div class="header-room-top">
+			 <div class="header-room-top-content">
+				<div class="header-search">
+					<input class="search-input" placeholder="Tìm kiếm ..." />
+					<button class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+				</div>
+			</div> 
+		</div>-->
+		<div class="header-room">
+			<div class="header-content">
+				<div class="header-content-item btn-outline-success">
+					<a class="header-content-item-button"> Tất cả (25)</a>
+				</div>
+				<div class="header-content-item btn-success">
+					<a class="header-content-item-button">Phòng trống (12)</a>
+				</div>
+				<div class="header-content-item btn-primary">
+					<a class="header-content-item-button">Đang ở (8)</a>
+				</div>
+				<div class="header-content-item btn-warning">
+					<a class="header-content-item-button ">Đã đặt (5)</a>
+				</div>
+				<div class="header-content-item ">
+					<a class="header-content-item-button">Quá hạn (3)</a>
+				</div>
+				<div class="header-content-item ">
+					<a class="header-content-item-button">Chưa dọn (6)</a>
+				</div>
+				<div class="header-content-item btn-secondary">
+					<a class="header-content-item-button ">Đang sửa (1)</a>
+				</div>
+			
+			</div>
+			
+		</div>
+		<div class="content-room">
+			<div class="content-room-item">
+				<div class="content-room-top">Lầu 1</div>
+				<div class="row content-room-center">
+					<div class="col-2" th:each="room : ${rooms}"
+						th:object="${room.value}">
+						<a class="detail-room"
+							th:href="@{|/admin/orders/detail-room/${room.key}|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{idRoom}]]</p>
+								<i class="fa-solid fa-circle-check"></i>
+							</div>
+						</a>
 					</div>
-				</a>
+				</div>
+			</div>
+			<div class="content-room-item">
+				<div class="content-room-top">Lầu 1</div>
+				<div class="row content-room-center">
+					<div class="col-2" th:each="room : ${rooms}"
+						th:object="${room.value}">
+						<a class="detail-room"
+							th:href="@{|/admin/orders/detail-room/${room.key}|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{idRoom}]]</p>
+								<i class="fa-solid fa-circle-check"></i>
+							</div>
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
+
 	</div>
+
 	<div id="footer" th:replace="@{user/footer}"></div>
 	<!-- The Modal -->
 	<div class="modal " id="myModal">
@@ -70,7 +132,7 @@
 	const messageTimeOut = setTimeout(closeMessage, 3000)
 
 	function closeMessage() {
-		$(".message").fadeOut();
+		$('.message').fadeOut();
 	}
 </script>
 </html>

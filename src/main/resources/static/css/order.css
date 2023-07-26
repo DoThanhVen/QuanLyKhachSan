@@ -1,10 +1,119 @@
 @charset "ISO-8859-1";
+.header-room-top {
+	height: 40px;
+}
+.header-room-top-content {
+	height: 100%
+}
+.header-search {
+	display: flex;
+	height: 40px;
+	width: 340px;
+	border: 1px solid #3333;
+}
+.search-input {
+	flex: 1;
+	padding: 4px 6px;
+	border: none
+}
+.search-button{
+	border: none;
+	border-left: 1px solid #3333;
+	width: 50px;
+	background-color: #fff;
+	border-bottom-right-radius: 4px;
+	border-top-right-radius: 4px
+	
+}
+.header-room {
+	width: 100%;
+	height: 60px;
+	border: 1px solid #3333;
+	margin-top: 20px;
+}
+
+.header-content-item {
+	height: 40px;
+	margin: 0 10px;
+	background: red;
+	width: 110px;
+	text-align: center;
+}
+.header-content-item:hover {
+	color: #fff;
+	opacity: 10;
+	
+}
+
+
+.header-content-item:first-child{
+	height: 40px;
+	margin: 0 10px;
+	background: #fff;
+	width: 110px;
+	text-align: center;
+	border: 1px solid green;
+	
+}
+.header-content-item:first-child .header-content-item-button{
+	color:#333;
+	
+}
+.header-content-item-button:hover {
+	color: #fff;
+}
+.content-room-item {
+	display: flex;
+	margin-top: 10px;
+	background: #f0f2f5;
+	
+}
+
+.content-room-top {
+	width: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	background: #333;
+	color: #fff;
+}
+
+
+.content-room-center {
+	
+}
+
+.detail-room-item-icon {
+	color: #fff;
+	width: 20px;
+}
+
+.header-content-item-button {
+	line-height: 40px;
+	text-decoration: none;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 8px;
+	color: #fff;
+	padding: 8px;
+}
+
+.content-room {
+	margin-top: 30px;
+}
+
+.header-content {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
 
 .detail-room {
 	display: block;
-	height: 160px;
-	background-color: #4D97FF;
-	margin: 10px;
+	height: 140px;
+	background-color: #469f48;
+	margin: 2px;
 	color: #fff;
 	text-decoration: none !important;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -36,6 +145,7 @@
 	border: 0.5px solid #3333;
 	width: 260px;
 }
+
 .form-group-service {
 	margin-left: 12px;
 	padding: 6px;
@@ -43,11 +153,16 @@
 	border: 0.5px solid #3333;
 	border-radius: 4px;
 }
+
 .form-service {
 	
 }
-.form-service ul{
+
+.form-service ul {
 	list-style: none;
 }
-
-
+.message {
+	color: #fff;
+	position: absolute;
+	right: 10px;
+}

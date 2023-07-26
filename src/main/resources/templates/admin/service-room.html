@@ -9,22 +9,19 @@
 <body>
 	<div id="header" th:replace="@{admin/menu}"></div>
 	<div class="container">
-		<div class="heading">Thông Tin Dịch Vụ Phòng</div>
-		<form>
+		<div class="heading">Thông Tin Dịch Vụ</div>
+		<form th:object="${service}">
 			<div class="mb-3">
-				<label for="id">Mã Dịch Vụ:</label> <input type="text" name id="id"
-					placeholder>
-			</div>
-			<div class="mb-3">
-				<label for="fullname">Tên Dịch Vụ:</label> <input type="text" name
+				<label for="fullname">Tên Dịch Vụ:</label> <input type="text" th:field="*{name}"
 					id="fullname" placeholder>
 			</div>
 			<div class="mb-3">
-				<label for="price">Giá Dịch Vụ:</label> <input type="text" name
+				<label for="price">Giá Dịch Vụ:</label> <input type="text" th:field="*{price}"
 					id="price" placeholder>
 			</div>
-			<a href="#" class="btn btn-success">Thêm</a> <a href="#"
-				class="btn btn-primary">Sửa</a> <a href="#" class="btn btn-danger">Xóa</a>
+			<button th:formaction="@{/admin/service-room/create-service}" class="btn btn-success">Thêm</button>
+			<button th:formaction="@{|/admin/service-room/update-service/${key}|}" class="btn btn-primary">Sửa</button>
+			
 		</form>
 		<table class="table">
 			<thead>
@@ -36,27 +33,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>DV113</td>
-					<td>Máy Sấy Tóc</td>
-					<td>125.000đ</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
+				<tr th:each="service : ${services}" th:object="${service.value}">
+					<td th:text="${service.key}"></td>
+					<td >[[*{name}]]</td>
+					<td >[[*{price}]]đ</td>
+					<td>
+					<a th:href="@{|/admin/service-room/edit-service/${service.key}|}" class="btn btn-success">Sửa</a>
+					
+					<a th:href="@{|/admin/service-room/delete-service/${service.key}|}"
 						class="btn btn-danger">Xóa</a></td>
 				</tr>
-				<tr>
-					<td>DV113</td>
-					<td>Máy Sấy Tóc</td>
-					<td>125.000đ</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>DV113</td>
-					<td>Máy Sấy Tóc</td>
-					<td>125.000đ</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
+
 			</tbody>
 		</table>
 	</div>
