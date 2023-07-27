@@ -10,30 +10,40 @@
 	<div id="header" th:replace="@{admin/menu}"></div>
 	<div class="container">
 		<div class="heading">Thông Tin Khách Hàng</div>
-		<form>
+		<div style="color: red; text-align: center">[[${message}]]</div>
+		<form th:object="${form}">
+			<div class="mb-3">
+				<label for="username">Tài Khoản:</label> <input type="text" name
+					id="username" th:field="*{username}" readonly>
+			</div>
 			<div class="mb-3">
 				<label for="fullname">Chủ Tài Khoản:</label> <input type="text" name
-					id="fullname" placeholder>
+					id="fullname" th:field="*{fullname}">
 			</div>
 			<div class="mb-3">
 				<label for="security">CCCD/CMND:</label> <input type="text" name
-					id="security" placeholder>
+					id="security" th:field="*{cccd}">
 			</div>
 			<div class="mb-3">
-				<label>Giới Tính:</label><input type="radio" name="gender" id="male"><label
-					for="male">Nam</label><input type="radio" name="gender" id="female"><label
-					for="female">Nữ</label>
+				<label>Giới Tính:</label><input type="radio" th:field="*{gender}"
+					name="gender" value="true" id="male"><label for="male">Nam</label><input
+					type="radio" th:field="*{gender}" name="gender" value="false"
+					id="female"><label for="female">Nữ</label>
 			</div>
 			<div class="mb-3">
 				<label for="phone">Số Điện Thoại:</label> <input type="text" name
-					id="phone" placeholder>
+					id="phone" th:field="*{phone}">
 			</div>
 			<div class="mb-3">
 				<label for="address">Địa Chỉ Thường Trú:</label> <input type="text"
-					id="address" placeholder>
+					id="address" th:field="*{address}">
 			</div>
-			<a href="#" class="btn btn-success">Thêm</a> <a href="#"
-				class="btn btn-primary">Sửa</a> <a href="#" class="btn btn-danger">Xóa</a>
+			<button type="submit"
+				th:formaction="@{|/admin/updateCustomer/${key}|}"
+				class="btn btn-success">Sửa</button>
+			<button type="submit"
+				th:formaction="@{|/admin/deleteCustomer/${key}|}"
+				class="btn btn-danger">Xóa</button>
 		</form>
 		<table class="table">
 			<thead>
@@ -47,40 +57,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
+				<tr th:each="user : ${listUser}" th:object="${user.value}">
+					<td th:text="*{username}"></td>
+					<td th:text="*{fullname}"></td>
+					<td th:text="*{cccd}"></td>
+					<td th:text="*{gender}"></td>
+					<td th:text="*{phone}"></td>
+					<td><a th:href="@{|/admin/editCustomer/${user.key}|}"
+						class="btn btn-success">Edit</a><a
+						th:href="@{|/admin/deleteCustomer/${user.key}|}"
 						class="btn btn-danger">Xóa</a></td>
 				</tr>
 			</tbody>

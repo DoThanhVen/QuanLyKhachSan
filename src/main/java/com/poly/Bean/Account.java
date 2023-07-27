@@ -15,4 +15,5 @@ public class Account {
 	String[] role;
 	String address;
 	boolean gender;
+	String phone;
 }

@@ -1,12 +1,21 @@
 package com.poly.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.poly.Bean.Account;
+import com.poly.Bean.AccountMap;
+import com.poly.DAO.AccountDAO;
+
 @Controller
 public class PageController {
+	@Autowired
+	AccountDAO dao;
+
 	// CUSTOMER
 	@GetMapping("/")
 	public String home() {
@@ -62,7 +71,11 @@ public class PageController {
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/customer")
-	public String managerCustomr() {
+	public String managerCustomr(Model model) {
+		Account account = new Account("", "", "", "", new String[] {}, "", false, "");
+		model.addAttribute("form", account);
+		AccountMap list = dao.findAll();
+		model.addAttribute("listUser", list);
 		return "admin/customer";
 	}
 
@@ -77,7 +90,7 @@ public class PageController {
 	public String serviceRoom() {
 		return "admin/service-room";
 	}
-	
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/room")
 	public String managerRoom() {

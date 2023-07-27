@@ -40,7 +40,7 @@ public class AccountController {
 			return "user/sign-up";
 		} else {
 			try {
-				Account account = new Account(username, repassword, username, password, null, repassword, false);
+				Account account = new Account(username, repassword, username, password, null, repassword, false,"");
 				dao.create(account);
 				System.out.print("tc");
 				model.addAttribute("message", "Đăng kí thành công");
