@@ -47,40 +47,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
-						class="btn btn-danger">Xóa</a></td>
-				</tr>
-				<tr>
-					<td>vendeptrai@gmail.com</td>
-					<td>Đỗ Thanh Vẹn</td>
-					<td>123123456</td>
-					<td>Nam</td>
-					<td>0123456789</td>
-					<td><a href="#" class="btn btn-success">Sửa</a><a href="#"
+				<tr th:each="user : ${listUser}" th:object="${user.value}">
+					<td th:text="*{username}"></td>
+					<td th:text="*{fullname}"></td>
+					<td th:text="*{cccd}"></td>
+					<td th:text="*{gender}"></td>
+					<td th:text="*{phone}"></td>
+					<td><a th:href="@{|/admin/editCustomer/${user.key}|}"
+						class="btn btn-success">Edit</a><a
+						th:href="@{|/admin/deleteCustomer/${user.key}|}"
 						class="btn btn-danger">Xóa</a></td>
 				</tr>
 			</tbody>

@@ -75,11 +75,6 @@ public class PageController {
 		return "user/change-password";
 	}
 
-	@GetMapping("/info-user")
-	public String infoUser() {
-		return "user/info-user";
-	}
-
 	@GetMapping("/order-history")
 	public String orderHistory() {
 		return "user/order-history";
