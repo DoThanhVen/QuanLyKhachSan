@@ -2,6 +2,8 @@ package com.poly;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +41,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 	// Quản lý dữ liệu người dùng
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
 	// Phân quyền sử dụng và hình thức đăng nhập
@@ -48,17 +50,20 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 		// CSRF, CORS
 		http.csrf().disable().cors().disable();
 
-//		// Phân quyền sử dụng
+		// Phân quyền sử dụng
 //		http.authorizeRequests().antMatchers("/home/index", "/auth/login/**", "/login/oauth2/code/**","/account/**").permitAll()
 //				.anyRequest().authenticated();
 		http.authorizeRequests().anyRequest().permitAll();
 //		Điều khiển lỗi truy cập không đúng vai trò
-		http.exceptionHandling()
-		.accessDeniedPage("/auth/access/denied");
+		http.exceptionHandling().accessDeniedPage("/auth/access/denied");
 		// Giao diện đăng nhập
 		http.formLogin().loginPage("/auth/login/form").loginProcessingUrl("/auth/login")// ACTION
-				.defaultSuccessUrl("/auth/login/success", false).failureUrl("/auth/login/error")
-				.usernameParameter("username").passwordParameter("password");
+				.defaultSuccessUrl("/auth/login/success", false).failureHandler((request, response, exception) -> {
+					HttpSession session = request.getSession();
+					session.setAttribute("username", request.getParameter("username"));
+					session.setAttribute("password", request.getParameter("password"));
+					response.sendRedirect("/auth/login/error");
+				});
 
 		http.rememberMe().rememberMeParameter("remember");
 

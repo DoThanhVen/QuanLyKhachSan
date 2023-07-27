@@ -8,24 +8,27 @@
 </head>
 <body>
 	<div id="header" th:replace="@{user/menu}"></div>
-	<form class="login-normal">
+	<form class="login-normal" action="/auth/login" method="POST">
 		<div class="heading">ĐĂNG NHẬP</div>
+		<b th:text="${message}"></b>
 		<div class="mb-3">
-			<input type="email" class="form-control" id="email"> <label
-				for="email" class="form-label">Email</label>
+			<input type="email" class="form-control" name="username" id="email">
+			<label for="email" class="form-label">Email</label>
 		</div>
 		<div class="mb-3">
-			<input type="password" class="form-control" id="password"> <label
-				for="password" class="form-label">Mật Khẩu</label>
+			<input type="password" class="form-control" name="password"
+				id="password"> <label for="password" class="form-label">Mật
+				Khẩu</label>
 		</div>
 		<button type="submit" class="btn btn-primary">Đăng Nhập</button>
 		<div class="mb-3 sign-up-account">
 			<div>
-				Bạn chưa có tài khoản? <a style="color:blue" onclick="redirectURL('sign-up')">Đăng
-					Kí Ngay</a>
+				Bạn chưa có tài khoản? <a style="color: blue"
+					onclick="redirectURL('sign-up')">Đăng Kí Ngay</a>
 			</div>
 			<div class="forgot-password">
-				<a style="color:blue" onclick="redirectURL('forgot-password')"> Quên Mật Khẩu</a>
+				<a style="color: blue" onclick="redirectURL('forgot-password')">
+					Quên Mật Khẩu</a>
 			</div>
 		</div>
 	</form>

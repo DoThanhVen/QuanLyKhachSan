@@ -25,6 +25,7 @@ import com.poly.Bean.Serviceroom;
 import com.poly.Bean.ServiceroomMap;
 import com.poly.Bean.Typeroom;
 import com.poly.Bean.TyperoomMap;
+import com.poly.DAO.AccountDAO;
 import com.poly.DAO.RoomDAO;
 import com.poly.DAO.ServiceroomDAO;
 import com.poly.DAO.TyperoomDAO;
@@ -38,7 +39,10 @@ public class PageController {
 	@Autowired
 	RoomDAO roomdao;
 	@Autowired
+	AccountDAO accountDAO;
+	@Autowired
 	com.poly.Service.SessionService session;
+
 	// CUSTOMER
 	@GetMapping("/")
 	public String home() {
@@ -89,42 +93,51 @@ public class PageController {
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/customer")
-	public String managerCustomr() {
+	public String managerCustomr(Model model) {
+		Account account = new Account("","","","","",new String[] {},false,"","");
+		model.addAttribute("form",account);
+		model.addAttribute("listUser", accountDAO.findAll());
 		return "admin/customer";
 	}
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/management")
-	public String typeRoom1(Model model,@ModelAttribute("typefind") Typeroom typeroom,@ModelAttribute("servfind") Serviceroom serviceroom,@ModelAttribute("roomfind") Room room) {
-			TyperoomMap type=typeroomdao.findAll();
-			ServiceroomMap serv=serviceroomDAO.findAll();
-			model.addAttribute("listtype",type);
-			RoomMap roommap=roomdao.findAll();
-			model.addAttribute("listtype",type);
-			model.addAttribute("listroom",roommap);
-			model.addAttribute("listserv",serv);
+	public String typeRoom1(Model model, @ModelAttribute("typefind") Typeroom typeroom,
+			@ModelAttribute("servfind") Serviceroom serviceroom, @ModelAttribute("roomfind") Room room) {
+		TyperoomMap type = typeroomdao.findAll();
+		ServiceroomMap serv = serviceroomDAO.findAll();
+		model.addAttribute("listtype", type);
+		RoomMap roommap = roomdao.findAll();
+		model.addAttribute("listtype", type);
+		model.addAttribute("listroom", roommap);
+		model.addAttribute("listserv", serv);
 		return "admin/management";
 	}
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/management/{key}")
-	public String typeRoom(Model model,@ModelAttribute("typefind") Typeroom typeroom,@ModelAttribute("servfind") Serviceroom serviceroom,@ModelAttribute("roomfind") Room room,@PathVariable("key") String kw) {
-			TyperoomMap type=typeroomdao.findAll();
-			ServiceroomMap serv=serviceroomDAO.findAll();
-			RoomMap roommap=roomdao.findAll();
-			Typeroom typefind=typeroomdao.findByKey(kw);
-			Room roomfind=roomdao.findByKey(kw);
-			Serviceroom servfind=serviceroomDAO.findByKey(kw);
-			model.addAttribute("listtype",type);
-			model.addAttribute("listroom",roommap);
-			model.addAttribute("listserv",serv);
-			if(roomfind==null&&typefind==null&&servfind!=null) {
-				model.addAttribute("servfind", servfind);
-			}else if(roomfind!=null&&typefind==null&&servfind==null){
-				model.addAttribute("roomfind",roomfind);
-			}else {
-				model.addAttribute("typefind",typefind);
-			}
-			return "admin/management";
+	public String typeRoom(Model model, @ModelAttribute("typefind") Typeroom typeroom,
+			@ModelAttribute("servfind") Serviceroom serviceroom, @ModelAttribute("roomfind") Room room,
+			@PathVariable("key") String kw) {
+		TyperoomMap type = typeroomdao.findAll();
+		ServiceroomMap serv = serviceroomDAO.findAll();
+		RoomMap roommap = roomdao.findAll();
+		Typeroom typefind = typeroomdao.findByKey(kw);
+		Room roomfind = roomdao.findByKey(kw);
+		Serviceroom servfind = serviceroomDAO.findByKey(kw);
+		model.addAttribute("listtype", type);
+		model.addAttribute("listroom", roommap);
+		model.addAttribute("listserv", serv);
+		if (roomfind == null && typefind == null && servfind != null) {
+			model.addAttribute("servfind", servfind);
+		} else if (roomfind != null && typefind == null && servfind == null) {
+			model.addAttribute("roomfind", roomfind);
+		} else {
+			model.addAttribute("typefind", typefind);
+		}
+		return "admin/management";
 	}
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/room")
 	public String managerRoom() {
