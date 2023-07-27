@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +43,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private AccountDAO accountDAO;
 	@Autowired
 	BCryptPasswordEncoder pe;
+	@Autowired
+	HttpSession session;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,6 +52,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (account == null) {
 			throw new UsernameNotFoundException("Không tìm thấy tài khoản với username: " + username);
 		} else {
+			session.setAttribute("username", account.getUsername());
+			session.setAttribute("password", account.getPassword());
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			for (String role : account.getRole()) {
 				authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
