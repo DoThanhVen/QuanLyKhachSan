@@ -1,5 +1,6 @@
 package com.poly.Bean;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,13 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account {
-	String username;
-	String password;
-	String cccd;
-	String fullname;
-	String[] role;
-	String address;
-	boolean gender;
-	String phone;
+public class Room {
+	String name;
+	String typeroom;
+	String status;
 }
