@@ -23,7 +23,9 @@ public class CustomerController {
 	@RequestMapping("/admin/updateCustomer/{key}")
 	public String createCustomer(Model model, Account account, @PathVariable("key") String key) {
 		Account checkAccount = dao.findByKey(key);
+		String[] roles = checkAccount.getRole();
 		account.setPassword(checkAccount.getPassword());
+		account.setRole(roles);
 		if (key != null) {
 			dao.update(key, account);
 			model.addAttribute("message", "Cập nhật thông tin thành công !");

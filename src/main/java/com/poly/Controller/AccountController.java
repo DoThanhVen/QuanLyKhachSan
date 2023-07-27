@@ -12,10 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.poly.Bean.Account;
+import com.poly.Bean.AccountMap;
 import com.poly.DAO.AccountDAO;
 import com.poly.Service.UserDetailsServiceImpl;
 
@@ -40,7 +42,7 @@ public class AccountController {
 			return "user/sign-up";
 		} else {
 			try {
-				Account account = new Account(username, repassword, username, password, null, repassword, false,"");
+				Account account = new Account(username, repassword, username, password, null, repassword, false, "");
 				dao.create(account);
 				System.out.print("tc");
 				model.addAttribute("message", "Đăng kí thành công");
@@ -104,5 +106,45 @@ public class AccountController {
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
 		return "redirect:/";
+	}
+
+	// INFO-USER
+	@GetMapping("/info-user")
+	public String infoUser(Model model) {
+		String username = (String) session.getAttribute("username");
+		Account list = dao.findByUsername(username);
+		String fullname = list.getFullname();
+		String cccd = list.getCccd();
+		boolean gender = list.isGender();
+		String phone = list.getPhone();
+		String address = list.getAddress();
+		Account account = new Account();
+		account.setUsername(username);
+		account.setFullname(fullname);
+		account.setCccd(cccd);
+		account.setGender(gender);
+		account.setPhone(phone);
+		account.setAddress(address);
+		model.addAttribute("form", account);
+		String key = dao.findKeyByUsername(username);
+		System.out.println("USER: " + account.getUsername());
+		System.out.println("KEY: " + key);
+		return "user/info-user";
+	}
+
+	@RequestMapping("/info-user/update/{key}")
+	public String createCustomer(Model model, Account account, @PathVariable("key") String key) {
+		System.out.println("KEY: " + key);
+//		Account checkAccount = dao.findByKey(key);
+//		String[] roles = checkAccount.getRole();
+//		account.setPassword(checkAccount.getPassword());
+//		account.setRole(roles);
+//		if (key != null) {
+//			dao.update(key, account);
+//			model.addAttribute("message", "Cập nhật thông tin thành công !");
+//		} else {
+//			model.addAttribute("message", "Vui lòng nhập tài khoản cần cập nhật !");
+//		}
+		return "redirect:/info-user";
 	}
 }
