@@ -32,30 +32,30 @@ public class AccountController {
 	@Autowired
 	HttpSession session;
 
-	@PostMapping("/sign-up")
-	public String register(Model model) {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String repassword = request.getParameter("repassword");
-		if (!password.equals(repassword)) {
-			model.addAttribute("message", "Đăng kí thất bại");
-			return "user/sign-up";
-		} else {
-			try {
-				Account account = new Account(username, repassword, username, password, null, repassword, false, "");
-				dao.create(account);
-				System.out.print("tc");
-				model.addAttribute("message", "Đăng kí thành công");
-				return "redirect:/sign-in";
-
-			} catch (Exception e) {
-				model.addAttribute("message", "Đăng kí thất bại");
-				System.out.print("tb");
-				return "user/sign-up";
-			}
-		}
-
-	}
+//	@PostMapping("/sign-up")
+//	public String register(Model model) {
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		String repassword = request.getParameter("repassword");
+//		if (!password.equals(repassword)) {
+//			model.addAttribute("message", "Đăng kí thất bại");
+//			return "user/sign-up";
+//		} else {
+//			try {
+//				Account account = new Account(username, repassword, username, password, null, repassword, false, "");
+//				dao.create(account);
+//				System.out.print("tc");
+//				model.addAttribute("message", "Đăng kí thành công");
+//				return "redirect:/sign-in";
+//
+//			} catch (Exception e) {
+//				model.addAttribute("message", "Đăng kí thất bại");
+//				System.out.print("tb");
+//				return "user/sign-up";
+//			}
+//		}
+//
+//	}
 
 	@RequestMapping("/auth/login/form")
 	public String form() {
