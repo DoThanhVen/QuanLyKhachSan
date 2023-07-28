@@ -48,7 +48,6 @@ public class TyperoomController {
 			if (images.size() > 0) {
 				// Lấy tên file tải lên
 				List<String> nameToSave = new ArrayList<>();
-				StringBuilder fileNames = new StringBuilder();
 				for (MultipartFile file : images) {
                     byte[] fileData = file.getBytes();
                     String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
