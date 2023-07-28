@@ -17,4 +17,5 @@ public class Typeroom {
 	@NotNull(message = "Không được bỏ trống giá phòng")
 	double price;
 	String description;
+	String[] images;
 }
