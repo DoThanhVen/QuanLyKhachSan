@@ -34,9 +34,7 @@ public class TyperoomController {
 	TyperoomDAO typeroomdao;
 	@Autowired
 	HttpServletRequest request;;
-	public final String UPLOAD_DIRECTORY = System.getProperty("user.dir")
-			+ "/src/main/resources/static/images/typeRooms";
-
+	
 	@PostMapping("/createTyperoom")
 	public String addTyperoom(Model model, @RequestParam("images") List<MultipartFile> images) {
 		try {
@@ -62,7 +60,6 @@ public class TyperoomController {
 			typeroom.setImages(listImages);
 			typeroomdao.create(typeroom);
 		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi lưu file !");
 			e.printStackTrace();
 		}
 		return "redirect:/admin/management/";
@@ -85,6 +82,7 @@ public class TyperoomController {
 					byte[] fileData = file.getBytes();
 					String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
 					nameToSave.add(base64EncodedImage);
+					System.out.println("Tên ảnh: "+base64EncodedImage);
 				}
 
 				listImages = nameToSave.toArray(new String[0]);
@@ -97,7 +95,6 @@ public class TyperoomController {
 			typeroom.setImages(listImages);
 			typeroomdao.update(key, typeroom);
 		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi lưu file !");
 			e.printStackTrace();
 		}
 		return "redirect:/admin/management/" + key;
