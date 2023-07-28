@@ -107,6 +107,12 @@ public class AccountController {
 		service.loginFromOAuth2(oauth2);
 		return "redirect:/";
 	}
+	
+	@RequestMapping("/oauth2/login/error")
+	public String googleError(Model model) {
+		model.addAttribute("message","Đăng nhập thất bại");
+		return "user/sign-in";
+	}
 
 	// INFO-USER
 	@GetMapping("/info-user")
@@ -132,19 +138,15 @@ public class AccountController {
 		return "user/info-user";
 	}
 
-	@RequestMapping("/info-user/update/{key}")
-	public String createCustomer(Model model, Account account, @PathVariable("key") String key) {
-		System.out.println("KEY: " + key);
-//		Account checkAccount = dao.findByKey(key);
-//		String[] roles = checkAccount.getRole();
-//		account.setPassword(checkAccount.getPassword());
-//		account.setRole(roles);
-//		if (key != null) {
-//			dao.update(key, account);
-//			model.addAttribute("message", "Cập nhật thông tin thành công !");
-//		} else {
-//			model.addAttribute("message", "Vui lòng nhập tài khoản cần cập nhật !");
-//		}
+	@PostMapping("/info-user/update")
+	public String UpdateInfoUser(String key, Account account) {
+		String username = (String) session.getAttribute("username");
+		key = dao.findKeyByUsername(username);
+		Account list = dao.findByUsername(username);
+		System.out.println(key);
+		account.setUsername(username);
+		account.setRole(list.getRole());
+		dao.update(key, account);
 		return "redirect:/info-user";
 	}
 }

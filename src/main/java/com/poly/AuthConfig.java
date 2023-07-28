@@ -49,8 +49,6 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().cors().disable();
 
 //		// Phân quyền sử dụng
-//		http.authorizeRequests().antMatchers("/home/index", "/auth/login/**", "/login/oauth2/code/**","/account/**").permitAll()
-//				.anyRequest().authenticated();
 		http.authorizeRequests().anyRequest().permitAll();
 //		Điều khiển lỗi truy cập không đúng vai trò
 		http.exceptionHandling()
