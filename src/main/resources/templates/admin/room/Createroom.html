@@ -28,7 +28,6 @@
 								<option th:each="i:${listtype}" th:value="${i.key}" th:text="${i.value.name}"></option>
 						</select>
 					</div>
-					<button class="btn btn-deep-orange" data-dismiss="modal">Hủy bỏ</button>
 					<button type="submit" class="btn btn-success" th:formaction="@{|/createRoom|}">Lưu</button>
 				</form>
 			</div>
