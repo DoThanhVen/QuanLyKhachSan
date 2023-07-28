@@ -102,7 +102,7 @@ public class PageController {
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/management")
-	public String typeRoom1(Model model, @ModelAttribute("typefind") Typeroom typeroom,
+	public String typeRoom1(Model model,
 			@ModelAttribute("servfind") Serviceroom serviceroom, @ModelAttribute("roomfind") Room room) {
 		TyperoomMap type = typeroomdao.findAll();
 		ServiceroomMap serv = serviceroomDAO.findAll();
@@ -111,6 +111,7 @@ public class PageController {
 		model.addAttribute("listtype", type);
 		model.addAttribute("listroom", roommap);
 		model.addAttribute("listserv", serv);
+		model.addAttribute("typefind",new Typeroom());
 		return "admin/management";
 	}
 

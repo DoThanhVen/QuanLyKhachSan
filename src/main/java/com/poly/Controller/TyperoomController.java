@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,39 +31,42 @@ import com.poly.DAO.TyperoomDAO;
 public class TyperoomController {
 	@Autowired
 	TyperoomDAO typeroomdao;
+	@Autowired
+	HttpServletRequest request;;
 
-	@RequestMapping(value = "/createTyperoom", method = RequestMethod.POST)
-	public String addTyperoom(Model model, @Valid @ModelAttribute Typeroom typeroom, Errors errors,
-			@RequestParam("images") List<MultipartFile> images) {
+	@PostMapping("/createTyperoom")
+	public String addTyperoom(Model model, @RequestParam("images") List<MultipartFile> images) {
 		String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images/typeRooms";
 		try {
-			if (errors.hasErrors()) {
-				TyperoomMap type = typeroomdao.findAll();
-				model.addAttribute("listtype", type);
-				return "admin/management";
-			} else {
-				String[] listImages = null;
-				if (!images.isEmpty()) {
-					Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
-
-					if (!Files.exists(uploadDirPath)) {
-						Files.createDirectories(uploadDirPath);
-					}
-					// Lấy tên file tải lên
-					List<String> nameToSave = new ArrayList<>();
-					StringBuilder fileNames = new StringBuilder();
-					for (MultipartFile file : images) {
-						String fileName = file.getOriginalFilename();
-						nameToSave.add(fileName);
-						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
-						fileNames.append(fileName);
-						Files.write(fileNameAndPath, file.getBytes());
-					}
-
-					listImages = nameToSave.toArray(new String[0]);
+			String[] listImages = null;
+			Typeroom typeroom = new Typeroom();
+			String name = request.getParameter("name");
+			Double price = Double.parseDouble(request.getParameter("price"));
+			String description = request.getParameter("description");
+			if (images != null) {
+				Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
+				if (!Files.exists(uploadDirPath)) {
+					Files.createDirectories(uploadDirPath);
 				}
-				typeroomdao.create(typeroom);
+				// Lấy tên file tải lên
+				List<String> nameToSave = new ArrayList<>();
+				StringBuilder fileNames = new StringBuilder();
+				for (MultipartFile file : images) {
+					String fileName = file.getOriginalFilename();
+					
+					nameToSave.add(fileName);
+					Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
+					fileNames.append(fileName);
+					Files.write(fileNameAndPath, file.getBytes());
+				}
+
+				listImages = nameToSave.toArray(new String[0]);
 			}
+			typeroom.setName(name);
+			typeroom.setPrice(price);
+			typeroom.setDescription(description);
+			typeroom.setImages(listImages);
+			typeroomdao.create(typeroom);
 		} catch (Exception e) {
 			model.addAttribute("message", "Lỗi lưu file !");
 			e.printStackTrace();
