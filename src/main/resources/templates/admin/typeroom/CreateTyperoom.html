@@ -68,14 +68,26 @@ span {
 			function countSelectedImages() {
 			  const inputElement = document.getElementById('imageInput');
 			  const selectedImageCountElement = document.getElementById('selectedImageCount');
-
+			  const selectedImageCount = 0;
 			  if (inputElement.files && inputElement.files.length > 0) {
-			    const selectedImageCount = inputElement.files.length;
-				console.log(selectedImageCount);
+			    selectedImageCount = inputElement.files.length;
 			    selectedImageCountElement.textContent = `Số ảnh đã chọn: ${selectedImageCount}`;
+				// Chuyển đổi từng hình ảnh thành chuỗi Base64
+				  for (let i = 0; i < selectedImagesCount; i++) {
+				    const imageFile = fileInput.files[i];
+				    const reader = new FileReader();
+
+				    reader.onload = function(event) {
+				      const base64String = event.target.result.split(',')[1];
+				      console.log('Hình ảnh ${i + 1} - Base64:'+ base64String);
+				    };
+
+				    reader.readAsDataURL(imageFile);
+				  }
 			  } else {
 			    selectedImageCountElement.textContent = "Không có ảnh nào được chọn.";
 			  }
+			  
 			}
 	</script>
 	</body>

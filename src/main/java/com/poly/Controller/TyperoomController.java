@@ -33,34 +33,51 @@ public class TyperoomController {
 	TyperoomDAO typeroomdao;
 	@Autowired
 	HttpServletRequest request;;
+	public final String UPLOAD_DIRECTORY = System.getProperty("user.dir")
+			+ "/src/main/resources/static/images/typeRooms";
 
 	@PostMapping("/createTyperoom")
 	public String addTyperoom(Model model, @RequestParam("images") List<MultipartFile> images) {
-		String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images/typeRooms";
 		try {
 			String[] listImages = null;
 			Typeroom typeroom = new Typeroom();
 			String name = request.getParameter("name");
 			Double price = Double.parseDouble(request.getParameter("price"));
 			String description = request.getParameter("description");
-			if (images != null) {
-				Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
-				if (!Files.exists(uploadDirPath)) {
-					Files.createDirectories(uploadDirPath);
-				}
-				// Lấy tên file tải lên
-				List<String> nameToSave = new ArrayList<>();
-				StringBuilder fileNames = new StringBuilder();
-				for (MultipartFile file : images) {
-					String fileName = file.getOriginalFilename();
-					
-					nameToSave.add(fileName);
-					Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
-					fileNames.append(fileName);
-					Files.write(fileNameAndPath, file.getBytes());
-				}
+			Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
+			if (!Files.exists(uploadDirPath)) {
+				Files.createDirectories(uploadDirPath);
+				if (images.size() > 0) {
+					// Lấy tên file tải lên
+					List<String> nameToSave = new ArrayList<>();
+					StringBuilder fileNames = new StringBuilder();
+					for (MultipartFile file : images) {
+						String fileName = file.getOriginalFilename();
+						System.out.println(fileName);
+						nameToSave.add(fileName);
+						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
+						fileNames.append(fileName);
+						Files.write(fileNameAndPath, file.getBytes());
+					}
 
-				listImages = nameToSave.toArray(new String[0]);
+					listImages = nameToSave.toArray(new String[0]);
+				}
+			} else {
+				if (images.size() > 0) {
+					// Lấy tên file tải lên
+					List<String> nameToSave = new ArrayList<>();
+					StringBuilder fileNames = new StringBuilder();
+					for (MultipartFile file : images) {
+						String fileName = file.getOriginalFilename();
+
+						nameToSave.add(fileName);
+						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
+						fileNames.append(fileName);
+						Files.write(fileNameAndPath, file.getBytes());
+					}
+
+					listImages = nameToSave.toArray(new String[0]);
+				}
 			}
 			typeroom.setName(name);
 			typeroom.setPrice(price);
