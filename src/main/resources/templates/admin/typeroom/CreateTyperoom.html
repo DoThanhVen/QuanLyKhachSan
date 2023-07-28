@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<link rel="stylesheet" href="/css/admin/type-room.css">
+		<style>
+span {
+	color: red;
+	display: block;
+}
+</style>
+		<script
+			src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
+	</head>
+
+	<body>
+		<div class="modal fade" id="modalRegisterForm" tabindex="-1"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header text-center">
+						<h4 class="modal-title w-100 font-weight-bold">Tạo phòng mới</h4>
+					</div>
+					<form th:object="${typefind}" enctype="multipart/form-data" method="post">
+						<div class="mb-3">
+							<label for="fullname">Tên Loại Phòng:</label> <input type="text"
+								name id="fullname" th:field="*{name}" placeholder> <span
+								th:errors="*{name}" />
+						</div>
+						<div class="mb-3">
+							<label for="price">Giá Loại Phòng:</label> <input type="text" name
+								id="price" th:field="*{price}" placeholder> <span
+								th:errors="*{price}" />
+						</div>
+						<div class="mb-3">
+							<label for="price">Mô tả:</label>
+							<textarea id="motatypecreate" th:field="*{description}" />
+						</div>
+						<div class="mb-3">
+							<label class="btn btn-primary" for="imageInput"
+								>Chọn Ảnh</label>
+						</div>
+						<div class="mb-3">
+							<p id="selectedImageCount">Số ảnh đã chọn: 0</p>
+						</div>
+						<input type="file" name="images" id="imageInput" accept="image/*"
+							multiple style="display: none" onchange="countSelectedImages()">
+
+						<button type="submit" class="btn btn-success"
+							th:formaction="@{|/createTyperoom|}">Lưu</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script>
+		ClassicEditor
+			.create(document.querySelector('#motatypecreate'))
+			.then(testmota => {
+				document.querySelector("#motatypecreate").value = testmota;
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
+			function countSelectedImages() {
+			  const inputElement = document.getElementById('imageInput');
+			  const selectedImageCountElement = document.getElementById('selectedImageCount');
+
+			  if (inputElement.files && inputElement.files.length > 0) {
+			    const selectedImageCount = inputElement.files.length;
+				console.log(selectedImageCount);
+			    selectedImageCountElement.textContent = `Số ảnh đã chọn: ${selectedImageCount}`;
+			  } else {
+			    selectedImageCountElement.textContent = "Không có ảnh nào được chọn.";
+			  }
+			}
+	</script>
+	</body>
+
+</html>

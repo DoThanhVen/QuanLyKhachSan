@@ -13,15 +13,15 @@
 	justify-content: space-between;
 }
 
-.content .mb-3:nth-child(3) {
+.content .mb-3:nth-child(4) {
 	display: block;
 }
 
-.content .mb-3:nth-child(3) #male {
+.content .mb-3:nth-child(4) #male {
 	margin-left: 100px;
 }
 
-.content .mb-3:nth-child(3) #female {
+.content .mb-3:nth-child(4) #female {
 	margin-left: 20px;
 }
 
@@ -35,7 +35,7 @@
 	outline: none;
 }
 
-.content .mb-3:nth-child(3) input[type="radio"] {
+.content .mb-3:nth-child(4) input[type="radio"] {
 	margin-right: 5px;
 }
 
