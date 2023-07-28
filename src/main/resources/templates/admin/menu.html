@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,9 +49,9 @@
 					Lý Phòng</a></li>
 			<li class="menu-item"><a onclick="redirectURL('/admin/orders')">Order</a></li>
 		</ul>
-		<div class="contact" th:if="${#request.remoteUser}">
+		<div class="contact" th:if="${session.username}">
 			<ul>
-				<li class="menu-item">[[${#request.remoteUser}]]</li>
+				<li class="menu-item">[[${session.username}]]</li>
 			</ul>
 			<a onclick="redirectURL('/auth/logoff')" class="btn sign-in">Đăng
 				Xuất</a>

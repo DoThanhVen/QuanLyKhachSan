@@ -1,10 +1,10 @@
 package com.poly.Controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.poly.Bean.Account;
 import com.poly.DAO.AccountDAO;
 import com.poly.Service.UserDetailsServiceImpl;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class AccountController {
@@ -62,11 +65,13 @@ public class AccountController {
 
 	@RequestMapping("/auth/login/success")
 	public String success(Model model) {
+		System.out.println("thành công");
 		return "redirect:/";
 	}
 
 	@RequestMapping("/auth/login/error")
 	public String error(Model model) {
+		System.out.println("lỗi");
 		String username = (String) session.getAttribute("username");
 		if (username != null) {
 			Account account = dao.findByUsername(username);
@@ -86,7 +91,8 @@ public class AccountController {
 	@RequestMapping("/auth/logoff/success")
 	public String logout_success(Model model) {
 		model.addAttribute("message", "Đăng xuất thành công");
-		return "forward:/auth/login/form";
+		session.removeAttribute("username");
+		return "redirect:/sign-in";
 	}
 
 	@RequestMapping("/auth/logoff/error")
@@ -97,12 +103,17 @@ public class AccountController {
 
 	@RequestMapping("/auth/access/denied")
 	public String denied(Model model) {
-		return "redirect:/";
+		System.out.println("lỗi");
+		return "redirect:/sign-in";
 	}
-
+	
+	
 	@RequestMapping("/oauth2/login/success")
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		session.setAttribute("username", auth.getName());
+		
 		return "redirect:/";
 	}
 }

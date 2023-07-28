@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 
@@ -24,13 +24,13 @@
 <link rel="stylesheet" href="/css/order.css" type="text/css">
 </head>
 <body>
-	<div id="header" th:replace="@{admin/menu}"></div>
+	<div id="header" th:replace="~{admin/menu}"></div>
 	<div class="container" style="min-height: 460px">
 		<div class="message" th:if="${session.message}">
 			<div class="alert alert-success">
 				<strong>Sửa thành công!</strong> 
 			</div>
-			 <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+			
 		</div>
 		<!--<div class="header-room-top">
 			 <div class="header-room-top-content">
@@ -68,7 +68,7 @@
 			
 		</div>
 		<div class="content-room">
-			<div class="content-room-item">
+			<div class="content-room-body">
 				<div class="content-room-top">Lầu 1</div>
 				<div class="row content-room-center">
 					<div class="col-2" th:each="room : ${rooms}"
@@ -78,12 +78,13 @@
 							<div class="detail-room-item">
 								<p>Phòng [[*{idRoom}]]</p>
 								<i class="fa-solid fa-circle-check"></i>
+								<p>Nông Văn Đạt</p>
 							</div>
 						</a>
 					</div>
 				</div>
 			</div>
-			<div class="content-room-item">
+			<div class="content-room-body">
 				<div class="content-room-top">Lầu 1</div>
 				<div class="row content-room-center">
 					<div class="col-2" th:each="room : ${rooms}"
@@ -93,6 +94,7 @@
 							<div class="detail-room-item">
 								<p>Phòng [[*{idRoom}]]</p>
 								<i class="fa-solid fa-circle-check"></i>
+								<p></p>
 							</div>
 						</a>
 					</div>
@@ -102,7 +104,7 @@
 
 	</div>
 
-	<div id="footer" th:replace="@{user/footer}"></div>
+	<div id="footer" th:replace="~{user/footer}"></div>
 	<!-- The Modal -->
 	<div class="modal " id="myModal">
 		<div class="modal-dialog modal-xl">
@@ -133,6 +135,6 @@
 
 	function closeMessage() {
 		$('.message').fadeOut();
-	}
+	} 
 </script>
 </html>

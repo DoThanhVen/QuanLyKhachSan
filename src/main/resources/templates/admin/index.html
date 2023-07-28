@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="/css/admin/index.css">
 </head>
 <body>
-    <div id="header" th:replace="@{admin/menu}"></div> 
+    <div id="header" th:replace="~{admin/menu}"></div> 
     <div class="container">
         <div class="this-month">
             <div class="card total">
@@ -61,6 +62,6 @@
               </table>
         </div>
     </div>
-    <div id="footer" th:replace="@{user/footer}"></div>
+    <div id="footer" th:replace="~{user/footer}"></div>
 </body>
 </html>

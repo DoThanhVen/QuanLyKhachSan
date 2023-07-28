@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,17 +42,17 @@
 			<li class="menu-item"><a href="#service">Dịch Vụ</a></li>
 			<li class="menu-item"><a href="#room">Mẫu Phòng</a></li>
 			<li class="menu-item"><a href="#footer">Liên Hệ</a></li>
-			<li class="menu-item" th:if="${#request.isUserInRole('ADMIN')}"><a onclick="redirectURL('/admin/index')">Quản Trị</a></li>
+			<li class="menu-item"><a onclick="redirectURL('/admin/index')">Quản Trị</a></li>
 		</ul>
 		<div class="contact">
-			<a th:unless="${#request.remoteUser}"
+			<a th:unless="${session.username}"
 				onclick="redirectURL('sign-up')" class="btn sign-in">Đăng Kí</a> <a
-				th:unless="${#request.remoteUser}" onclick="redirectURL('sign-in')"
+				th:unless="${session.username}" onclick="redirectURL('sign-in')"
 				class="btn sign-in">Đăng Nhập</a>
 		</div>
-		<div class="contact" th:if="${#request.remoteUser}">
+		<div class="contact" th:if="${session.username}">
 			<ul>
-				<li class="menu-item">[[${#request.remoteUser}]]
+				<li class="menu-item">[[${session.username}]]
 					<ul class="sub-menu">
 						<li class="sub-menu-item"><a
 							onclick="redirectURL('info-user')">Thông Tin Cá Nhân</a></li>

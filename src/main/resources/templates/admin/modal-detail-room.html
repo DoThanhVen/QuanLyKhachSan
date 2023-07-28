@@ -51,6 +51,11 @@
 								for="checkbox-service">Xe đưa đón sân bay</label>
 						</div>
 					</div>
+					<div class="form-bill">
+						<div class="form-bill-body">
+							<p></p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -58,9 +63,12 @@
 
 	<!-- Modal footer -->
 	<div class="modal-footer">
-		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
+			class="btn btn-success">Thanh toán</button>
 		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
 			class="btn btn-success">Lưu lại</button>
+		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+
 	</div>
 </form>
 
