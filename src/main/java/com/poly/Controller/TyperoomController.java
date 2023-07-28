@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,40 +45,18 @@ public class TyperoomController {
 			String name = request.getParameter("name");
 			Double price = Double.parseDouble(request.getParameter("price"));
 			String description = request.getParameter("description");
-			Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
-			if (!Files.exists(uploadDirPath)) {
-				Files.createDirectories(uploadDirPath);
-				if (images.size() > 0) {
-					// Lấy tên file tải lên
-					List<String> nameToSave = new ArrayList<>();
-					StringBuilder fileNames = new StringBuilder();
-					for (MultipartFile file : images) {
-						String fileName = file.getOriginalFilename();
-						System.out.println(fileName);
-						nameToSave.add(fileName);
-						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
-						fileNames.append(fileName);
-						Files.write(fileNameAndPath, file.getBytes());
-					}
-
-					listImages = nameToSave.toArray(new String[0]);
+			if (images.size() > 0) {
+				// Lấy tên file tải lên
+				List<String> nameToSave = new ArrayList<>();
+				StringBuilder fileNames = new StringBuilder();
+				for (MultipartFile file : images) {
+                    byte[] fileData = file.getBytes();
+                    String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
+					System.out.println(base64EncodedImage);
+					nameToSave.add(base64EncodedImage);
 				}
-			} else {
-				if (images.size() > 0) {
-					// Lấy tên file tải lên
-					List<String> nameToSave = new ArrayList<>();
-					StringBuilder fileNames = new StringBuilder();
-					for (MultipartFile file : images) {
-						String fileName = file.getOriginalFilename();
 
-						nameToSave.add(fileName);
-						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
-						fileNames.append(fileName);
-						Files.write(fileNameAndPath, file.getBytes());
-					}
-
-					listImages = nameToSave.toArray(new String[0]);
-				}
+				listImages = nameToSave.toArray(new String[0]);
 			}
 			typeroom.setName(name);
 			typeroom.setPrice(price);
