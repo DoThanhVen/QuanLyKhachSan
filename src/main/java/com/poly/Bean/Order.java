@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
-	String idRoom;
-	String timeCheckInDate;
-	String timeCheckOutDate;
-	String nameCustomer;
-	String phoneCustomer;
-	String emailCustomer;
-	String cccd;
-	String[] service;
-	int numberPeople;
+	private String idRoom;
+	private Date timeCheckInDate;
+	private Date timeCheckOutDate;
+	private int numberPeople;
+	private boolean status;
+	private String[] orderDetail;
+	private String userCreate;
+	private Date dateAt;
 }

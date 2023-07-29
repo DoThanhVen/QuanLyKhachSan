@@ -27,10 +27,11 @@ public class SecurityConfig {
 		// Phân quyền sử dụng
 //		http.authorizeRequests().antMatchers("/home/index", "/auth/login/**", "/login/oauth2/code/**","/account/**").permitAll()
 //				.anyRequest().authenticated();
-				.authorizeHttpRequests((request) -> request.requestMatchers("/", "/auth/login/**","/sign-in/**","sign-up/**").permitAll()
+				.authorizeHttpRequests((request) -> 
+				request.requestMatchers("/", "/auth/login/**","/sign-in/**","sign-up/**","/oauth2/login/**").permitAll()
 						.anyRequest().authenticated());
 		// Giao diện đăng nhập
-		http.formLogin(f -> f.loginPage("/auth/login/form").loginProcessingUrl("/auth/login")// ACTION
+		http.formLogin(f -> f.loginPage("/sign-in").loginProcessingUrl("/auth/login")// ACTION
 				.defaultSuccessUrl("/auth/login/success", false).failureHandler((request, response, exception) -> {
 					HttpSession session = request.getSession();
 					session.setAttribute("username", request.getParameter("username"));

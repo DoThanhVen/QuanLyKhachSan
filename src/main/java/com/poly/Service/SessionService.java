@@ -3,13 +3,17 @@ package com.poly.Service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
 
 
 @Service
+
 public class SessionService {
 	@Autowired
 	HttpSession session;
@@ -45,6 +49,18 @@ public class SessionService {
 	 * @param name tên attribute cần xóa
 	 */
 	public void remove(String name) {
+		System.out.println("name "+name);
 		session.removeAttribute(name);
+	}
+	
+	public void removeMessage() {
+		try {
+			System.out.println("remove message session");
+			HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession(); 
+			session.removeAttribute("message");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 	}
 }

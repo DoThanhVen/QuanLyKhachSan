@@ -40,7 +40,7 @@ public class PageController {
 	// CUSTOMER
 	@GetMapping("/")
 	public String home(Model model) {
-		System.out.println("thành công");
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		model.addAttribute("role", auth.getAuthorities());
 		model.addAttribute("username", auth.getName());

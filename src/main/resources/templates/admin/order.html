@@ -26,11 +26,11 @@
 <body>
 	<div id="header" th:replace="~{admin/menu}"></div>
 	<div class="container" style="min-height: 460px">
-		<div class="message" th:if="${session.message}">
+		<div class="message" th:if="${session.message != null}">
 			<div class="alert alert-success">
-				<strong>Sửa thành công!</strong> 
+				<strong>Sửa thành công!</strong>
 			</div>
-			
+			<th:block th:text="${@sessionService.removeMessage()}"></th:block>
 		</div>
 		<!--<div class="header-room-top">
 			 <div class="header-room-top-content">
@@ -42,49 +42,98 @@
 		</div>-->
 		<div class="header-room">
 			<div class="header-content">
-				<div class="header-content-item btn-outline-success">
-					<a class="header-content-item-button"> Tất cả (25)</a>
+				<div class="header-content-item btn-success">
+					<a th:href="@{/admin/orders}" class="header-content-item-button">Tất cả [[${sizeAll}]]</a>
 				</div>
 				<div class="header-content-item btn-success">
-					<a class="header-content-item-button">Phòng trống (12)</a>
+					<a th:href="@{/admin/orders?type=1}" class="header-content-item-button">Phòng trống ([[${roomAvailable}]])</a>
 				</div>
 				<div class="header-content-item btn-primary">
-					<a class="header-content-item-button">Đang ở (8)</a>
+					<a th:href="@{/admin/orders?type=2}" class="header-content-item-button">Đang ở ([[${roomUnAvailable}]])</a>
 				</div>
 				<div class="header-content-item btn-warning">
-					<a class="header-content-item-button ">Đã đặt (5)</a>
+					<a th:href="@{/admin/orders?type=3}" class="header-content-item-button ">Đã đặt ([[${roomReserved}]])</a>
 				</div>
 				<div class="header-content-item ">
-					<a class="header-content-item-button">Quá hạn (3)</a>
+					<a th:href="@{/admin/orders?type=4}" class="header-content-item-button ">Quá hạn ([[${roomOverdue}]])</a>
 				</div>
 				<div class="header-content-item ">
-					<a class="header-content-item-button">Chưa dọn (6)</a>
+					<a th:href="@{/admin/orders?type=5}"  class="header-content-item-button purpleColor">Chưa dọn ([[${roomNotClean}]])</a>
 				</div>
 				<div class="header-content-item btn-secondary">
-					<a class="header-content-item-button ">Đang sửa (1)</a>
+					<a th:href="@{/admin/orders?type=6}" class="header-content-item-button ">Đang sửa ([[${roomFix}]])</a>
 				</div>
-			
 			</div>
-			
 		</div>
 		<div class="content-room">
 			<div class="content-room-body">
-				<div class="content-room-top">Lầu 1</div>
+				<!-- <div class="content-room-top">Lầu 1</div> -->
+				<!-- 1 phòng còn trống -->
 				<div class="row content-room-center">
 					<div class="col-2" th:each="room : ${rooms}"
-						th:object="${room.value}">
-						<a class="detail-room"
-							th:href="@{|/admin/orders/detail-room/${room.key}|}">
+						th:object="${room.value}"
+						 th:switch="${room.value.status}">
+						<a th:case="'1'" class="detail-room " 
+						
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=1|}">
 							<div class="detail-room-item">
-								<p>Phòng [[*{idRoom}]]</p>
+								
+								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-circle-check"></i>
+								<p>(còn trống)</p>
+								
+							</div>
+						</a>
+						<!-- 2 phòng đang ở -->
+						<a th:case="'2'" class="detail-room blueColor" 
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=2|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{name}]]</p>
+								<i class="fa-solid fa-bed"></i>
+								<p>Nông Văn Đạt</p>
+								<p>10:30 26-07-2023</p>
+							</div>
+						</a>
+						<!-- 3 phòng đã đặt -->
+						<a th:case="'3'" class="detail-room yellowColor" 
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{name}]]</p>
+								<i class="fa-solid fa-file-pen"></i>
+								<p>Nông Văn Đạt</p>
+							</div>
+						</a>
+						<!-- 4 phòng quá hạn -->
+						<a th:case="'4'" class="detail-room redColor" 
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=4|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{name}]]</p>
+								<i class="fa-solid fa-x"></i>
+								<p>Nông Văn Đạt</p>
+							</div>
+						</a>
+						<!-- 5 phòng chưa dọn -->
+						<a th:case="'5'" class="detail-room purpleColor" 
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=5|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{name}]]</p>
+								<i class="fa-solid fa-broom"></i>
+								<p>Nông Văn Đạt</p>
+							</div>
+						</a>
+						<!-- 5 phòng đang sửa -->
+						<a th:case="'6'" class="detail-room greyColor" 
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=6|}">
+							<div class="detail-room-item">
+								<p>Phòng [[*{name}]]</p>
+								<i class="fa-solid fa-wrench"></i>
 								<p>Nông Văn Đạt</p>
 							</div>
 						</a>
 					</div>
 				</div>
 			</div>
-			<div class="content-room-body">
+			<!-- <div class="content-room-body">
 				<div class="content-room-top">Lầu 1</div>
 				<div class="row content-room-center">
 					<div class="col-2" th:each="room : ${rooms}"
@@ -92,22 +141,22 @@
 						<a class="detail-room"
 							th:href="@{|/admin/orders/detail-room/${room.key}|}">
 							<div class="detail-room-item">
-								<p>Phòng [[*{idRoom}]]</p>
+								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-circle-check"></i>
 								<p></p>
 							</div>
 						</a>
 					</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 
 	</div>
 
 	<div id="footer" th:replace="~{user/footer}"></div>
 	<!-- The Modal -->
-	<div class="modal " id="myModal">
-		<div class="modal-dialog modal-xl">
+	<div class="modal" id="myModal">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content"></div>
 		</div>
 	</div>
@@ -128,6 +177,8 @@
 				})
 
 			})
+			
+			
 </script>
 
 <script type="text/javascript">
