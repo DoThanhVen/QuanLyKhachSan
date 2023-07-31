@@ -17,4 +17,5 @@ public class Account {
 	boolean gender;
 	String address;
 	String phone;
+	
 }

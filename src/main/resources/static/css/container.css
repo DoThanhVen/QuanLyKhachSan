@@ -134,10 +134,6 @@
     transform: scale(1.02);
 }
 
-.room .room-order:hover button {
-    border-radius: 5px;
-}
-
 .room .room-order .heading {
     padding: 10px 0;
 }
@@ -154,22 +150,23 @@
 
 .room .room-order .content {
     padding: 10px 0;
+    height: 150px;
 }
 
-.room .room-order button {
-    position: absolute;
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%);
-    padding: 10px 28px;
+.room .room-order .check-room {
+    margin: 10px 0;
+}
+
+.room .room-order .submit {
+    padding: 10px 20px;
     background: blue;
     color: white;
     border: none;
     transition: all .5s ease;
 }
 
-.room .room-order button:hover {
-    border-radius: 5px;
+.room .room-order .submit:hover {
+    opacity: .5;
     transition: all .5s ease;
 }
 
@@ -262,9 +259,10 @@
 }
 
 @media screen and (max-width:750px) {
-    .service{
+    .service {
         padding: 0 60px;
     }
+
     .service>div {
         display: flex;
         flex-direction: column !important;
@@ -275,7 +273,7 @@
     }
 
     .service>div .content {
-        padding:0;
+        padding: 0;
         margin-bottom: 5px;
     }
 }

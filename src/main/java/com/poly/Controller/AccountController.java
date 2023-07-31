@@ -57,11 +57,6 @@ public class AccountController {
 //
 //	}
 
-	@RequestMapping("/auth/login/form")
-	public String form() {
-		return "user/sign-in";
-	}
-
 	@RequestMapping("/auth/login/success")
 	public String success(Model model) {
 		return "redirect:/";
@@ -82,19 +77,19 @@ public class AccountController {
 		} else {
 			model.addAttribute("message", "Vui lòng nhập đầy đủ thông tin");
 		}
-		return "redirect:/auth/login/form";
+		return "redirect:/sign-in";
 	}
 
 	@RequestMapping("/auth/logoff/success")
 	public String logout_success(Model model) {
 		model.addAttribute("message", "Đăng xuất thành công");
-		return "forward:/auth/login/form";
+		return "redirect:/sign-in";
 	}
 
 	@RequestMapping("/auth/logoff/error")
 	public String logout_error(Model model) {
 		model.addAttribute("message", "Đăng xuất thất bại");
-		return "forward:/auth/login/form";
+		return "redirect:/sign-in";
 	}
 
 	@RequestMapping("/auth/access/denied")
@@ -111,7 +106,7 @@ public class AccountController {
 	@RequestMapping("/oauth2/login/error")
 	public String googleError(Model model) {
 		model.addAttribute("message","Đăng nhập thất bại");
-		return "user/sign-in";
+		return "redirect:/sign-in";
 	}
 
 	// INFO-USER

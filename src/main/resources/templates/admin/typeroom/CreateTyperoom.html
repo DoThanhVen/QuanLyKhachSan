@@ -47,7 +47,7 @@ span {
 							<p id="selectedImageCount">Số ảnh đã chọn: 0</p>
 						</div>
 						<input type="file" name="images" id="imageInput" accept="image/*"
-							multiple style="display: none" onchange="countSelectedImages()">
+							multiple style="display: none" onchange="countSelectedImagesCreate()">
 
 						<button type="submit" class="btn btn-success"
 							th:formaction="@{|/createTyperoom|}">Lưu</button>
@@ -65,7 +65,7 @@ span {
 				console.error(error);
 			});
 
-			function countSelectedImages() {
+			function countSelectedImagesCreate() {
 			  const inputElement = document.getElementById('imageInput');
 			  const selectedImageCountElement = document.getElementById('selectedImageCount');
 			  if (inputElement.files && inputElement.files.length > 0) {

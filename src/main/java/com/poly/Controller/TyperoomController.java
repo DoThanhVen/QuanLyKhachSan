@@ -34,8 +34,6 @@ public class TyperoomController {
 	TyperoomDAO typeroomdao;
 	@Autowired
 	HttpServletRequest request;;
-	public final String UPLOAD_DIRECTORY = System.getProperty("user.dir")
-			+ "/src/main/resources/static/images/typeRooms";
 
 	@PostMapping("/createTyperoom")
 	public String addTyperoom(Model model, @RequestParam("images") List<MultipartFile> images) {
@@ -48,11 +46,9 @@ public class TyperoomController {
 			if (images.size() > 0) {
 				// Lấy tên file tải lên
 				List<String> nameToSave = new ArrayList<>();
-				StringBuilder fileNames = new StringBuilder();
 				for (MultipartFile file : images) {
-                    byte[] fileData = file.getBytes();
-                    String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
-					System.out.println(base64EncodedImage);
+					byte[] fileData = file.getBytes();
+					String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
 					nameToSave.add(base64EncodedImage);
 				}
 
@@ -64,21 +60,41 @@ public class TyperoomController {
 			typeroom.setImages(listImages);
 			typeroomdao.create(typeroom);
 		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi lưu file !");
 			e.printStackTrace();
 		}
 		return "redirect:/admin/management/";
 	}
 
 	@PostMapping("/updateTyperoom/{key}")
-	public String updateTyperoom(Model model, @Valid @ModelAttribute Typeroom typeroom, Errors errors,
+	public String updateTyperoom(Model model, @RequestParam("imagesUpdate") List<MultipartFile> images,
 			@PathVariable("key") String key) {
-		if (errors.hasErrors()) {
-			return "admin/managament";
-		} else {
+		try {
+			String[] listImages = null;
+			Typeroom typeroom = new Typeroom();
+			String name = request.getParameter("name");
+			Double price = Double.parseDouble(request.getParameter("price"));
+			String description = request.getParameter("description");
+			if (images != null) {
+				// Lấy tên file tải lên
+				List<String> nameToSave = new ArrayList<>();
+				for (MultipartFile file : images) {
+					byte[] fileData = file.getBytes();
+					String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
+					nameToSave.add(base64EncodedImage);
+				}
+				listImages = nameToSave.toArray(new String[0]);
+				typeroom.setImages(listImages);
+			} else {
+				typeroom.setImages(typeroomdao.findByKey(key).getImages());
+			}
+			typeroom.setName(name);
+			typeroom.setPrice(price);
+			typeroom.setDescription(description);
 			typeroomdao.update(key, typeroom);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return "redirect:/admin/management/" + key;
+		return "redirect:/admin/management";
 	}
 
 	@PostMapping("/deleteTyperoom/{key}")

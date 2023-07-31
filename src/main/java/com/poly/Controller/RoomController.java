@@ -24,7 +24,7 @@ public class RoomController {
 
 	@PostMapping("/createRoom")
 	public String addRoom(Model model, @ModelAttribute Room Room) {
-		Room.setStatus("good");
+		Room.setStatus("1");
 		Roomdao.create(Room);
 		return "redirect:/admin/management/";
 	}

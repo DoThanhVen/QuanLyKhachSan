@@ -23,7 +23,8 @@
 	justify-content: space-between;
 }
 
-.modal-content form .mb-3 input, select {
+.modal-content form .mb-3 input,
+select {
 	width: 70%;
 	height: 30px;
 	border: 1px solid lightgrey;
@@ -31,7 +32,8 @@
 	border-radius: 5px;
 }
 
-.modal-content form .mb-3 input:focus, select:focus {
+.modal-content form .mb-3 input:focus,
+select:focus {
 	outline: none;
 }
 
@@ -39,10 +41,12 @@
 	background-color: red;
 }
 
-#modalRegisterFormCreaServ .modal-dialog, #modalRegisterFormdeleteServ .modal-dialog,
-	#modalRegisterFormupdateServ .modal-dialog, #modalRegisterForm .modal-dialog,
-	#modalRegisterFormdelete .modal-dialog, #modalRegisterFormupdate .modal-dialog
-	{
+#modalRegisterFormCreaServ .modal-dialog,
+#modalRegisterFormdeleteServ .modal-dialog,
+#modalRegisterFormupdateServ .modal-dialog,
+#modalRegisterForm .modal-dialog,
+#modalRegisterFormdelete .modal-dialog,
+#modalRegisterFormupdate .modal-dialog {
 	transition: all .5s ease;
 	max-width: 70% !important;
 }
@@ -52,12 +56,16 @@
 }
 
 @media screen and (max-width:1000px) {
-	#modalRegisterFormCreaServ .modal-dialog, #modalRegisterFormdeleteServ .modal-dialog,
-		#modalRegisterFormupdateServ .modal-dialog, #modalRegisterForm .modal-dialog,
-		#modalRegisterFormdelete .modal-dialog, #modalRegisterFormupdate .modal-dialog
-		{
+
+	#modalRegisterFormCreaServ .modal-dialog,
+	#modalRegisterFormdeleteServ .modal-dialog,
+	#modalRegisterFormupdateServ .modal-dialog,
+	#modalRegisterForm .modal-dialog,
+	#modalRegisterFormdelete .modal-dialog,
+	#modalRegisterFormupdate .modal-dialog {
 		max-width: 90% !important;
 	}
+
 	.ck.ck-reset.ck-editor.ck-rounded-corners {
 		overflow: scroll;
 	}
@@ -76,7 +84,8 @@ thead {
 	width: calc(100% - 18px);
 }
 
-th, td {
+th,
+td {
 	padding: 5px 10px;
 	border: 1px solid #000;
 }
@@ -115,12 +124,22 @@ button.btn-success.btn {
 td {
 	position: relative;
 	overflow: hidden;
-	height: 70px;
 }
 
-td img {
+.tableService td img,
+.tableRoom td img {
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.flex-images {
+	width: 240px;
+}
+
+.flex-images img {
+	width: 70px;
+	height: 50px;
+	margin: 2px;
 }

@@ -55,7 +55,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 //		Điều khiển lỗi truy cập không đúng vai trò
 		http.exceptionHandling().accessDeniedPage("/auth/access/denied");
 		// Giao diện đăng nhập
-		http.formLogin().loginPage("/auth/login/form").loginProcessingUrl("/auth/login")// ACTION
+		http.formLogin().loginPage("/sign-in").loginProcessingUrl("/auth/login")// ACTION
 				.defaultSuccessUrl("/auth/login/success", false).failureHandler((request, response, exception) -> {
 					HttpSession session = request.getSession();
 					session.setAttribute("username", request.getParameter("username"));

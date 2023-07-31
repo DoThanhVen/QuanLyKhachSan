@@ -45,7 +45,8 @@ public class PageController {
 
 	// CUSTOMER
 	@GetMapping("/")
-	public String home() {
+	public String home(Model model) {
+		model.addAttribute("typerooms",typeroomdao.findAll());
 		return "user/index";
 	}
 
@@ -69,8 +70,9 @@ public class PageController {
 		return "user/forgot-password-finally";
 	}
 
-	@GetMapping("/infomation-room")
-	public String infomationRoom() {
+	@GetMapping("/infomation-room/{key}")
+	public String infomationRoom(Model model,@PathVariable("key") String key) {
+		model.addAttribute("inforoom",typeroomdao.findByKey(key));
 		return "user/infomation-room";
 	}
 
