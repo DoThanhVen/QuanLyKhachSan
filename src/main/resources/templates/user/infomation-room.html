@@ -28,8 +28,8 @@
 <body>
 	<div id="header" th:replace="@{user/menu}"></div>
 	<div class="heading">thông tin phòng:</div>
-	<div class="info-room" th:object="${inforoom}">
-		<div class="image-room">
+	<form class="info-room">
+		<div class="image-room" th:object="${inforoom}">
 			<div id="carouselExampleIndicators" class="carousel slide"
 				data-bs-ride="carousel">
 				<div class="carousel-inner">
@@ -55,7 +55,7 @@
 				</button>
 			</div>
 		</div>
-		<ul class="about-room">
+		<ul class="about-room" th:object="${inforoom}">
 			<li class="type">Loại phòng: [[*{name}]]
 				<ul class="menu list-group convenient">
 					<div th:if="*{name == 'Queen' || name == 'Superior'}">
@@ -70,7 +70,13 @@
 			<li class="price">Giá phòng: <a
 				th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}"></a>đ/Ngày
 			</li>
-			<li class="quantity">Số lượng người ở: 1-2 người</li>
+			<div th:if="*{name == 'Queen' || name == 'Superior'}">
+				<li class="quantity">Số lượng người ở: 1-4 người</li>
+			</div>
+			<div th:if="*{name == 'Standard'}">
+				<li class="quantity">Số lượng người ở: 1-2 người</li>
+			</div>
+
 			<li class="acreage">Diện tích: 20m<sup>2</sup></li>
 			<li>Tiện nghi:
 				<ul class="menu list-group convenient">
@@ -89,20 +95,32 @@
 		<div class="order">
 			<div class="check-in">
 				<label for="check-in">Ngày Nhận Phòng:</label> <input type="date"
-					id="check-in" name="date" class="date-input">
+					id="check-in" name="dateCheckin" class="date-input">
 			</div>
 			<div class="check-out mt-3">
 				<label for="check-out">Ngày Trả Phòng:</label> <input type="date"
-					id="check-out" name="date" class="date-input">
+					id="check-out" name="dateCheckout" class="date-input">
 			</div>
-			<div class="phone mt-3">
-				<label for="phone">Số điện thoại:</label> <input type="text"
-					id="phone" name="date" class="date-input"
-					placeholder="Số điện thoại">
+			<div>DANH SÁCH PHÒNG TRỐNG</div>
+			<div class="list-room-none mt-3">
+				<div th:if="${sizeRoom > 0}">
+					<div class="ListRoom" th:each="room : ${listroom}" th:object="${room.value}">
+						<input type="radio" th:id="${room.key}" th:value="${room.key}" name="checkedRoom" class="checkedRoom" style="display: none">
+						<label th:for="${room.key}"  th:text="${room.value.name}"></label>
+					</div>
+				</div>
+				<div th:if="${sizeRoom == 0}">
+					<b style="color: red">Không còn phòng trống!</b>
+				</div>
 			</div>
-			<button type="submit" id="order-room" class="mt-3">Đặt Phòng</button>
+			<b th:text="${message}" style="color: red"></b>
+			<button th:if="${sizeRoom > 0}"
+				th:formaction="@{|/user/orderRoom|}" type="submit" id="order-room"
+				class="mt-3">Đặt Phòng</button>
+			<button th:if="${sizeRoom == 0}" type="submit"
+				id="order-room" class="mt-3" disabled>Hết Phòng</button>
 		</div>
-	</div>
+	</form>
 	<div id="footer" th:replace="@{user/footer}"></div>
 </body>
 </html>

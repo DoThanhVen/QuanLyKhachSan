@@ -45,8 +45,8 @@
 		</ul>
 		<div class="contact">
 			<a th:unless="${#request.remoteUser}"
-				onclick="redirectURL('sign-up')" class="btn sign-in">Đăng Kí</a> <a
-				th:unless="${#request.remoteUser}" onclick="redirectURL('sign-in')"
+				onclick="redirectURL('/sign-up')" class="btn sign-in">Đăng Kí</a> <a
+				th:unless="${#request.remoteUser}" onclick="redirectURL('/sign-in')"
 				class="btn sign-in">Đăng Nhập</a>
 		</div>
 		<div class="contact" th:if="${#request.remoteUser}">
@@ -54,9 +54,9 @@
 				<li class="menu-item">[[${#request.remoteUser}]]
 					<ul class="sub-menu">
 						<li class="sub-menu-item"><a
-							onclick="redirectURL('info-user')">Thông Tin Cá Nhân</a></li>
+							onclick="redirectURL('/info-user')">Thông Tin Cá Nhân</a></li>
 						<li class="sub-menu-item"><a
-							onclick="redirectURL('order-history')">Thông Tin Phòng</a></li>
+							onclick="redirectURL('/order-history')">Thông Tin Phòng</a></li>
 					</ul>
 				</li>
 			</ul>

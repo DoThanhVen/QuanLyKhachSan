@@ -12,10 +12,10 @@ public class Account {
 	String password;
 	String fullname;
 	String cccd;
-	String email;
 	String[] role;
 	boolean gender;
 	String address;
 	String phone;
+	String image;
 	
 }

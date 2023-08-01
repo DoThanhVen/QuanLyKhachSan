@@ -109,39 +109,4 @@ public class AccountController {
 		return "redirect:/sign-in";
 	}
 
-	// INFO-USER
-	@GetMapping("/info-user")
-	public String infoUser(Model model) {
-		String username = (String) session.getAttribute("username");
-		Account list = dao.findByUsername(username);
-		String fullname = list.getFullname();
-		String cccd = list.getCccd();
-		boolean gender = list.isGender();
-		String phone = list.getPhone();
-		String address = list.getAddress();
-		Account account = new Account();
-		account.setUsername(username);
-		account.setFullname(fullname);
-		account.setCccd(cccd);
-		account.setGender(gender);
-		account.setPhone(phone);
-		account.setAddress(address);
-		model.addAttribute("form", account);
-		String key = dao.findKeyByUsername(username);
-		System.out.println("USER: " + account.getUsername());
-		System.out.println("KEY: " + key);
-		return "user/info-user";
-	}
-
-	@PostMapping("/info-user/update")
-	public String UpdateInfoUser(String key, Account account) {
-		String username = (String) session.getAttribute("username");
-		key = dao.findKeyByUsername(username);
-		Account list = dao.findByUsername(username);
-		System.out.println(key);
-		account.setUsername(username);
-		account.setRole(list.getRole());
-		dao.update(key, account);
-		return "redirect:/info-user";
-	}
 }

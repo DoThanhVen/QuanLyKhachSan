@@ -12,25 +12,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.poly.Bean.Order;
-import com.poly.Bean.OrderMap;
-import com.poly.DAO.OrderDAO;
+import com.poly.Bean.CustomerOrder;
+import com.poly.Bean.CustomerOrderMap;
+import com.poly.DAO.CustomerOrderDAO;
 
 @Controller
 public class OrderController {
 	@Autowired
-	OrderDAO dao;
+	CustomerOrderDAO dao;
 
 	@RequestMapping("/admin/orders")
 	public String HomeOrder(Model model) {
-		OrderMap orders = dao.findAll();
+		CustomerOrderMap orders = dao.findAll();
 		model.addAttribute("rooms", orders);
 		return "admin/order";
 	}
 
 	@RequestMapping("/admin/orders/detail-room/{id}")
 	public String showModal(@PathVariable("id") String id, Model model) {
-		Order order = dao.findByKey(id);
+		CustomerOrder order = dao.findByKey(id);
 		model.addAttribute("room", order);
 		return "admin/modal-detail-room";
 	}

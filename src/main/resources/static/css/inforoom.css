@@ -48,7 +48,7 @@
 	font-size: 16px;
 }
 
-.info-room .order input {
+.info-room .order input:not([type="radio"]) {
 	width: 100%;
 }
 
@@ -85,4 +85,45 @@
 #carouselExampleIndicators img {
 	width: 100%;
 	height: 450px;
+}
+
+.roomChecked label {
+	cursor: pointer;
+}
+
+.roomChecked {
+	cursor: pointer;
+	padding: 5px 10px;
+	background-color: blue;
+	color: white;
+	display: inline-block;
+}
+
+.list-room-none {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+
+button[disabled] {
+	cursor: not-allowed;
+}
+
+.list-room-none {
+	display: flex;
+	flex-direction: row;
+}
+
+.ListRoom label {
+	width: 70px;
+	padding: 5px 10px;
+	background-color: blue;
+	color: white;
+	margin: 3px;
+	transition: all .5s ease;
+	cursor: pointer;
+}
+
+.ListRoom input[type="radio"]:checked+label {
+	background-color: red;
 }
