@@ -14,6 +14,8 @@
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+
 <script src="https://code.jquery.com/jquery-3.7.0.js"
 	integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
 	crossorigin="anonymous"></script>
@@ -96,7 +98,7 @@
 						</a>
 						<!-- 3 phòng đã đặt -->
 						<a th:case="'3'" class="detail-room yellowColor" 
-							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}">
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}" data-toggle="modal">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-file-pen"></i>
@@ -155,8 +157,8 @@
 
 	<div id="footer" th:replace="~{user/footer}"></div>
 	<!-- The Modal -->
-	<div class="modal" id="myModal">
-		<div class="modal-dialog modal-lg">
+	<div class="modal fade" id="myModal" >
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content"></div>
 		</div>
 	</div>
@@ -172,9 +174,7 @@
 									.load($(this).attr('href'))
 						})
 
-				$('#btn').on('click', function() {
-					$('#myModal').modal("show")
-				})
+				
 
 			})
 			

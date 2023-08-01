@@ -36,7 +36,9 @@ public class CustomerController {
 		}
 		return "forward:/admin/customer";
 	}
+	
 
+	
 	@RequestMapping("/admin/editCustomer/{key}")
 	public String editCustomer(Model model, @PathVariable("key") String key) {
 		model.addAttribute("form", dao.findByKey(key));
@@ -50,4 +52,6 @@ public class CustomerController {
 		dao.delete(key);
 		return "redirect:/admin/customer";
 	}
+	
+	
 }

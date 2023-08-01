@@ -1,86 +1,168 @@
 <!-- The Modal -->
-<form>
+<form th:object="${order}">
 	<div class="modal-header" xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:th="http://www.thymeleaf.org">
-		<div th:if="${action == 'update'}">
-			<h4 class="modal-title">Thông tin phòng [[*{idRoom}]]</h4>
-			<p>
-				Ngày nhận phòng:<b style="margin-left: 10px;">[[*{timeCheckInDate}]]</b>
-			</p>
-		</div>
-		<div th:if="${action == 'create'}">
-			<h4 class="modal-title">Mở phòng</h4>
-			<p>
-				Ngày nhận phòng:<b style="margin-left: 10px;">[[*{timeCheckInDate}]]</b>
-			</p>
-		</div>
-
 		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 	</div>
 	<!-- Modal body -->
 	<div class="modal-body">
-		<i>Vui lòng nhập đầy đủ thông tin *</i>
+		<div class="row">
+			<div th:if="${action == 'update'}">
+				<h4  th:text="${keyOrder}"></h4>
+				<h4 class="modal-title">Thông tin phòng [[${roomOrder.name}]]</h4>
+				<p>
+					Ngày nhận phòng : <b style="margin-left: 10px;">[[${time}]]</b>
+				</p>
+			</div>
+			<div th:if="${action == 'create'}">
+				<h4 class="modal-title">Mở phòng</h4>
+				<p>
+					Ngày nhận phòng:<b style="margin-left: 10px;"></b>
+				</p>
+			</div>
+		</div>
 		<div>
 			<div class="row">
+				<h4>Thông tin khác hàng</h4>
 				<div class="col">
-					<div class="form-group">
-						<label for="name"> Tên khách hàng: </label> <input name="name"
-							th:value="Dat" class="form-group-item" />
+					<div class="form-group" hidden="true">
+						<label for="name">Tên khách hàng: </label> <input
+							th:value="${keyOrder}" id="keyOrder" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="phone"> Số điện thoại: </label> <input name="phone"
-							th:value="123123" class="form-group-item" />
+						<label for="name">Tên khách hàng: </label> <input
+							th:field="${customer.name}" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="CCCD"> CCCD/CMND: </label> <input th:value="123"
-							name="CCCD" class="form-group-item" />
+						<label for="phone">Số điện thoại: </label> <input
+							th:field="${customer.phone}" class="form-group-item" />
+					</div>
+					<div class="form-group">
+						<label for="CCCD"> CCCD/CMND: </label> <input
+							th:field="${customer.CCCD}" class="form-group-item" />
 					</div>
 					<div class="form-group">
 						<label for="numberPeople"> Số người: </label> <input
-							th:value="123" name="numberPeople" class="form-group-item" />
+							th:field="*{numberPeople}" class="form-group-item" />
 					</div>
 				</div>
-				<div class="col">
-					<!-- <div class="form-service">
-						<div class="form-group-serviced">
-							<p>Dịch vụ bạn đang sử dụng:</p>
-							<ul class="list-serviced" th:if=""
-								th:each="service:${room.service}" th:object="">
-								<li class="list-serviced-item" th:text="${service}"></li>
-							</ul>
-							<ul class="list-serviced" th:unless="${room.service}">
-								<li class="list-serviced-item">Không có dịch vụ</li>
-							</ul>
+				<div class="row" style="min-height: 400px;">
+					<div class="col">
+						<div class="form-service">
+							<div class="form-group-serviced">
+								<p>Dịch vụ:</p>
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Tên dịch vụ</th>
+											<th>Giá</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="service" th:each="serviceRoom : ${serviceRooms}"
+											th:object="${serviceRoom.value}">
+
+											<td th:text="*{name}"></td>
+											<td th:text="*{price}"></td>
+											<td><input th:value="${serviceRoom.key}"
+												class="checkbox" type="checkbox" name="cx" /></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="form-service-footer">
+									<button type="button" id="addService" class="btn btn-success">Thêm</button>
+									<p>[[${messageErrorService}]]</p>
+								</div>
+							</div>
+							<div class="form-bill">
+								<div class="form-bill-body">
+									<p></p>
+								</div>
+							</div>
 						</div>
-						<div th:if="${room.service}">
-							<input name="checkbox-service" type="checkbox"> <label
-								for="checkbox-service">Xe đưa đón sân bay</label>
-						</div> -->
-				</div>
-				<div class="form-bill">
-					<div class="form-bill-body">
-						<p></p>
+					</div>
+					<div class="col">
+						<div class="form-service">
+							<div class="form-group-serviced">
+								<p>Dịch vụ bạn sử dụng :</p>
+								<div class="container mt-3">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Tên dịch vụ</th>
+												<th>Giá</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="sv"></tr>
+											<tr class="sv" th:each="so : ${serviceOrder}"
+												th:object="${so.value}">
+												<td th:text="*{name}"></td>
+												<td th:text="*{price}"></td>
+												<td></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="form-bill">
+								<div class="form-bill-body">
+									<p></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	</div>
-
-	<!-- Modal footer -->
-	<div th:if="${action == 'update'}" class="modal-footer">
-		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
-			class="btn btn-success">Thanh toán</button>
-		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
-			class="btn btn-success">Lưu lại</button>
-		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-
-	</div>
-	<div th:if="${action == 'create'}" class="modal-footer">
-		<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
-			class="btn btn-success">Mở phòng</button>
-		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-
+		<!-- Modal footer -->
+		<div th:if="${action == 'update'}" class="modal-footer">
+			<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
+				class="btn btn-success">Thanh toán</button>
+			<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
+				class="btn btn-success">Lưu lại</button>
+			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+		</div>
+		<div th:if="${action == 'create'}" class="modal-footer">
+			<button th:formaction="@{|/admin/orders/create/${id}|}"
+				class="btn btn-success">Mở phòng</button>
+			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+		</div>
 	</div>
 </form>
+
+<script type="text/javascript">
+$(document).ready(
+		$('#addService').on("click",function(){
+			console.log("click")
+			var service = [];
+			$("input:checkbox[name='cx']:checked").each(function(){    
+				service.push($(this).val());
+				var tr = "<tr class='sv'>"+$("input:checkbox[name='cx']:checked").parents().eq(1).html()+"</tr>"
+				
+				var htmls = "<tr class='sv'>"+tr+"</tr>";
+				
+				 $('.sv:last-child').after(htmls)
+				
+				$("input:checkbox[name='cx']:checked").parents().eq(1).remove();
+				 $('.sv:last-child').find('.checkbox').remove();
+			});
+
+			var key = $('#keyOrder').val()
+			console.log("key ",key)
+			$.post( "/admin/orders/addService/"+key,
+				{
+				
+				service : service.join(",")
+				
+				}
+			); 
+
+			
+			
+			})	
+		)
+</script>
 

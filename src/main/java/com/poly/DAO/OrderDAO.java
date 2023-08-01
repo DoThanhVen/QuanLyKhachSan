@@ -1,11 +1,15 @@
 package com.poly.DAO;
 
+import java.util.Map.Entry;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.poly.Bean.Customer;
+import com.poly.Bean.CustomerMap;
 import com.poly.Bean.Order;
 import com.poly.Bean.OrderMap;
 
@@ -45,12 +49,25 @@ public class OrderDAO {
 	public Order findByIdRoom(String idRoom) {
 		OrderMap orderMap = findAll();
 		for (Order order : orderMap.values()) {
-			if (idRoom.equals(order.getIdRoom())) {
+			if(order.getRoom().keySet().toString().equals("["+idRoom+"]")) {
 				return order;
 			}
 		}
 		return null;
 	}
+	
 
+	
+	public String findKey(Order order) {
+		
+		OrderMap orderMap = findAll();
+		for (Entry<String, Order> o : orderMap.entrySet()) {
+			
+			if(o.getValue().equals(order) && o.getValue().getStatus().equals(order.getStatus())) {
+				return o.getKey();
+			}
+		}
+		return null;
+}
 }
 

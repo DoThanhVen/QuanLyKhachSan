@@ -34,7 +34,7 @@ public class AccountController {
 	UserDetailsServiceImpl service;
 	@Autowired
 	HttpSession session;
-
+	
 //	@PostMapping("/sign-up")
 //	public String register(Model model) {
 //		String username = request.getParameter("username");

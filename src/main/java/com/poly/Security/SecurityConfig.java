@@ -28,8 +28,8 @@ public class SecurityConfig {
 //		http.authorizeRequests().antMatchers("/home/index", "/auth/login/**", "/login/oauth2/code/**","/account/**").permitAll()
 //				.anyRequest().authenticated();
 				.authorizeHttpRequests((request) -> 
-				request.requestMatchers("/", "/auth/login/**","/sign-in/**","sign-up/**","/oauth2/login/**").permitAll()
-						.anyRequest().authenticated());
+				request.requestMatchers("/admin/**").authenticated()
+						.anyRequest().permitAll());
 		// Giao diện đăng nhập
 		http.formLogin(f -> f.loginPage("/sign-in").loginProcessingUrl("/auth/login")// ACTION
 				.defaultSuccessUrl("/auth/login/success", false).failureHandler((request, response, exception) -> {
@@ -38,7 +38,8 @@ public class SecurityConfig {
 					session.setAttribute("password", request.getParameter("password"));
 					response.sendRedirect("/auth/login/error");
 				}));
-//
+//		
+		
 		http.rememberMe(rememberme -> rememberme.rememberMeParameter("remember"));
 
 		// Đăng xuất
