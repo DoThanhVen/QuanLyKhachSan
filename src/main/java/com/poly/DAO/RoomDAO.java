@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.poly.Bean.Customer;
+import com.poly.Bean.CustomerMap;
 import com.poly.Bean.Room;
 import com.poly.Bean.RoomMap;
 @Repository
@@ -37,5 +39,20 @@ public class RoomDAO {
 	}
 	public void delete(String key) {
 		rest.delete(getUrl(key));
+	}
+	
+	public RoomMap findByKeyRoom(String keyRoom) {
+		RoomMap roomMap = findAll();
+		if (roomMap.containsKey(keyRoom)) {
+			return roomMap;
+		}
+		return null;
+	}
+	
+
+	public String getKeyRoomOpen() {
+		RoomMap roomMap = findAll();
+		
+		return null;
 	}
 }

@@ -53,15 +53,40 @@ public class ServiceroomDAO {
 		}
 		return null;
 	}
-	
+
 	// find service in order
-		public Serviceroom findServiceOrder(ServiceroomMap serviceroomMap, String key) {
-			for(Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
-				if(entry.getKey().equals(key)) {
-					return entry.getValue();
+	public Serviceroom findServiceOrder(ServiceroomMap serviceroomMap, String key) {
+		for (Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
+			if (entry.getKey().equals(key)) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
+
+	public ServiceroomMap findServiceNotOrder(ServiceroomMap serviceroomMap, ServiceroomMap serviceroomOrder) {
+		ServiceroomMap map = new ServiceroomMap();
+
+		for (Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
+			boolean check = true;
+			for (Entry<String, Serviceroom> entry2 : serviceroomOrder.entrySet()) {
+				if (entry.getKey().equals(entry2.getKey())) {
+					check = false;
 				}
 			}
-			return null;
+			if (check) {
+				map.put(entry.getKey(), entry.getValue());
+			}
+
 		}
-	
+		return map;
+	}
+
+	public double totalPriceServiceOrder(ServiceroomMap serviceroomMap) {
+		double total = 0;
+			for(Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
+				total += entry.getValue().getPrice();
+			}
+		return total;
+	}
 }

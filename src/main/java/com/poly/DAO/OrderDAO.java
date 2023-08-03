@@ -49,7 +49,7 @@ public class OrderDAO {
 	public Order findByIdRoom(String idRoom) {
 		OrderMap orderMap = findAll();
 		for (Order order : orderMap.values()) {
-			if(order.getRoom().keySet().toString().equals("["+idRoom+"]")) {
+			if(order.getRoom().keySet().toString().equals("["+idRoom+"]") && order.getStatus().equals("0")) {
 				return order;
 			}
 		}
@@ -59,7 +59,6 @@ public class OrderDAO {
 
 	
 	public String findKey(Order order) {
-		
 		OrderMap orderMap = findAll();
 		for (Entry<String, Order> o : orderMap.entrySet()) {
 			

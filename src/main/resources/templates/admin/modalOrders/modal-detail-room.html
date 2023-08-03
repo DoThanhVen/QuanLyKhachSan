@@ -7,18 +7,35 @@
 	<!-- Modal body -->
 	<div class="modal-body">
 		<div class="row">
-			<div th:if="${action == 'update'}">
-				<h4  th:text="${keyOrder}"></h4>
-				<h4 class="modal-title">Thông tin phòng [[${roomOrder.name}]]</h4>
-				<p>
-					Ngày nhận phòng : <b style="margin-left: 10px;">[[${time}]]</b>
-				</p>
+			<h4 class="modal-title">Thông tin phòng [[${roomOrder.name}]]</h4>
+			<div class="col">
+				<div>
+					<div th:if="${roomOrder != null}">
+						<p>123</p>
+						
+					</div>
+					<p>
+						Ngày nhận phòng : <b style="margin-left: 10px;">[[${time}]]</b>
+					</p>
+					<p>
+						Loại phòng : <b style="margin-left: 10px;">[[${typeRoom.name}]]</b>
+					</p>
+					<p>
+						Giá phòng : <b style="margin-left: 10px;">[[${priceRoom}]] VND
+							/ ngày</b>
+					</p>
+
+				</div>
 			</div>
-			<div th:if="${action == 'create'}">
-				<h4 class="modal-title">Mở phòng</h4>
-				<p>
-					Ngày nhận phòng:<b style="margin-left: 10px;"></b>
-				</p>
+			<div class="col">
+				<div>
+					<p>
+						Tổng thời gian ở : <b style="margin-left: 10px;">[[${totalTime}]]</b>
+					</p>
+					<p>
+						Ngày trả phòng dự kiến (đặt trước) : <b style="margin-left: 10px;"></b>
+					</p>
+				</div>
 			</div>
 		</div>
 		<div>
@@ -26,23 +43,25 @@
 				<h4>Thông tin khác hàng</h4>
 				<div class="col">
 					<div class="form-group" hidden="true">
-						<label for="name">Tên khách hàng: </label> <input
+						<label for="name">id </label> <input
 							th:value="${keyOrder}" id="keyOrder" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="name">Tên khách hàng: </label> <input
+						<label for="name">Tên khách hàng: </label> <input readonly
 							th:field="${customer.name}" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="phone">Số điện thoại: </label> <input
+						<label for="phone">Số điện thoại: </label> <input readonly
 							th:field="${customer.phone}" class="form-group-item" />
 					</div>
+				</div>
+				<div class="col">
 					<div class="form-group">
-						<label for="CCCD"> CCCD/CMND: </label> <input
+						<label for="CCCD"> CCCD/CMND: </label> <input readonly
 							th:field="${customer.CCCD}" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="numberPeople"> Số người: </label> <input
+						<label for="numberPeople"> Số người: </label> <input readonly
 							th:field="*{numberPeople}" class="form-group-item" />
 					</div>
 				</div>
@@ -70,9 +89,8 @@
 										</tr>
 									</tbody>
 								</table>
-								<div class="form-service-footer">
+								<div class="form-service-footer" th:if="${serviceRooms}">
 									<button type="button" id="addService" class="btn btn-success">Thêm</button>
-									<p>[[${messageErrorService}]]</p>
 								</div>
 							</div>
 							<div class="form-bill">
@@ -98,7 +116,7 @@
 										<tbody>
 											<tr class="sv"></tr>
 											<tr class="sv" th:each="so : ${serviceOrder}"
-												th:object="${so.value}">
+												th:object="${so.value}" th:value="${so.key}">
 												<td th:text="*{name}"></td>
 												<td th:text="*{price}"></td>
 												<td></td>
@@ -118,16 +136,11 @@
 			</div>
 		</div>
 		<!-- Modal footer -->
-		<div th:if="${action == 'update'}" class="modal-footer">
-			<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
-				class="btn btn-success">Thanh toán</button>
-			<button th:formaction="@{|/update/detail-room-serivce/${id}|}"
-				class="btn btn-success">Lưu lại</button>
-			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-		</div>
-		<div th:if="${action == 'create'}" class="modal-footer">
-			<button th:formaction="@{|/admin/orders/create/${id}|}"
-				class="btn btn-success">Mở phòng</button>
+		<div class="modal-footer">
+			<a id="btn-pay"
+				th:href="@{|/admin/orders/pay-form/${keyOrder}?idRoom=${id}}|"
+				class="btn btn-success">Thanh toán</a>
+
 			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
 		</div>
 	</div>
@@ -149,20 +162,29 @@ $(document).ready(
 				$("input:checkbox[name='cx']:checked").parents().eq(1).remove();
 				 $('.sv:last-child').find('.checkbox').remove();
 			});
-
+			console.log('value ',$('.sv').val())
 			var key = $('#keyOrder').val()
 			console.log("key ",key)
 			$.post( "/admin/orders/addService/"+key,
 				{
-				
 				service : service.join(",")
 				
-				}
-			); 
-
-			
-			
-			})	
+				},
+				); 
+			})
+						
 		)
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#btn-pay").on(
+			'click',
+			function(e) {
+				e.preventDefault();
+				$('.modal-content').load($(this).attr('href'))
+			})
+}
+
+)
 </script>
 

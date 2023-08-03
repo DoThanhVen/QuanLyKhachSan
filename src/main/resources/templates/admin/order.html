@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
@@ -33,6 +34,7 @@
 				<strong>Sửa thành công!</strong>
 			</div>
 			<th:block th:text="${@sessionService.removeMessage()}"></th:block>
+
 		</div>
 		<!--<div class="header-room-top">
 			 <div class="header-room-top-content">
@@ -45,25 +47,37 @@
 		<div class="header-room">
 			<div class="header-content">
 				<div class="header-content-item btn-success">
-					<a th:href="@{/admin/orders}" class="header-content-item-button">Tất cả [[${sizeAll}]]</a>
+					<a th:href="@{/admin/orders}" class="header-content-item-button">Tất
+						cả [[${sizeAll}]]</a>
 				</div>
 				<div class="header-content-item btn-success">
-					<a th:href="@{/admin/orders?type=1}" class="header-content-item-button">Phòng trống ([[${roomAvailable}]])</a>
+					<a th:href="@{/admin/orders?type=1}"
+						class="header-content-item-button">Phòng trống
+						([[${roomAvailable}]])</a>
 				</div>
 				<div class="header-content-item btn-primary">
-					<a th:href="@{/admin/orders?type=2}" class="header-content-item-button">Đang ở ([[${roomUnAvailable}]])</a>
+					<a th:href="@{/admin/orders?type=2}"
+						class="header-content-item-button">Đang ở
+						([[${roomUnAvailable}]])</a>
 				</div>
 				<div class="header-content-item btn-warning">
-					<a th:href="@{/admin/orders?type=3}" class="header-content-item-button ">Đã đặt ([[${roomReserved}]])</a>
+					<a th:href="@{/admin/orders?type=3}"
+						class="header-content-item-button ">Đã đặt
+						([[${roomReserved}]])</a>
 				</div>
 				<div class="header-content-item ">
-					<a th:href="@{/admin/orders?type=4}" class="header-content-item-button ">Quá hạn ([[${roomOverdue}]])</a>
+					<a th:href="@{/admin/orders?type=4}"
+						class="header-content-item-button ">Quá hạn
+						([[${roomOverdue}]])</a>
 				</div>
 				<div class="header-content-item ">
-					<a th:href="@{/admin/orders?type=5}"  class="header-content-item-button purpleColor">Chưa dọn ([[${roomNotClean}]])</a>
+					<a th:href="@{/admin/orders?type=5}"
+						class="header-content-item-button purpleColor">Chưa dọn
+						([[${roomNotClean}]])</a>
 				</div>
 				<div class="header-content-item btn-secondary">
-					<a th:href="@{/admin/orders?type=6}" class="header-content-item-button ">Đang sửa ([[${roomFix}]])</a>
+					<a th:href="@{/admin/orders?type=6}"
+						class="header-content-item-button ">Đang sửa ([[${roomFix}]])</a>
 				</div>
 			</div>
 		</div>
@@ -73,63 +87,66 @@
 				<!-- 1 phòng còn trống -->
 				<div class="row content-room-center">
 					<div class="col-2" th:each="room : ${rooms}"
-						th:object="${room.value}"
-						 th:switch="${room.value.status}">
-						<a th:case="'1'" class="detail-room " 
-						
+						th:object="${room.value}" th:switch="${room.value.status}">
+						<a th:case="'1'" class="detail-room "
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=1|}">
 							<div class="detail-room-item">
-								
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-circle-check"></i>
 								<p>(còn trống)</p>
-								
 							</div>
 						</a>
 						<!-- 2 phòng đang ở -->
-						<a th:case="'2'" class="detail-room blueColor" 
+						<a th:case="'2'" class="detail-room blueColor"
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=2|}">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-bed"></i>
-								<p>Nông Văn Đạt</p>
-								<p>10:30 26-07-2023</p>
+								<div th:with="order=${@orderDAO.findByIdRoom(room.key)}">
+									<p class="order-time-in">Lúc vào : [[${@format.formatTime(order.timeCheckInDate)}]]</p>
+									<div th:with="customer=${order.customer}">
+										<p th:each="c : ${customer}" th:object="${c.value}">
+											[[*{name}]]</p>
+									</div>
+								</div>
+
 							</div>
 						</a>
 						<!-- 3 phòng đã đặt -->
-						<a th:case="'3'" class="detail-room yellowColor" 
-							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}" data-toggle="modal">
+						<a th:case="'3'" class="detail-room yellowColor"
+							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}"
+							data-toggle="modal">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-file-pen"></i>
-								<p>Nông Văn Đạt</p>
+
 							</div>
 						</a>
 						<!-- 4 phòng quá hạn -->
-						<a th:case="'4'" class="detail-room redColor" 
+						<a th:case="'4'" class="detail-room redColor"
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=4|}">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-x"></i>
-								<p>Nông Văn Đạt</p>
+
 							</div>
 						</a>
 						<!-- 5 phòng chưa dọn -->
-						<a th:case="'5'" class="detail-room purpleColor" 
+						<a th:case="'5'" class="detail-room purpleColor"
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=5|}">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-broom"></i>
-								<p>Nông Văn Đạt</p>
+
 							</div>
 						</a>
 						<!-- 5 phòng đang sửa -->
-						<a th:case="'6'" class="detail-room greyColor" 
+						<a th:case="'6'" class="detail-room greyColor"
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=6|}">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-wrench"></i>
-								<p>Nông Văn Đạt</p>
+
 							</div>
 						</a>
 					</div>
@@ -157,15 +174,14 @@
 
 	<div id="footer" th:replace="~{user/footer}"></div>
 	<!-- The Modal -->
-	<div class="modal fade" id="myModal" >
+	<div class="modal fade" id="myModal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content"></div>
 		</div>
 	</div>
 </body>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
+	$(document).ready(function() {
 				$(".detail-room").on(
 						'click',
 						function(e) {
@@ -173,12 +189,9 @@
 							$('#myModal').modal('show').find('.modal-content')
 									.load($(this).attr('href'))
 						})
+			}
 
-				
-
-			})
-			
-			
+			)
 </script>
 
 <script type="text/javascript">

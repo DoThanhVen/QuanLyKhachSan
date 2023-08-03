@@ -22,5 +22,5 @@ public class Order {
 	private String status;
 	private ServiceroomMap serviceOrder;
 	private String userCreate;
-	
+	private PromotionMap promoMap;
 }
