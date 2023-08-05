@@ -66,26 +66,6 @@ public class PageController {
 		return "user/index";
 	}
 
-	@GetMapping("/sign-in")
-	public String login() {
-		return "user/sign-in";
-	}
-
-	@GetMapping("/sign-up")
-	public String signUp() {
-		return "user/sign-up";
-	}
-
-	@GetMapping("/forgot-password")
-	public String forgotPassword() {
-		return "user/forgot-password";
-	}
-
-	@GetMapping("/forgot-password-finally")
-	public String forgotPasswordFinally() {
-		return "user/forgot-password-finally";
-	}
-
 	@GetMapping("/infomation-room/{key}")
 	public String infomationRoom(Model model, @PathVariable("key") String key) {
 		model.addAttribute("inforoom", typeroomdao.findByKey(key));
@@ -93,11 +73,6 @@ public class PageController {
 		model.addAttribute("sizeRoom", roomdao.findByTypeRoom(key).size());
 		session.setAttribute("keyRoom", key);
 		return "user/infomation-room";
-	}
-
-	@GetMapping("/change-password")
-	public String changePassword() {
-		return "user/change-password";
 	}
 
 	@GetMapping("/order-history")

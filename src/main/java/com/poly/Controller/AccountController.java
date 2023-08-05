@@ -2,6 +2,7 @@ package com.poly.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.Bean.Account;
 import com.poly.Bean.AccountMap;
+import com.poly.Bean.MailInformation;
 import com.poly.DAO.AccountDAO;
+import com.poly.Service.MailServiceImplement;
+import com.poly.Service.PasswordUtil;
 import com.poly.Service.UserDetailsServiceImpl;
 
 @Controller
@@ -31,31 +36,151 @@ public class AccountController {
 	UserDetailsServiceImpl service;
 	@Autowired
 	HttpSession session;
+	@Autowired
+	MailServiceImplement mailServiceImplement;
+	@Autowired
+	PasswordUtil passwordUtil;
 
-//	@PostMapping("/sign-up")
-//	public String register(Model model) {
-//		String username = request.getParameter("username");
-//		String password = request.getParameter("password");
-//		String repassword = request.getParameter("repassword");
-//		if (!password.equals(repassword)) {
-//			model.addAttribute("message", "Đăng kí thất bại");
-//			return "user/sign-up";
-//		} else {
-//			try {
-//				Account account = new Account(username, repassword, username, password, null, repassword, false, "");
-//				dao.create(account);
-//				System.out.print("tc");
-//				model.addAttribute("message", "Đăng kí thành công");
-//				return "redirect:/sign-in";
-//
-//			} catch (Exception e) {
-//				model.addAttribute("message", "Đăng kí thất bại");
-//				System.out.print("tb");
-//				return "user/sign-up";
-//			}
-//		}
-//
-//	}
+	@GetMapping("/sign-up")
+	public String signUp() {
+		return "user/sign-up";
+	}
+
+	@GetMapping("/sign-in")
+	public String login() {
+		return "user/sign-in";
+	}
+
+	@GetMapping("/forgot-password")
+	public String forgotPassword() {
+		return "user/forgot-password";
+	}
+
+	@GetMapping("/forgot-password-finally")
+	public String forgotPasswordFinal() {
+		return "user/forgot-password-finally";
+	}
+
+	@GetMapping("/change-password")
+	public String changePassword() {
+		return "user/change-password";
+	}
+
+	@PostMapping("/sign-up")
+	public String register(Model model) {
+		Account ac = new Account();
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String repassword = request.getParameter("repassword");
+		if (!username.equals("") && !password.equals("") && !repassword.equals("")) {
+			if (!password.equals(repassword)) {
+				model.addAttribute("message", "Xác thực mật khẩu không đúng ");
+			} else {
+				if (dao.findByUsername(username) == null) {
+					if (password.length() < 6 || password.length() > 20) {
+						model.addAttribute("message", "Password từ 6 đến 20 kí tự!");
+					} else {
+						try {
+							ac.setAddress("");
+							ac.setCccd("");
+							ac.setRole(new String[] { "USER" });
+							ac.setImage("");
+							ac.setPhone("");
+							ac.setGender(false);
+							ac.setFullname("");
+							ac.setPassword(password);
+							ac.setUsername(username);
+							dao.create(ac);
+							model.addAttribute("message", "Đăng kí thành công!");
+						} catch (Exception e) {
+							model.addAttribute("message", "Đăng kí thất bại!");
+							e.printStackTrace();
+						}
+					}
+				} else {
+					model.addAttribute("message", "Tài khoản đã tồn tại!");
+				}
+			}
+		} else {
+			model.addAttribute("message", "Vui lòng nhập đầy đủ thông tin!");
+		}
+		return "forward:/register";
+	}
+
+	private String retrievePasswordVerifycode = "";
+	private String currentUsernameForgotPassword = "";
+
+	@RequestMapping("/account/retrieve-password")
+	public String retrievePassword(Model model) {
+		String email = request.getParameter("email");
+		if (email != null || !email.equals("")) {
+			try {
+				Account ac = dao.findByUsername(email);
+				if (ac != null) {
+					currentUsernameForgotPassword = email;
+					MailInformation mail = new MailInformation();
+					mail.setTo(ac.getUsername());
+					mail.setSubject("Quên mật khẩu");
+					String verifyCode = String.valueOf(passwordUtil.generatePassword(6));
+					retrievePasswordVerifycode = verifyCode;
+					mail.setBody("Mã xác nhận của bạn là: \r\n" + verifyCode);
+					mailServiceImplement.send(mail);
+					model.addAttribute("message", "Mã xác nhận đã được gửi đi, vui lòng kiểm tra email!");
+				} else {
+					model.addAttribute("message", "Tài khoản không tồn tại!");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("message", "Có lỗi xảy ra!");
+			}
+		} else {
+			model.addAttribute("message", "Vui lòng nhập email!");
+		}
+		return "forward:/forgot-password";
+	}
+
+	@RequestMapping("/account/code-retrieve-password")
+	public String submitNewPassword(Model model, @RequestParam("verifyCode") String verifyCode) {
+		if (retrievePasswordVerifycode != "") {
+			if (!verifyCode.equals(retrievePasswordVerifycode)) {
+				model.addAttribute("message", "Mã xác nhận không đúng, vui lòng kiểm tra lại!");
+				return "forward:/forgot-password";
+			} else {
+				return "user/forgot-password-finally";
+			}
+		} else {
+			model.addAttribute("message", "Vui lòng lấy mã trước khi sang bước tiếp theo!");
+			return "user/forgot-password";
+		}
+	}
+
+	@RequestMapping("/account/submit-retrieve-password")
+	public String RetrieveChange(Model model, @RequestParam("newPass") String newPass,
+			@RequestParam("rePass") String rePass) {
+		if (newPass == "" || rePass == "") {
+			model.addAttribute("message", "Vui lòng nhập đầy đủ thông tin!");
+		} else {
+			if (newPass.length() < 6 || newPass.length() > 20) {
+				model.addAttribute("message", "Password từ 6 đến 20 kí tự!");
+			} else {
+				try {
+					if (!newPass.equals(rePass)) {
+						model.addAttribute("message", "Xác nhận mật khẩu chưa chính xác!");
+					} else {
+						Account ac = dao.findByUsername(currentUsernameForgotPassword);
+						String key = dao.findKeyByUsername(currentUsernameForgotPassword);
+						ac.setPassword(newPass);
+						dao.update(key, ac);
+						model.addAttribute("message", "Đổi mật khẩu thành công!");
+					}
+				} catch (Exception e) {
+					model.addAttribute("message", "Đổi mật khẩu thất bại!");
+				}
+			}
+		}
+		return "user/forgot-password-finally";
+
+	}
 
 	@RequestMapping("/auth/login/success")
 	public String success(Model model) {
@@ -102,10 +227,10 @@ public class AccountController {
 		service.loginFromOAuth2(oauth2);
 		return "redirect:/";
 	}
-	
+
 	@RequestMapping("/oauth2/login/error")
 	public String googleError(Model model) {
-		model.addAttribute("message","Đăng nhập thất bại");
+		model.addAttribute("message", "Đăng nhập thất bại");
 		return "redirect:/sign-in";
 	}
 
