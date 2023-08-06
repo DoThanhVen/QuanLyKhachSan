@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html xmlns="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,39 +10,58 @@
 	<div id="header" th:replace="@{user/menu}"></div>
 	<div class="content">
 		<div class="heading">Thông Tin Khách Hàng</div>
-<div style="color: red; text-align: center">[[${message}]]</div>
-		<form th:object="${form}">
+		<form th:object="${form}" method="post">
 			<div class="mb-3">
-				<label for="username">Tài Khoản:</label> <input type="text" name
-					id="username" th:field="*{username}" readonly>
+				<label for="inputImage">Hình Ảnh: </label> <input type="file"
+					class="form-control" id="inputImage" aria-describedby="emailHelp"
+					name="role" style="display: none"> <input type="hidden"
+					id="srcImg" th:field="*{image}"></input> <label for="inputImage"
+					id="chooseImage">Chọn Ảnh</label>
+				<div class="formImage mt-3">
+					<img style="width: 300px" th:src="*{image}" id="imgload">
+				</div>
 			</div>
 			<div class="mb-3">
-				<label for="fullname">Chủ Tài Khoản:</label> <input type="text" name
-					id="fullname" th:field="*{fullname}">
+				<label for="fullname">Chủ Tài Khoản:</label> <input type="text"
+					th:field="*{fullname}" id="fullname">
 			</div>
 			<div class="mb-3">
-				<label for="security">CCCD/CMND:</label> <input type="text" name
-					id="security" th:field="*{cccd}">
+				<label for="security">CCCD/CMND:</label> <input type="text"
+					th:field="*{cccd}" id="security" placeholder>
 			</div>
 			<div class="mb-3">
-				<label>Giới Tính:</label><input type="radio" th:field="*{gender}"
-					name="gender" value="true" id="male"><label for="male">Nam</label><input
-					type="radio" th:field="*{gender}" name="gender" value="false"
-					id="female"><label for="female">Nữ</label>
+				<label>Giới Tính:</label> <input type="radio" name="gender"
+					id="male" th:field="*{gender}" value="true"><label
+					for="male">Nam</label> <input type="radio" name="gender"
+					id="female" th:field="*{gender}" value="false"><label
+					for="female">Nữ</label>
 			</div>
 			<div class="mb-3">
-				<label for="phone">Số Điện Thoại:</label> <input type="text" name
-					id="phone" th:field="*{phone}">
+				<label for="phone">Số Điện Thoại:</label> <input type="text"
+					th:field="*{phone}" id="phone">
 			</div>
 			<div class="mb-3">
 				<label for="address">Địa Chỉ Thường Trú:</label> <input type="text"
-					id="address" th:field="*{address}">
+					th:field="*{address}" id="address">
 			</div>
-			<button type="submit"
-				th:formaction="@{|/info-user/update/${key}|}"
-				class="btn btn-success">Lưu Thay Đổi</button>
+			<button type="submit" class="changeInfo"
+				th:formaction="@{|/info-user/update|}">Lưu thay đổi</button>
 		</form>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
 </body>
+
+<script>
+	document.querySelector("#inputImage").addEventListener("change", readFile);
+
+	function readFile() {
+		const FR = new FileReader();
+		FR.addEventListener("load", function(evt) {
+			document.querySelector("#imgload").src = evt.target.result;
+			document.querySelector("#srcImg").value = evt.target.result;
+			/* alert(document.querySelector("#srcImg").value); */
+		});
+		FR.readAsDataURL(this.files[0]);
+	}
+</script>
 </html>
