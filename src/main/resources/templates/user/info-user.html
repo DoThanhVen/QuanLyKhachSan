@@ -10,7 +10,7 @@
 	<div id="header" th:replace="@{user/menu}"></div>
 	<div class="content">
 		<div class="heading">Thông Tin Khách Hàng</div>
-		<form th:object="${form}" method="post">
+		<form th:object="${form}">
 			<div class="mb-3">
 				<label for="inputImage">Hình Ảnh: </label> <input type="file"
 					class="form-control" id="inputImage" aria-describedby="emailHelp"
@@ -27,7 +27,7 @@
 			</div>
 			<div class="mb-3">
 				<label for="security">CCCD/CMND:</label> <input type="text"
-					th:field="*{cccd}" id="security" placeholder>
+					th:field="*{cccd}" id="cccd" placeholder>
 			</div>
 			<div class="mb-3">
 				<label>Giới Tính:</label> <input type="radio" name="gender"
@@ -44,9 +44,8 @@
 				<label for="address">Địa Chỉ Thường Trú:</label> <input type="text"
 					th:field="*{address}" id="address">
 			</div>
-			<button type="submit" class="changeInfo"
-				th:formaction="@{|/info-user/update|}">Lưu thay đổi</button>
 		</form>
+		<button type="submit" class="changeInfo">Lưu thay đổi</button>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
 </body>
@@ -59,9 +58,55 @@
 		FR.addEventListener("load", function(evt) {
 			document.querySelector("#imgload").src = evt.target.result;
 			document.querySelector("#srcImg").value = evt.target.result;
-			/* alert(document.querySelector("#srcImg").value); */
 		});
 		FR.readAsDataURL(this.files[0]);
 	}
+
+	function isValidPhoneNumber(phoneNumber) {
+		  const phoneRegex = /^(0|\+84)(\s|\.|_|-)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.|_|-)?(\d{3})(\s|\.|_|-)?(\d{3})$/;
+		  return phoneRegex.test(phoneNumber);
+	}
+	
+	$(document).ready(function() {
+		$(".changeInfo").click(function() {
+			const fullname = $("#fullname").val(); 
+			const cccd = $("#cccd").val();
+			const phone = $("#phone").val();
+			const address = $("#address").val();
+			const image = $("#srcImg").val();
+			const gender = $("input[name='gender']:checked").val();
+			
+			if(isValidPhoneNumber(phone) === false){
+				thongBao('Thông Báo','Số điện thoại không hợp lệ!',
+				'error');
+				return;
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/info-user/update",
+				data:{
+					fullname: fullname,
+					cccd : cccd,
+					phone : phone,
+					address : address,
+					image : image,
+					gender : gender
+				},
+				success : function(response) {
+					if (response === true) {
+						thongBao('Thông Báo','Thay đổi thông tin thành công!',
+								'success');
+					} else {
+						thongBao('Thông Báo','Thay đổi thông tin thất bại!',
+								'error');
+					}
+				},
+				error : function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		});
+	});
 </script>
 </html>

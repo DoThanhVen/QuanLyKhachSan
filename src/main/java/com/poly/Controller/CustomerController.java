@@ -26,6 +26,7 @@ public class CustomerController {
 		String[] roles = checkAccount.getRole();
 		account.setPassword(checkAccount.getPassword());
 		account.setRole(roles);
+		account.setImage(checkAccount.getImage());
 		if (key != null) {
 			dao.update(key, account);
 			model.addAttribute("message", "Cập nhật thông tin thành công !");

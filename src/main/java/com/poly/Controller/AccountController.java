@@ -1,6 +1,13 @@
 package com.poly.Controller;
 
+import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Positive;
 
@@ -73,7 +80,7 @@ public class AccountController {
 	public boolean changePassword(@RequestParam("password") String password,
 			@RequestParam("repassword") String repassword) {
 		if (password.equals(repassword)) {
-			String key = dao.findKeyByUsername((String)session.getAttribute("username"));
+			String key = dao.findKeyByUsername((String) session.getAttribute("username"));
 			Account account = dao.findByKey(key);
 			account.setPassword(password);
 			dao.update(key, account);
@@ -219,7 +226,7 @@ public class AccountController {
 		} else {
 			model.addAttribute("message", "Vui lòng nhập đầy đủ thông tin");
 		}
-		return "redirect:/sign-in";
+		return "user/sign-in";
 	}
 
 	@RequestMapping("/auth/logoff/success")
@@ -250,40 +257,53 @@ public class AccountController {
 		model.addAttribute("message", "Đăng nhập thất bại");
 		return "redirect:/sign-in";
 	}
-	
-	// INFO-User
-		@GetMapping("/info-user")
-		public String infoUser(Model model) {
-			String username = (String) session.getAttribute("username");
-			Account list = dao.findByUsername(username);
-			String fullname = list.getFullname();
-			String cccd = list.getCccd();
-			boolean gender = list.isGender();
-			String phone = list.getPhone();
-			String address = list.getAddress();
-			String image = list.getImage();
-			Account account = new Account();
-			account.setUsername(username);
-			account.setFullname(fullname);
-			account.setCccd(cccd);
-			account.setGender(gender);
-			account.setPhone(phone);
-			account.setAddress(address);
-			account.setImage(image);
-			model.addAttribute("form", account);
-			return "user/info-user";
-		}
 
-		@PostMapping("/info-user/update")
-		public String UpdateInfoUser(String key, Account account) {
-			String username = (String) session.getAttribute("username");
-			key = dao.findKeyByUsername(username);
-			Account list = dao.findByUsername(username);
-			account.setUsername(username);
-			account.setPassword(list.getPassword());
-			account.setRole(list.getRole());
-			dao.update(key, account);
-			return "redirect:/info-user";
+	// INFO-User
+	@GetMapping("/info-user")
+	public String infoUser(Model model) {
+		String username = (String) session.getAttribute("username");
+		Account list = dao.findByUsername(username);
+		String fullname = list.getFullname();
+		String cccd = list.getCccd();
+		boolean gender = list.isGender();
+		String phone = list.getPhone();
+		String address = list.getAddress();
+		String image = list.getImage();
+		Account account = new Account();
+		account.setUsername(username);
+		account.setFullname(fullname);
+		account.setCccd(cccd);
+		account.setGender(gender);
+		account.setPhone(phone);
+		account.setAddress(address);
+		account.setImage(image);
+		model.addAttribute("form", account);
+		return "user/info-user";
+	}
+
+	@PostMapping("/info-user/update")
+	@ResponseBody
+	public boolean UpdateInfoUser(Model model,
+            @RequestParam("fullname") String fullname,
+            @RequestParam("cccd") String cccd,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            @RequestParam("image") String image,
+            @RequestParam("gender") boolean gender) {
+		String key = dao.findKeyByUsername((String) session.getAttribute("username"));
+		Account account = dao.findByKey(key);
+		try {
+				account.setAddress(address);
+				account.setPhone(phone);
+				account.setFullname(fullname);
+				account.setImage(image);
+				account.setGender(gender);
+				dao.update(key, account);
+				return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
+	}
 
 }

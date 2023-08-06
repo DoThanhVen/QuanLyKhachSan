@@ -12,6 +12,10 @@
 		<div class="heading">Thông Tin Khách Hàng</div>
 		<div style="color: red; text-align: center">[[${message}]]</div>
 		<form th:object="${form}">
+			<div class="formImage" th:if="*{image}">
+				<img style="width: 300px" th:src="*{image}" id="imgload"
+					alt="ẢNH KHÁCH HÀNG">
+			</div>
 			<div class="mb-3">
 				<label for="username">Tài Khoản:</label> <input type="text" name
 					id="username" th:field="*{username}" readonly>
@@ -41,7 +45,7 @@
 			<button type="submit"
 				th:formaction="@{|/admin/updateCustomer/${key}|}"
 				class="btn btn-success">Edit</button>
-				<button type="submit"
+			<button type="submit"
 				th:formaction="@{|/admin/deleteCustomer/${key}|}"
 				class="btn btn-danger">Delete</button>
 		</form>
@@ -72,5 +76,18 @@
 		</table>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
+	<script type="text/javascript">
+		document.querySelector("#inputImage").addEventListener("change",
+				readFile);
+
+		function readFile() {
+			const FR = new FileReader();
+			FR.addEventListener("load", function(evt) {
+				document.querySelector("#imgload").src = evt.target.result;
+				document.querySelector("#srcImg").value = evt.target.result;
+			});
+			FR.readAsDataURL(this.files[0]);
+		}
+	</script>
 </body>
 </html>

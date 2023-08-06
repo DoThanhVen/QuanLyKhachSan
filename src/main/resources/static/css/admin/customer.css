@@ -8,7 +8,7 @@
 	margin-bottom: 20px;
 }
 
-.container form .mb-3:not(:nth-child(4)) {
+.container form .mb-3:not(:nth-child(5)) {
 	display: flex;
 	justify-content: space-between;
 }
@@ -24,15 +24,15 @@
 	outline: none;
 }
 
-.container form .mb-3:nth-child(4) #male {
+.container form .mb-3:nth-child(5) #male {
 	margin-left: 130px;
 }
 
-.container form .mb-3:nth-child(4) #female {
+.container form .mb-3:nth-child(5) #female {
 	margin-left: 20px;
 }
 
-.container form .mb-3:nth-child(4) input[type="radio"] {
+.container form .mb-3:nth-child(5) input[type="radio"] {
 	margin-right: 5px;
 }
 
@@ -47,11 +47,9 @@ table.table {
 	margin-bottom: 10px;
 }
 
-.btn-success,
-.btn-danger {
+.btn-success, .btn-danger {
 	width: 70px;
 }
-
 
 table {
 	table-layout: fixed;
@@ -66,8 +64,7 @@ thead {
 	width: calc(100% - 18px);
 }
 
-th,
-td {
+th, td {
 	padding: 5px 10px;
 	border: 1px solid #000;
 }
@@ -113,4 +110,9 @@ td img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.formImage {
+	text-align: center;
+	padding:10px;
 }
