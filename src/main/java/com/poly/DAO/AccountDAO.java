@@ -65,9 +65,11 @@ public class AccountDAO {
 
 	public Account findByUsername(String username) {
 		AccountMap accountMap = findAll();
-		for (Account account : accountMap.values()) {
-			if (username.equals(account.getUsername())) {
-				return account;
+		if (accountMap != null) {
+			for (Account account : accountMap.values()) {
+				if (username.equals(account.getUsername())) {
+					return account;
+				}
 			}
 		}
 		return null;

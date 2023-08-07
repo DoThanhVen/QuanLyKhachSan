@@ -4,9 +4,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
-
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,53 +34,70 @@ import jakarta.validation.Valid;
 public class TyperoomController {
 	@Autowired
 	TyperoomDAO typeroomdao;
-
-	@RequestMapping(value = "/createTyperoom", method = RequestMethod.POST)
-	public String addTyperoom(Model model, @Valid @ModelAttribute Typeroom typeroom, Errors errors,
-			@RequestParam("images") List<MultipartFile> images) {
-		String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images/typeRooms";
+	@Autowired
+	HttpServletRequest request;;
+	
+	@PostMapping("/createTyperoom")
+	public String addTyperoom(Model model, @RequestParam("images") List<MultipartFile> images) {
 		try {
-			if (errors.hasErrors()) {
-				TyperoomMap type = typeroomdao.findAll();
-				model.addAttribute("listtype", type);
-				return "admin/management";
-			} else {
-				String[] listImages = null;
-				if (!images.isEmpty()) {
-					Path uploadDirPath = Paths.get(UPLOAD_DIRECTORY);
-
-					if (!Files.exists(uploadDirPath)) {
-						Files.createDirectories(uploadDirPath);
-					}
-					// Lấy tên file tải lên
-					List<String> nameToSave = new ArrayList<>();
-					StringBuilder fileNames = new StringBuilder();
-					for (MultipartFile file : images) {
-						String fileName = file.getOriginalFilename();
-						nameToSave.add(fileName);
-						Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName);
-						fileNames.append(fileName);
-						Files.write(fileNameAndPath, file.getBytes());
-					}
-
-					listImages = nameToSave.toArray(new String[0]);
+			String[] listImages = null;
+			Typeroom typeroom = new Typeroom();
+			String name = request.getParameter("name");
+			Double price = Double.parseDouble(request.getParameter("price"));
+			String description = request.getParameter("description");
+			if (images.size() > 0) {
+				// Lấy tên file tải lên
+				List<String> nameToSave = new ArrayList<>();
+				for (MultipartFile file : images) {
+					byte[] fileData = file.getBytes();
+					String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
+					nameToSave.add(base64EncodedImage);
 				}
-				typeroomdao.create(typeroom);
+
+				listImages = nameToSave.toArray(new String[0]);
 			}
+			typeroom.setName(name);
+			typeroom.setPrice(price);
+			typeroom.setDescription(description);
+			typeroom.setImages(listImages);
+			typeroomdao.create(typeroom);
 		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi lưu file !");
 			e.printStackTrace();
 		}
 		return "redirect:/admin/management/";
 	}
 
 	@PostMapping("/updateTyperoom/{key}")
-	public String updateTyperoom(Model model, @Valid @ModelAttribute Typeroom typeroom, Errors errors,
+	public String updateTyperoom(Model model, @RequestParam("imagesUpdate") List<MultipartFile> images,
 			@PathVariable("key") String key) {
-		if (errors.hasErrors()) {
-			return "admin/managament";
-		} else {
+		try {
+			String[] listImages = null;
+			Typeroom typeroom = new Typeroom();
+			String name = request.getParameter("name");
+			Double price = Double.parseDouble(request.getParameter("price"));
+			String description = request.getParameter("description");
+			System.out.println("Số ảnh được chọn: "+images.size());
+			if (images.size() > 0) {
+				// Lấy tên file tải lên
+				List<String> nameToSave = new ArrayList<>();
+				for (MultipartFile file : images) {
+					byte[] fileData = file.getBytes();
+					String base64EncodedImage = Base64.getEncoder().encodeToString(fileData);
+					nameToSave.add(base64EncodedImage);
+					System.out.println("Tên ảnh: "+base64EncodedImage);
+				}
+
+				listImages = nameToSave.toArray(new String[0]);
+			}else {
+				listImages = typeroomdao.findByKey(key).getImages();
+			}
+			typeroom.setName(name);
+			typeroom.setPrice(price);
+			typeroom.setDescription(description);
+			typeroom.setImages(listImages);
 			typeroomdao.update(key, typeroom);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return "redirect:/admin/management/" + key;
 	}

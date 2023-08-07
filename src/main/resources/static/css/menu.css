@@ -104,21 +104,26 @@ nav .contact ul li.menu-item:hover {
 }
 
 nav .contact ul li.menu-item:hover .sub-menu {
+	pointer-events: auto;
 	opacity: 1;
-	transform: translateY(10px);
+	transform: translateY(0px);
 	transition: opacity .5s, transform .5s;
 }
 
 nav .contact .sub-menu {
+	pointer-events: none;
 	opacity: 0;
 	position: absolute;
 	left: 0;
+	top: 100%;
 	padding: 0;
 	transform: translateY(30px);
 	background-color: white;
 	box-shadow: 0 0 10px black;
 	width: 200px;
 	border-radius: 5px;
+	transition: opacity 0.3s, transform 0.3s;
+	opacity: 0;
 }
 
 nav .contact .sub-menu li {
@@ -224,7 +229,6 @@ nav .menu.active li:hover {
 		display: none;
 		transition: all .5s ease;
 	}
-
 	nav .bx-list-ul {
 		display: block;
 	}
@@ -234,7 +238,6 @@ nav .menu.active li:hover {
 	nav .menu {
 		margin-left: 100px;
 	}
-
 	nav .contact ul {
 		padding: 0;
 	}
@@ -252,16 +255,13 @@ nav .menu.active li:hover {
 	}
 }
 
-
 @media screen and (max-width:556px) {
 	nav .menu {
 		display: none;
 	}
-
 	nav .logo {
 		margin-left: 5px;
 	}
-
 	nav .contact ul {
 		padding: 0;
 	}
@@ -282,13 +282,17 @@ nav .menu.active li:hover {
 	z-index: 9999;
 }
 
-#loading-container .loader {
-	width: 200px;
-	height: 200px;
-	background: url('/images/thank-you.gif') no-repeat center center;
-	background-size: contain;
+#loading-container i {
+	color: red;
+	font-size: 40px;
+	animation: scroll 2s infinite;
 }
 
+@keyframes scroll { 100% {
+	transform: rotate(360deg);
+}
+
+}
 a {
 	cursor: pointer;
 }

@@ -8,7 +8,7 @@
 	border-radius: 5px;
 }
 
-.content .mb-3 {
+.content .mb-3:not(:nth-child(1)) {
 	display: flex;
 	justify-content: space-between;
 }
@@ -39,6 +39,18 @@
 	margin-right: 5px;
 }
 
+.content .mb-3:last-child() {
+	display: flex;
+}
+
+#chooseImage {
+	padding: 5px 10px;
+	border: 1px solid blue;
+	color: blue;
+	font-size: 15px;
+	background: transparent;
+}
+
 .content>.heading {
 	text-align: center;
 	font-size: 25px;
@@ -48,7 +60,7 @@
 }
 
 @media screen and (max-width:640px) {
-	.content{
+	.content {
 		width: 400px;
 	}
 	.content .mb-3 input[type="text"] {
@@ -57,4 +69,16 @@
 	.content .mb-3:nth-child(3) #male {
 		margin-left: 120px;
 	}
+}
+
+.formImage {
+	text-align: center;
+}
+
+.changeInfo {
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+	background-color: blue;
+	color: white;
 }

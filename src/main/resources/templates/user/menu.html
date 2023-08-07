@@ -28,11 +28,13 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
 	integrity="sha512-********************" crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
 
 </head>
 <body>
 	<div id="loading-container">
-		<div class="loader"></div>
+		<i class='bx bx-loader-alt'></i>
 	</div>
 	<nav>
 		<a class="logo" onclick="redirectURL('/')"> HOTEL </a>
@@ -42,22 +44,25 @@
 			<li class="menu-item"><a href="#service">Dịch Vụ</a></li>
 			<li class="menu-item"><a href="#room">Mẫu Phòng</a></li>
 			<li class="menu-item"><a href="#footer">Liên Hệ</a></li>
-			<li class="menu-item"><a onclick="redirectURL('/admin/index')">Quản
-					Trị</a></li>
+			<li class="menu-item" th:if="${#request.isUserInRole('ADMIN')}"><a
+				onclick="redirectURL('/admin/index')">Quản Trị</a></li>
 		</ul>
 		<div class="contact">
-			<a th:unless="${session.username}" onclick="redirectURL('sign-up')"
-				class="btn sign-in">Đăng Kí</a> <a th:unless="${session.username}"
-				onclick="redirectURL('sign-in')" class="btn sign-in">Đăng Nhập</a>
+			<a th:unless="${#request.remoteUser}"
+				onclick="redirectURL('/sign-up')" class="btn sign-in">Đăng Kí</a> <a
+				th:unless="${#request.remoteUser}" onclick="redirectURL('/sign-in')"
+				class="btn sign-in">Đăng Nhập</a>
 		</div>
 		<div class="contact" th:if="${session.username}">
 			<ul>
 				<li class="menu-item">[[${session.username}]]
 					<ul class="sub-menu">
 						<li class="sub-menu-item"><a
-							onclick="redirectURL('info-user')">Thông Tin Cá Nhân</a></li>
+							onclick="redirectURL('/info-user')">Thông Tin Cá Nhân</a></li>
 						<li class="sub-menu-item"><a
-							onclick="redirectURL('order-history')">Thông Tin Phòng</a></li>
+							onclick="redirectURL('/order-history')">Thông Tin Phòng</a></li>
+						<li class="sub-menu-item"><a
+							onclick="redirectURL('/change-password')">Đổi Mật Khẩu</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -68,7 +73,21 @@
 	</nav>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
 	<script>
+	function thongBao(title, message, status,reload) {
+	    swal(title, message, status);
+	    if(reload === true){
+		    $(".swal2-confirm, .swal2-styled").on("click", function() {
+	            location.reload();
+	         });	
+	    }
+	  }
+	
+	function deleteCookie(name) {
+		  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		}
             //SHOW MENU
             const buttonMenu = document.querySelector('.bx-list-ul');
             const menu = document.querySelector('.menu');
@@ -110,7 +129,9 @@
 				var currentPath = window.location.pathname;
 				if (currentPath === '/sign-in' || currentPath === '/sign-up'
 						|| currentPath === '/forgot-password' || currentPath === '/forgot-password-finally'
-						|| currentPath === '/change-password' || currentPath === '/info-user' || currentPath === '/order-history') {
+						|| currentPath === '/change-password' || currentPath === '/info-user'
+						|| currentPath === '/order-history' || currentPath === '/account/retrieve-password'
+						||	currentPath === '/account/code-retrieve-password') {
 							var ulElement = document.querySelector('.menu');
 							var menuElement = document.querySelector('.bx-list-ul');
 							ulElement.style.display = 'none';

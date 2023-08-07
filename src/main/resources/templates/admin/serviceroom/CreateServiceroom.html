@@ -13,6 +13,29 @@
 		}
 	</style>
 	<script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
+	<script type="text/javascript">
+	function ValidateCreateServ() {
+		var name = document.frmCreateServ.name.value;
+		var price = document.frmCreateServ.price.value;
+		var des = document.frmCreateServ.description.value;
+		var image = document.frmCreateServ.image.value;
+		if (name == "") {
+			document.getElementById("errnamecreateserv").innerHTML = "Tên không được để trống"
+			return false;
+		} else if (price == "") {
+			document.getElementById("errpricecreateserv").innerHTML = "Giá không được để trống"
+			return false;
+		}else if (des == '') {
+			document.getElementById("errdescreateserv").innerHTML = "Mô tả không được để trống"
+			return false;
+		} else if (image == '') {
+			document.getElementById("errimagecreateserv").innerHTML = "Hình ảnh không được để trống"
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>
 </head>
 
 <body>
@@ -23,30 +46,29 @@
 				<div class="modal-header text-center">
 					<h4 class="modal-title w-100 font-weight-bold">Tạo dịch vụ mới</h4>
 				</div>
-				<form th:object="${servfind}" method="post">
-
+				<form th:object="${servfind}" method="post" name="frmCreateServ" onsubmit="return ValidateCreateServ()">
 					<div class="mb-3">
-						<label for="fullname">Tên dịch vụ:</label> <input type="text" name id="fullname"
+						<label for="fullname">Tên dịch vụ:</label> <input type="text" id="fullname"
 							th:field="*{name}" placeholder>
-						<span th:errors="*{name}" />
-
 					</div>
+					 <span id="errnamecreateserv" style="color: red"></span>
 					<div class="mb-3">
-						<label for="price">Giá dịch vụ:</label> <input type="text" name id="price" th:field="*{price}"
+						<label for="price">Giá dịch vụ:</label> <input type="text" id="price" th:field="*{price}"
 							placeholder>
-						<span th:errors="*{price}" />
 					</div>
+					 <span id="errpricecreateserv" style="color: red"></span>
 					<div class="mb-3">
 						<label for="price">Mô tả:</label> <textarea id="motaservcreate" th:field="*{description}" />
 					</div>
+					 <span id="errdescreateserv" style="color: red"></span>
 					<div class="form-group">
 						<label for="exampleInputEmail1">Image</label> <input
 							type="file" class="form-control" id="inputImage"
-							aria-describedby="emailHelp" name="role" required> <input
+							aria-describedby="emailHelp" name="role"> <input
 							type="hidden" id="srcImg" th:field="*{image}"></input> <img
 							style="width: 150px" src="" id="imgload">
-
 					</div>
+					 <span id="errimagecreateserv" style="color: red"></span>
 					<button type="submit" class="btn btn-success" th:formaction="@{|/createServiceroom|}">Lưu</button>
 				</form>
 			</div>

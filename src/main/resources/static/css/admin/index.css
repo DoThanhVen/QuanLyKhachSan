@@ -4,27 +4,157 @@
 
 .this-month {
 	display: flex;
-	justify-content: space-around;
 	margin: 10px 0;
-    flex-wrap: wrap;
-    row-gap: 10px;
+	flex-wrap: wrap;
+	gap: 10px;
+	transition: all .5s ease;
+	text-align: center;
 }
 
 .this-month .card {
 	width: 350px;
-	height: 150px;
-    position: relative;
+	height: 200px;
+	position: relative;
+	overflow: hidden;
+	border: none;
+	box-shadow: 0 0 5px grey;
 }
-.this-month .card div.heading{
-    position: absolute;
-    color:blue;
-    font-size: 26px;
-    font-weight: 500;
-    width: 100%;
-    text-align: center;
+
+.total {
+	border-left: 5px solid yellow;
 }
-.this-month .card b{
-    position: absolute;
-    bottom:5px;
-    left: 5px;
+
+.total i {
+	color: yellow;
+}
+
+.person {
+	border-left: 5px solid grey;
+}
+
+.person i {
+	color: grey;
+}
+
+b.room-none {
+	border-left: 5px solid green;
+}
+
+b.room-none i {
+	color: green;
+}
+
+b.room-checked {
+	border-left: 5px solid red;
+}
+
+b.room-checked i {
+	color: red;
+}
+
+.total .circle-top {
+	width: 50%;
+	height: 50%;
+	background: yellow;
+	border-radius: 50%;
+	position: absolute;
+	top: -30px;
+	left: -30px;
+}
+
+.total .circle-bottom {
+	width: 50%;
+	height: 50%;
+	background: green;
+	border-radius: 50%;
+	position: absolute;
+	bottom: -30px;
+	right: -30px;
+}
+
+.user .circle-top {
+	width: 50%;
+	height: 100%;
+	background: yellow;
+	border-radius: 50%;
+	position: absolute;
+	top: 0%;
+	left: -50px;
+}
+
+.user .circle-bottom {
+	width: 100px;
+	height: 100px;
+	background: green;
+	border-radius: 50%;
+	position: absolute;
+	right: 30px;
+	top: 50px;
+}
+
+div.room-none .circle-top {
+	width: 50%;
+	height: 50%;
+	background: yellow;
+	border-radius: 50%;
+	position: absolute;
+	top: 30px;
+	left: 30px;
+}
+
+div.room-none .circle-bottom {
+	width: 50%;
+	height: 50%;
+	background: green;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 20px;
+	right: -30px;
+}
+
+div.room-checked .circle-top {
+	width: 50%;
+	height: 50%;
+	background: yellow;
+	border-radius: 50%;
+	position: absolute;
+	top: 30px;
+	left: -10px;
+}
+
+div.room-checked .circle-bottom {
+	width: 50%;
+	height: 50%;
+	background: green;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 50px;
+	right: -30px;
+}
+
+.heading {
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #333;
+	z-index: 20;
+}
+
+b {
+	font-size: 20px;
+}
+
+.this-month .card div.heading {
+	position: absolute;
+	color: blue;
+	font-size: 26px;
+	font-weight: 500;
+	width: 100%;
+	text-align: center;
+}
+
+.this-month .card b {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
 }

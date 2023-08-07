@@ -6,13 +6,30 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link rel="stylesheet" href="/css/admin/type-room.css">
-	<style>
-		span {
-			color: red;
-
-		}
-	</style>
 	<script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
+	<script type="text/javascript">
+	function ValidateUpdateServ() {
+		var name = document.frmUpdateServ.name.value;
+		var price = document.frmUpdateServ.price.value;
+		var des = document.frmUpdateServ.description.value;
+		var image = document.frmUpdateServ.image.value;
+		if (name == '') {
+			document.getElementById("errnameupdateserv").innerHTML = "Tên không được để trống"
+			return false;
+		} else if (price == '') {
+			document.getElementById("errpriceupdateserv").innerHTML = "Giá không được để trống"
+			return false;
+		}else if (des == '') {
+			document.getElementById("errdescupdateserv").innerHTML = "Mô tả không được để trống"
+			return false;
+		} else if (image == '') {
+			document.getElementById("errimageupdateserv").innerHTML = "Hình ảnh không được để trống"
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>
 </head>
 
 <body>
@@ -23,34 +40,33 @@
 				<div class="modal-header text-center">
 					<h4 class="modal-title w-100 font-weight-bold">Cập nhật dịch vụ</h4>
 				</div>
-				<form th:object="${servfind}" method="post">
+				<form th:object="${servfind}" method="post" name="frmUpdateServ" onsubmit="return ValidateUpdateServ()">
 					<div class="mb-3">
-						<label for="fullname">Tên dịch vụ:</label> <input type="text" name id="fullname"
+						<label for="fullname">Tên dịch vụ:</label> <input type="text"  id="fullname"
 							th:field="*{name}" placeholder>
-						<span th:errors="*{name}" />
 					</div>
+					 <span id="errnameupdateserv" style="color: red"></span>
 					<div class="mb-3">
-						<label for="price">Giá dịch vụ:</label> <input type="text" name id="price" th:field="*{price}"
+						<label for="price">Giá dịch vụ:</label> <input type="text" id="price" th:field="*{price}"
 							placeholder>
-						<span th:errors="*{price}" />
 					</div>
+					<span id="errpriceupdateserv" style="color: red"></span>
 					<div class="mb-3">
-						<label for="price">Tình trạng:</label> <input type="text" name id="price" th:field="*{status}"
-							placeholder>
-						<span th:errors="*{price}" />
+						<label for="price">Tình trạng:</label> <input type="text"  id="price" th:field="*{status}"
+							placeholder><span th:errors="*{price}" />
 					</div>
 					<div class="mb-3">
 						<label for="price">Mô tả:</label><textarea id="motaservupdate" th:field="*{description}" />
-
 					</div>
+					<span id="errdesupdateserv" style="color: red"></span>
 					<div class="form-group">
 						<label for="exampleInputEmail1">Image</label> <input
 							type="file" class="form-control" id="inputImageup"
-							aria-describedby="emailHelp" name="role" required> <input
+							aria-describedby="emailHelp" name="role"> <input
 							type="hidden" id="srcImgup" th:field="*{image}"></input> <img
 							style="width: 150px" th:src="*{image}" id="imgloadup">
-
 					</div>
+					 <span id="errimageupdateserv" style="color: red"></span>
 					<button type="submit" class="btn btn-success"
 						th:formaction="@{|/updateServiceroom/${key}|}">Lưu</button>
 				</form>
