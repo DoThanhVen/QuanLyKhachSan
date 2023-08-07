@@ -22,11 +22,6 @@
 					aria-controls="profile" aria-selected="false">Đang Ở</button>
 			</li>
 			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="stating-tab" data-bs-toggle="tab"
-					data-bs-target="#staying" type="button" role="tab"
-					aria-controls="staying" aria-selected="false">Đã Trả Phòng</button>
-			</li>
-			<li class="nav-item" role="presentation">
 				<button class="nav-link" id="contact-tab" data-bs-toggle="tab"
 					data-bs-target="#contact" type="button" role="tab"
 					aria-controls="contact" aria-selected="false">Đã Hủy Phòng</button>
@@ -81,29 +76,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="tab-pane fade" id="staying" role="tabpanel"
-				aria-labelledby="staying-tab">
-				<table class="table table-striped">
-					<tr>
-						<th>Ngày Đặt</th>
-						<th>Ngày Nhận Phòng</th>
-						<th>Ngày Trả Phòng</th>
-						<th>Loại Phòng</th>
-						<th>Mã Phòng</th>
-						<th>Giá Phòng</th>
-					</tr>
-					<tbody>
-						<tr th:each="room : ${listRoom}" th:if="${room[6] == '3'}">
-							<td th:text="*{#dates.format(room[0], 'HH:mm:ss dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[1], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[2], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{room[3]}"></td>
-							<td th:text="*{room[4]}"></td>
-							<td th:text="*{{#numbers.formatDecimal(room[5],0,'COMMA',0,'POINT')}}"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+
 			<div class="tab-pane fade" id="contact" role="tabpanel"
 				aria-labelledby="contact-tab">
 				<table class="table table-striped">

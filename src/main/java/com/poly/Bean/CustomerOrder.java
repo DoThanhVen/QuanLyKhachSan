@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 public class CustomerOrder {
 	String idRoom;
 	String idTypeRoom;
+	String idCustomer;
 	Date timeOrderRoom;
 	Date timeCheckInDate;
 	Date timeCheckOutDate;
-	String idCustomer;
 	String[] service;
 	long numberDays;
 	String statusOrder;
