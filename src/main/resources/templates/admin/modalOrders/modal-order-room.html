@@ -35,8 +35,7 @@
 			<h1>Trả phòng</h1>
 		</div>
 		<!-- The Modal -->
-		<form th:object="${orderRoom}">
-
+		<form th:object="${orderRoom}" method="POST">
 			<!-- Modal body -->
 			<div class="modal-body">
 				<div class="row">
@@ -60,10 +59,8 @@
 										th:object="${typeRoom.value}" class="nav-item"><a
 										th:class="nav-link"
 										th:classappend="${keyTR.equals(typeRoom.key)} ? active : ''"
-										data-bs-toggle="pill"
 										th:href="@{|/admin/orders/form-order-room/${typeRoom.key}|}">[[${typeRoom.value.name}]]</a></li>
 								</ul>
-
 								<!-- Tab panes -->
 								<div class="tab-content">
 									<div class="tab-pane container active"
@@ -71,10 +68,10 @@
 										<div class="form-group">
 											<label for="name">Danh sách phòng còn trống </label> <select
 												name="keyRoom" class="form-group-item">
-												<option>------Chọn Phòng------</option>
+												<option th:value="none">------Chọn Phòng------</option>
 												<option th:each="emptyRoom : ${emptyRooms}"
 													th:oject="${emptyRoom.value}" th:value="${emptyRoom.key}">[[${emptyRoom.value.name}]]</option>
-											</select>
+											</select> <span class="form-message">[[${messageErrorKeyRoom}]]</span>
 										</div>
 									</div>
 
@@ -96,30 +93,39 @@
 
 							<div class="form-group">
 								<label for="CCCD">Ngày nhận phòng</label> <input name="CheckIn"
-									type="date" class="form-group-item" />
+									type="date" class="form-group-item" /> <span
+									class="form-message">[[${messageErrorCheckIn}]]</span>
 							</div>
 							<div class="form-group">
 								<label for="numberPeople">Ngày trả phòng</label> <input
-									name="CheckOut" type="date" class="form-group-item" />
+									name="CheckOut" type="date" class="form-group-item" /> <span
+									class="form-message">[[${messageErrorCheckOut}]]</span>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<h4>Thông tin khác hàng</h4>
 						<div class="col-6">
+							<div class="form-group" hidden="true">
+								<label for="keyTypeRoom">Tên khách hàng: </label> <input
+									name="${keyTypeRoom}" class="form-group-item" />
+							</div>
 							<div class="form-group">
 								<label for="name">Tên khách hàng: </label> <input
-									th:field="*{nameCustomer}" class="form-group-item" />
+									th:field="*{nameCustomer}" class="form-group-item" /> <span
+									th:errors="*{nameCustomer}" class="form-message"></span>
 							</div>
 							<div class="form-group">
 								<label for="phone">Số điện thoại: </label> <input
-									th:field="*{phoneCustomer}" class="form-group-item" />
+									th:field="*{phoneCustomer}" class="form-group-item" /> <span
+									th:errors="*{nameCustomer}" class="form-message"></span>
 							</div>
 						</div>
 						<div class="col">
 							<div class="form-group">
 								<label for="numberPeople"> Số người: </label> <input
-									th:field="*{numberPeople}" class="form-group-item" />
+									th:field="*{numberPeople}" class="form-group-item" /> <span
+									th:errors="*{numberPeople}" class="form-message"></span>
 							</div>
 						</div>
 					</div>
