@@ -1,4 +1,4 @@
-package com.poly.Bean;
+ package com.poly.Bean;
 
 import java.util.Date;
 
@@ -26,6 +26,6 @@ public class OrderRoom {
 	private Date dateCancel;
 	@NotNull
 	private int numberPeople;
-	
+	boolean typeOrder;
 	
 }

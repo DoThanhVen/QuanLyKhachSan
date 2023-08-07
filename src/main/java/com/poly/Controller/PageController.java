@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -41,6 +37,8 @@ import com.poly.DAO.RoomDAO;
 import com.poly.DAO.ServiceroomDAO;
 import com.poly.DAO.TyperoomDAO;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class PageController {
 	@Autowired
@@ -54,8 +52,6 @@ public class PageController {
 	@Autowired
 	AccountDAO accountDAO;
 	@Autowired
-	CustomerOrderDAO orderDAO;
-	@Autowired
 	HttpSession session;
 	@Autowired
 	GetDateDAO dateDAO;
@@ -63,10 +59,19 @@ public class PageController {
 	// CUSTOMER
 	@GetMapping("/")
 	public String home(Model model) {
-		model.addAttribute("typerooms", typeroomdao.findAll())
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		model.addAttribute("role", auth.getAuthorities());
-		model.addAttribute("username", auth.getName());
+		model.addAttribute("typerooms", typeroomdao.findAll());
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		model.addAttribute("role", auth.getAuthorities());
+//		model.addAttribute("username", auth.getName());
+		if((String) session.getAttribute("username") != null) {
+			Account account = accountDAO.findByUsername((String) session.getAttribute("username"));
+			for(String role : account.getRole()) {
+				if(role.equals("ADMIN")) {
+					session.setAttribute("admin", true);
+					break;
+				}
+			}	
+		}
 		return "user/index";
 	}
 
@@ -81,8 +86,7 @@ public class PageController {
 
 	@GetMapping("/order-history")
 	public String orderHistory(Model model) {
-		HashMap<String, Object> dataMap = customerOrderDAO
-				.findAllRoomCustomer((String) session.getAttribute("username"));
+		HashMap<String, Object> dataMap = customerOrderDAO.findAllRoomCustomer((String) session.getAttribute("username"));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Gson gson = new Gson();
 		List<Object> list = new ArrayList<>();

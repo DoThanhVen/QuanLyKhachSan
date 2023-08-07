@@ -68,11 +68,11 @@
 				<div class="price"
 					th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}">
 				</div>
-				<img th:src="*{'data:image/png;base64,' + images[0]}"
+				<img th:src="@{'data:image/png;base64,' + *{images[0]}}"
 					alt="Room Image">
 				<div class="content">[(*{description})]</div>
 				<div class="check-room">
-					<button class="btn btn-primary" 
+					<button class="btn btn-primary"
 						th:formaction="@{|/infomation-room/${type.key}|}">Chi
 						Tiết</button>
 				</div>

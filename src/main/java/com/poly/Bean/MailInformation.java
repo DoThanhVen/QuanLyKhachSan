@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class MailInformation {
-	private String from ="Male Shop <andnpk02691@fpt.edu.vn>";
+	private String from ="Khách Sạn Hoàng Gia";
 	private String to;
 	private String[] cc;
 	private String[] bcc;

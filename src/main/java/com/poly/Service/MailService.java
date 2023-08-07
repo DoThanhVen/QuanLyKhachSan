@@ -1,8 +1,8 @@
 package com.poly.Service;
 
-import javax.mail.MessagingException;
-
 import com.poly.Bean.MailInformation;
+
+import jakarta.mail.MessagingException;
 
 public interface MailService {
 	void send(MailInformation mail) throws MessagingException;

@@ -73,8 +73,9 @@ public class CustomerDAO {
 		}
 		return null;
 	}
+
 	public Customer findByCustomer(CustomerMap customerMap) {
-		
+
 		for (Customer customer : customerMap.values()) {
 			return customer;
 		}
@@ -100,16 +101,17 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-//	public String findKeyByUsername(String targetUsername) {
-//		String jsonStr = rest.getForObject(url, String.class);
-//		JsonObject jsonObject = JsonParser.parseString(jsonStr).getAsJsonObject();
-//		for (String key : jsonObject.keySet()) {
-//			JsonObject object = jsonObject.getAsJsonObject(key);
-//			if (object.has("username") && targetUsername.equals(object.get("username").getAsString())) {
-//				return key;
-//			}
-//		}
-//		return null;
-//	}
+
+	public String findKeyByUsername(String targetUsername) {
+		String jsonStr = rest.getForObject(url, String.class);
+		JsonObject jsonObject = JsonParser.parseString(jsonStr).getAsJsonObject();
+		for (String key : jsonObject.keySet()) {
+			JsonObject object = jsonObject.getAsJsonObject(key);
+			if (object.has("username") && targetUsername.equals(object.get("username").getAsString())) {
+				return key;
+			}
+		}
+		return null;
+	}
 
 }

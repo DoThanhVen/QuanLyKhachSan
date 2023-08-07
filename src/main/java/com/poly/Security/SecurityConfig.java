@@ -37,9 +37,9 @@ public class SecurityConfig {
 					session.setAttribute("username", request.getParameter("username"));
 					session.setAttribute("password", request.getParameter("password"));
 					response.sendRedirect("/auth/login/error");
-				})).successHandler((request, response, exception) -> {
+				}).successHandler((request, response, exception) -> {
 					response.sendRedirect("/auth/login/success");
-	            });
+	            }));
 		
 		
 		http.rememberMe(rememberme -> rememberme.rememberMeParameter("remember"));

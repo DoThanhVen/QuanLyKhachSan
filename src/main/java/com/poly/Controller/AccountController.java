@@ -1,15 +1,9 @@
 package com.poly.Controller;
 
-import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -307,9 +301,6 @@ public class AccountController {
 	@RequestMapping("/oauth2/login/success")
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		session.setAttribute("username", auth.getName());
-		
 		return "redirect:/";
 	}
 

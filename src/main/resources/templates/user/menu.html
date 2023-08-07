@@ -44,13 +44,13 @@
 			<li class="menu-item"><a href="#service">Dịch Vụ</a></li>
 			<li class="menu-item"><a href="#room">Mẫu Phòng</a></li>
 			<li class="menu-item"><a href="#footer">Liên Hệ</a></li>
-			<li class="menu-item" th:if="${#request.isUserInRole('ADMIN')}"><a
+			<li class="menu-item" th:if="${session.admin == true}"><a
 				onclick="redirectURL('/admin/index')">Quản Trị</a></li>
 		</ul>
 		<div class="contact">
-			<a th:unless="${#request.remoteUser}"
+			<a th:unless="${session.username}"
 				onclick="redirectURL('/sign-up')" class="btn sign-in">Đăng Kí</a> <a
-				th:unless="${#request.remoteUser}" onclick="redirectURL('/sign-in')"
+				th:unless="${session.username}" onclick="redirectURL('/sign-in')"
 				class="btn sign-in">Đăng Nhập</a>
 		</div>
 		<div class="contact" th:if="${session.username}">

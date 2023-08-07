@@ -64,7 +64,7 @@
 				<tr th:each="type : ${listtype}" th:object="${type.value}">
 					<td th:unless="*{images}" style="width: 22%;"></td>
 					<td class="flex-images">
-						<img th:each="image : *{images}" th:src="${'data:image/png;base64,' + image}" />
+						<img th:each="image : *{images}" th:src="@{'data:image/png;base64,' + ${image}}" />
 					</td>
 					<td th:text="*{#strings.capitalizeWords(name)}"></td>
 					<td th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}"></td>
@@ -94,7 +94,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="serv : ${listserv}" th:object="${serv.value}">
-					<td><img th:src="*{image}"></td>
+					<td><img th:src="@{*{image}}"></td>
 					<td th:text="*{#strings.capitalizeWords(name)}"></td>
 					<td th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}"></td>
 					<td th:text="*{usercreated}"></td>

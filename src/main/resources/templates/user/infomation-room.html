@@ -36,11 +36,11 @@
 					<div class="carousel-item active"
 						th:each="image, iterStat : *{images}"
 						th:if="${iterStat.index == 0}">
-						<img th:src="${'data:image/png;base64,' + image}" />
+						<img th:src="@{'data:image/png;base64,' + ${image}}" />
 					</div>
 					<div class="carousel-item" th:each="image, iterStat : *{images}"
 						th:if="${iterStat.index != 0}">
-						<img th:src="${'data:image/png;base64,' + image}" />
+						<img th:src="@{'data:image/png;base64,' + ${image}}" />
 					</div>
 				</div>
 				<button class="carousel-control-prev" type="button"

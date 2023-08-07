@@ -30,8 +30,6 @@ public class CustomerOrderDAO {
 	@Autowired
 	RoomDAO roomdao;
 	@Autowired
-	CustomerOrderDAO customerOrderDAO;
-	@Autowired
 	AccountDAO accountDAO;
 
 	private String getUrl(String key) {
@@ -61,7 +59,7 @@ public class CustomerOrderDAO {
 	public void delete(String key) {
 		rest.delete(getUrl(key));
 	}
-
+ 
 	public HashMap<String, Object> findAllRoomCustomer(String username) {
 		HashMap<String, Object> listRooms = new HashMap<>();
 		String jsonStr = rest.getForObject(url, String.class);
