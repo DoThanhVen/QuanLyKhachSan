@@ -12,7 +12,7 @@
 			<div class="sign-up">
 				<div class="heading">ĐĂNG KÍ</div>
 				<b th:text="${message}" style="color: red;"></b>
-				<form action="/sign-up" method="POST">
+				<form>
 					<div class="mb-3 mt-4">
 						<input name="username" type="text" class="form-control"
 							id="username"> <label for="username" class="form-label">Email</label>
@@ -27,7 +27,7 @@
 							id="re-password"> <label for="re-password"
 							class="form-label">Xác Thực Mật Khẩu</label>
 					</div>
-					<button th:formaction="@{|/sign-up|}" type="submit"
+					<button type="submit" id="btnSignUp"
 						class="btn btn-primary">Đăng Kí</button>
 					<div class="mb-3 mt-4">
 						Đã có tài khoản?<a onclick="redirectURL('/sign-in')"> Đăng Nhập
@@ -51,6 +51,40 @@
 				}
 			});
 		});
+		
+		$(document).ready(function() {
+	        $("#btnSignUp").click(function(e) {
+	            e.preventDefault();
+	            
+	            var username = $("#username").val();
+	            var password = $("#password").val();
+	            var repassword = $("#re-password").val();
+
+	            $.ajax({
+	                url: "/sign-up",
+	                type: "POST",
+	                data: {
+	                    username: username,
+	                    password: password,
+	                    repassword: repassword
+	                },
+	                success: function(data) {
+	                	if(data.success === false){
+			                thongBao('Thông Báo!',data.message,'error',false);	
+	                	}else{
+	                		thongBao('Thông Báo!',data.message,'success',false);	
+		               		 setTimeout(function() {
+		                		 redirectURL("/sign-in");
+		                     }, 2000);
+	                	}
+	                    console.log(data);
+	                },
+					error : function(xhr, status, error) {
+						thongBao('Thông Báo!',error,'error',true);
+					}
+	            });
+	        });
+	    });
 	</script>
 	</body>
 </html>

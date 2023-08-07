@@ -67,6 +67,14 @@
 		  return phoneRegex.test(phoneNumber);
 	}
 	
+	function isValidID(citizenID) {
+		  // Loại bỏ khoảng trắng nếu có
+		  citizenID = citizenID.replace(/\s/g, '');
+
+		  const regex = /^\d{10}$|^\d{12}$/;
+		  return regex.test(citizenID);
+		}
+	
 	$(document).ready(function() {
 		$(".changeInfo").click(function() {
 			const fullname = $("#fullname").val(); 
@@ -78,6 +86,12 @@
 			
 			if(isValidPhoneNumber(phone) === false){
 				thongBao('Thông Báo','Số điện thoại không hợp lệ!',
+				'error');
+				return;
+			}
+			
+			if(isValidID(cccd) === false){
+				thongBao('Thông Báo','CMND/CCCD không hợp lệ!',
 				'error');
 				return;
 			}

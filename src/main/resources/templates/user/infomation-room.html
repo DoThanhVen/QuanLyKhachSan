@@ -56,12 +56,12 @@
 			</div>
 		</div>
 		<ul class="about-room" th:object="${inforoom}">
-			<li class="type">Loại phòng: [[*{name}]]
+			<li class="type">Loại phòng: <b>[[*{name}]]</b>
 				<ul class="menu list-group convenient">
 					<div th:if="*{name == 'Queen' || name == 'Superior'}">
 						<li class="menu-item list-group-item">Phòng giường đôi</li>
 					</div>
-					<div th:if="*{name == 'Standard'}">
+					<div th:if="*{name != 'Queen' && name != 'Superior'}">
 						<li class="menu-item list-group-item">Phòng giường đơn</li>
 					</div>
 					<li class="menu-item list-group-item">Có phòng tắm riêng</li>
@@ -70,12 +70,12 @@
 			<li class="price">Giá phòng: <a
 				th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}"></a>đ/Ngày
 			</li>
-			<div th:if="*{name == 'Queen' || name == 'Superior'}">
-				<li class="quantity">Số lượng người ở: 1-4 người</li>
-			</div>
-			<div th:if="*{name == 'Standard'}">
-				<li class="quantity">Số lượng người ở: 1-2 người</li>
-			</div>
+			<th:block th:if="*{name == 'Queen' || name == 'Superior'}">
+				<li class="quantity menu-item">Số lượng người ở: 1-4 người</li>
+			</th:block>
+			<th:block th:if="*{name != 'Queen' && name != 'Superior'}">
+				<li class="quantity menu-item">Số lượng người ở: 1-2 người</li>
+			</th:block>
 
 			<li class="acreage">Diện tích: 20m<sup>2</sup></li>
 			<li>Tiện nghi:
@@ -101,7 +101,7 @@
 				<label for="check-out">Ngày Trả Phòng:</label> <input type="date"
 					id="check-out" name="dateCheckout" class="date-input">
 			</div>
-			<div>DANH SÁCH PHÒNG TRỐNG</div>
+			<div class="mt-2">DANH SÁCH PHÒNG TRỐNG</div>
 			<div class="list-room-none mt-3">
 				<div th:if="${sizeRoom > 0}">
 					<div class="ListRoom" th:each="room : ${listroom}" th:object="${room.value}">

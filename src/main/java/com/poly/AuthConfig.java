@@ -61,7 +61,9 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 					session.setAttribute("username", request.getParameter("username"));
 					session.setAttribute("password", request.getParameter("password"));
 					response.sendRedirect("/auth/login/error");
-				});
+				}).successHandler((request, response, authentication) -> {
+					response.sendRedirect("/auth/login/success");
+	            });;
 
 		http.rememberMe().rememberMeParameter("remember");
 

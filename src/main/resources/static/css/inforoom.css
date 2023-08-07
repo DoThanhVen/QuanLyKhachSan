@@ -110,8 +110,14 @@ button[disabled] {
 }
 
 .list-room-none {
+	width: 100%;
+}
+
+.list-room-none div {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
+	display: flex;
 }
 
 .ListRoom label {

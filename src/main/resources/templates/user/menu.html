@@ -33,7 +33,7 @@
 </head>
 <body>
 	<div id="loading-container">
-		<div class="loader"></div>
+		<i class='bx bx-loader-alt'></i>
 	</div>
 	<nav>
 		<a class="logo" onclick="redirectURL('/')"> HOTEL </a>
@@ -75,11 +75,13 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
 	<script>
-	function thongBao(title, message, status) {
+	function thongBao(title, message, status,reload) {
 	    swal(title, message, status);
-	    $(".swal2-confirm, .swal2-styled").on("click", function() {
-            location.reload();
-         });
+	    if(reload === true){
+		    $(".swal2-confirm, .swal2-styled").on("click", function() {
+	            location.reload();
+	         });	
+	    }
 	  }
 	
 	function deleteCookie(name) {
