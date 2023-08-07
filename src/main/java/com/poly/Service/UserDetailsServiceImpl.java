@@ -50,10 +50,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public void loginFromOAuth2(OAuth2AuthenticationToken oauth2) {
 		String email = oauth2.getPrincipal().getAttribute("email");
 		String name = oauth2.getPrincipal().getAttribute("name");
-		System.out.println("Tên: "+name);
 		String password = Long.toHexString(System.currentTimeMillis());
 		session.setAttribute("username", email);
 		session.setAttribute("admin", true);
+		session.setAttribute("statusLogin", true);
 		UserDetails user = User.withUsername(email).password(pe.encode(password)).roles("ADMIN").build();
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
