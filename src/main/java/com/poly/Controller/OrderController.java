@@ -59,7 +59,7 @@ public class OrderController {
 	@Autowired
 	HttpServletRequest request;
 	@Autowired
-	CustomerDAO customerDAO;
+	CustomerDAO customerDAO; 
 	@Autowired
 	ServiceroomDAO serviceRoomDao;
 	@Autowired
