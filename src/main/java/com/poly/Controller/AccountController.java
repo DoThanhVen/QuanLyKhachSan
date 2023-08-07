@@ -169,7 +169,6 @@ public class AccountController {
 		return ResponseEntity.ok(response);
 	}
 
-	private String retrievePasswordVerifycode = "";
 	private String currentUsernameForgotPassword = "";
 
 	@RequestMapping("/account/retrieve-password")
@@ -187,10 +186,17 @@ public class AccountController {
 					mail.setTo(ac.getUsername());
 					mail.setSubject("Quên mật khẩu");
 					String verifyCode = String.valueOf(passwordUtil.generatePassword(6));
-					retrievePasswordVerifycode = verifyCode;
-					mail.setBody("Mã xác nhận của bạn là: \r\n" + verifyCode);
+					session.setAttribute("verificationCode", verifyCode);
+					session.setAttribute("verificationCodeExpiresAt", System.currentTimeMillis() + (30 * 1000));
+					mail.setBody("<html><body>" + "<p>Xin chào " + ac.getUsername() + ",</p>"
+							+ "<p>Chúng tôi nhận được yêu cầu thiết lập lại mật khẩu cho tài khoản HOTEL của bạn.</p>"
+							+ "<p>Vui lòng không chia sẽ mã này cho bất cứ ai:" + "<h3>" + verifyCode + "</h3>" + "</p>"
+							+ "<p>Nếu bạn không yêu cầu thiết lập lại mật khẩu, vui lòng liên hệ Bộ phận Chăm sóc Khách hàng tại đây</p>"
+							+ "<p>Trân trọng,</p>" + "<p>Đội ngũ HOTEL</p>"
+							+ "<p>Bạn có thắc mắc? Liên hệ chúng tôi tại đây andnpk02691@fpt.edu.vn.</p>"
+							+ "</body></html>");
 					mailServiceImplement.send(mail);
-					message = "Mã xác nhận đã được gửi đi, vui lòng kiểm tra email!";
+					message = "Một mã xác nhận đã được gửi đến email của bạn!";
 					response.setSuccess(true);
 				} else {
 					message = "Tài khoản không tồn tại!";
@@ -210,12 +216,25 @@ public class AccountController {
 		LoginResponse response = new LoginResponse();
 		String message = "";
 		response.setSuccess(false);
-		if (retrievePasswordVerifycode != "") {
-			if (!verifyCode.equals(retrievePasswordVerifycode)) {
+		String code = (String) session.getAttribute("verificationCode");
+		long verificationCodeExpiresAt = 0;
+		if (session.getAttribute("verificationCodeExpiresAt") != null) {
+			verificationCodeExpiresAt = (long) session.getAttribute("verificationCodeExpiresAt");
+		}
+		if ((String) session.getAttribute("verificationCode") != ""
+				|| (String) session.getAttribute("verificationCode") != null) {
+			long currentTime = System.currentTimeMillis();
+			if (!verifyCode.equals(code)) {
 				message = "Mã xác nhận không đúng, vui lòng kiểm tra lại!";
 			} else {
-				message = "Mã xác nhận hợp lệ!";
-				response.setSuccess(true);
+				if (verificationCodeExpiresAt < currentTime) {
+					session.removeAttribute("verificationCode");
+					session.removeAttribute("verificationCodeExpiresAt");
+					message = "Mã Code đã hết hiệu lực!";
+				} else {
+					message = "Mã xác nhận hợp lệ!";
+					response.setSuccess(true);
+				}
 			}
 		} else {
 			message = "Vui lòng lấy mã trước khi sang bước tiếp theo!";
