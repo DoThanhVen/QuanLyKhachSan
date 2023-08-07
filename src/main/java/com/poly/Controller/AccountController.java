@@ -138,7 +138,7 @@ public class AccountController {
 			} else {
 				if (dao.findByUsername(username) == null) {
 					if (password.length() < 6 || password.length() > 20) {
-						message = "Password từ 6 đến 20 kí tự!";
+						message = "Mật khẩu từ 6 đến 20 kí tự!";
 					} else {
 						try {
 							ac.setAddress("");
