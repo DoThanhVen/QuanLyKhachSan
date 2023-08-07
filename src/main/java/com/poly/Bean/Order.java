@@ -23,4 +23,5 @@ public class Order {
 	private ServiceroomMap serviceOrder;
 	private String userCreate;
 	private PromotionMap promoMap;
+	private OrderRoomMap orderRoom;
 }

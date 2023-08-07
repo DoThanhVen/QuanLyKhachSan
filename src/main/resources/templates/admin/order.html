@@ -80,6 +80,17 @@
 						class="header-content-item-button ">Đang sửa ([[${roomFix}]])</a>
 				</div>
 			</div>
+			<div class="header-left">
+				<div class="dropdown">
+					<button type="button" class="btn dropdown-toggle"
+						data-bs-toggle="dropdown">Tuỳ chọn khác</button>
+					<ul class="dropdown-menu">
+						<li><a id="btn-order-room" class="dropdown-item"
+							th:href="@{/admin/orders/form-order-room/create}">Đặt phòng</a></li>
+					</ul>
+				</div>
+
+			</div>
 		</div>
 		<div class="content-room">
 			<div class="content-room-body">
@@ -103,7 +114,8 @@
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-bed"></i>
 								<div th:with="order=${@orderDAO.findByIdRoom(room.key)}">
-									<p class="order-time-in">Lúc vào : [[${@format.formatTime(order.timeCheckInDate)}]]</p>
+									<p class="order-time-in">Lúc vào :
+										[[${@format.formatTime(order.timeCheckInDate)}]]</p>
 									<div th:with="customer=${order.customer}">
 										<p th:each="c : ${customer}" th:object="${c.value}">
 											[[*{name}]]</p>
@@ -114,13 +126,20 @@
 						</a>
 						<!-- 3 phòng đã đặt -->
 						<a th:case="'3'" class="detail-room yellowColor"
-							th:href="@{|/admin/orders/detail-room/${room.key}?status=3|}"
+							th:href="@{|/admin/orders/form-edit-order-room/${room.key}|}"
 							data-toggle="modal">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-file-pen"></i>
-
+								<div th:with="orderRoom=${@orderRoomDAO.findByIdRoom(room.key)}">
+									<p class="order-time-in">ngày checkin :
+										[[${@format.formatDate(orderRoom.dateCheckIn)}]]</p>
+									<div>
+										<p>[[${orderRoom.nameCustomer}]]</p>
+									</div>
+								</div>
 							</div>
+
 						</a>
 						<!-- 4 phòng quá hạn -->
 						<a th:case="'4'" class="detail-room redColor"
@@ -189,9 +208,17 @@
 							$('#myModal').modal('show').find('.modal-content')
 									.load($(this).attr('href'))
 						})
-			}
 
-			)
+
+						$('#btn-order-room').on("click", function(e){
+							console.log("clcik")
+							e.preventDefault();
+							$('#myModal').modal('show').find('.modal-content')
+									.load($(this).attr('href'))
+							})
+							
+					}
+				)
 </script>
 
 <script type="text/javascript">

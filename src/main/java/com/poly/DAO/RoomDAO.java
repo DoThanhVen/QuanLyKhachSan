@@ -2,6 +2,7 @@ package com.poly.DAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,26 @@ public class RoomDAO {
 
 	public String getKeyRoomOpen() {
 		RoomMap roomMap = findAll();
-		
 		return null;
+	}
+	public RoomMap getRoomEmpty() {
+		RoomMap roomMapNew = new RoomMap();
+		RoomMap roomMap = findAll();
+		for (Entry<String, Room> room : roomMap.entrySet()) {
+			if(room.getValue().getStatus().equals("1")) {
+				roomMapNew.put(room.getKey(), room.getValue());
+			}
+		}
+		return roomMapNew;
+	}
+	public RoomMap getRoomEmptyByType(String typeRoom) {
+		RoomMap roomMapNew = new RoomMap();
+		RoomMap roomMap = findAll();
+		for (Entry<String, Room> room : roomMap.entrySet()) {
+			if(room.getValue().getStatus().equals("1") && room.getValue().getTyperoom().equals(typeRoom)) {
+				roomMapNew.put(room.getKey(), room.getValue());
+			}
+		}
+		return roomMapNew;
 	}
 }

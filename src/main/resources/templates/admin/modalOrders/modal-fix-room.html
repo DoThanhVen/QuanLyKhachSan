@@ -7,19 +7,10 @@
 	<!-- Modal body -->
 	<div class="modal-body">
 		<div class="row">
-			<div class="col">
-				<h4>Thông tin phòng</h4>
+			<div>
+				<h4 class="modal-title">Mở phòng</h4>
 				<p>
-					Tên phòng:<b style="margin-left: 10px;">[[${roomOrder.name}]]</b>
-				</p>
-				<p>
-					Loại phòng:<b style="margin-left: 10px;">[[${typeRoom.name}]]</b>
-				</p>
-				
-			</div>
-			<div class="col">
-				<p>
-					Giá phòng:<b style="margin-left: 10px;">[[${typeRoom.price}]]</b>
+					Ngày nhận phòng:<b style="margin-left: 10px;"></b>
 				</p>
 			</div>
 		</div>
@@ -47,7 +38,7 @@
 							th:field="${customer.CCCD}" class="form-group-item" />
 					</div>
 					<div class="form-group">
-						<label for="numberPeople"> Số người: </label> <input 
+						<label for="numberPeople"> Số người: </label> <input
 							th:field="*{numberPeople}" class="form-group-item" />
 					</div>
 				</div>

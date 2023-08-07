@@ -157,6 +157,7 @@ public class OrderController {
 		Customer customer = new Customer();
 		ServiceroomMap serviceroom = new ServiceroomMap();
 		Room room = roomDAO.findByKey(id);
+		System.out.println(room.getName());
 		Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
 		String keyOrder = "";
 		String totalTime = "";
@@ -168,7 +169,7 @@ public class OrderController {
 		// phòng đang trống
 		case "1": {
 			url = "modal-open-room";
-			System.out.println("open");
+			
 			break;
 		}
 		// phòng đang ở
@@ -188,7 +189,6 @@ public class OrderController {
 		// phòng đã đặt
 		case "3": {
 			url = "reserved-room";
-			action = "create";
 			break;
 		}
 		// phòng quá hạn

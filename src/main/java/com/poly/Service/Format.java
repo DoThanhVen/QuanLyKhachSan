@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -25,12 +26,15 @@ public class Format {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM dd-MM-yyyy");
 		return dateFormat.format(date);
 	}
+	public static String formatDate(Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(date);
+	}
 	public static String checkDate(Date dateCheckIn, Date dateCheckOut) {
 		long timeCheckIn = dateCheckIn.getTime();
 		long timeCheckOut = dateCheckOut.getTime();
 		long differenceInMillis = timeCheckOut - timeCheckIn;
 		long daysDifference = differenceInMillis / (1000 * 60 * 60);
-
 		long diffSeconds = differenceInMillis / 1000 % 60;
 		long diffMinutes = differenceInMillis / (60 * 1000) % 60;
 		long diffHours = differenceInMillis / (60 * 60 * 1000) % 24;
@@ -41,5 +45,17 @@ public class Format {
 		return dayformat;
 	}
 
-
+	public static Date getTypeDate(String sDate)  {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateTime = null;
+		try {
+			dateTime = dateFormat.parse(sDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Date new : "+dateTime);
+		return dateTime;
+	}
 }

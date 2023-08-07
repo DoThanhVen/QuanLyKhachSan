@@ -38,4 +38,6 @@ public class TyperoomDAO {
 	public void delete(String key) {
 		rest.delete(getUrl(key));
 	}
+	
+	
 }

@@ -1,0 +1,124 @@
+<!-- The Modal -->
+<form th:object="${orderRoom}">
+	<div class="modal-header" xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	</div>
+	<!-- Modal body -->
+	<div class="modal-body">
+		<div class="row">
+			<div>
+				<h4 class="modal-title">Đặt phòng</h4>
+
+			</div>
+		</div>
+		<div>
+			<div class="row">
+
+				<h4>Thông tin phòng</h4>
+				<div class="col">
+					<div class="form-group">
+						<p>Loại phòng :</p>
+
+						<ul class="nav nav-pills"
+							style="height: 60px; align-items: center; border: 1px solid #3333; padding-left: 10px">
+							<li style="margin-right: 20px;" th:each="typeRoom : ${typeRooms}"
+								th:object="${typeRoom.value}" class="nav-item"><a
+								th:class="nav-link"
+								th:classappend="${keyTR.equals(typeRoom.key)} ? active : ''"
+								data-bs-toggle="pill"
+								th:href="@{|/admin/orders/form-edit-order-room/${keyRoom}?keyTypeRoom=${typeRoom.key}|}">[[${typeRoom.value.name}]]</a></li>
+						</ul>
+
+
+						<div class="tab-content">
+							<div class="tab-pane container active"
+								style="margin: 0; padding: 0">
+								<div class="form-group">
+									<label for="name">Danh sách phòng còn trống </label> <select
+										name="keyRoom" class="form-group-item">
+										<option th:value="none">------Chọn Phòng------</option>
+										<option th:each="emptyRoom : ${emptyRooms}"
+											th:oject="${emptyRoom.value}" th:value="${emptyRoom.key}">[[${emptyRoom.value.name}]]</option>
+									</select>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="form-group" th:each="r : *{room}"
+						th:object="${r.value}">
+						<p>
+							Tên phòng: <b>[[*{name}]]</b>
+						</p>
+
+					</div>
+					<div class="form-group">
+						<p>
+							Loại phòng: <b>[[${nameRoom}]]</b>
+						</p>
+						<p>
+							Giá phòng: <b>[[${priceRoom}]]</b>
+						</p>
+						<p>
+							Ngày đặt: <b>[[${dateAt}]]</b>
+						</p>
+					</div>
+
+
+				</div>
+				<div class="col">
+
+					<div class="form-group">
+						<label for="CCCD">Ngày nhận phòng</label> <input
+							th:value="${dateCheckIn}" name="CheckIn" type="date"
+							class="form-group-item" />
+					</div>
+					<div class="form-group">
+						<label for="numberPeople">Ngày trả phòng</label> <input
+							th:value="${dateCheckOut}" name="CheckOut" type="date"
+							class="form-group-item" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<h4>Thông tin khác hàng</h4>
+				<div class="col-6">
+					<div class="form-group">
+						<label for="name">Tên khách hàng: </label> <input
+							th:field="*{nameCustomer}" class="form-group-item" />
+					</div>
+					<div class="form-group">
+						<label for="phone">Tên khách hàng: </label> <input
+							th:field="*{phoneCustomer}" class="form-group-item" />
+					</div>
+					<div class="form-group">
+						<label for="CCCD">CCCD: </label> <input
+							th:field="*{CCCDCustomer}" class="form-group-item" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Modal footer -->
+	<div class="modal-footer">
+		<button th:formaction="@{|/admin/orders/open-order-room/${keyOrderRoom}|}"
+			class="btn btn-success">Mở phòng</button>
+		<button
+			th:formaction="@{|/admin/orders/update-order-room/${keyOrderRoom}|}"
+			class="btn btn-primary">Lưu lại</button>
+		<button
+			th:formaction="@{|/admin/orders/cancel-order-room/${keyOrderRoom}|}"
+			class="btn btn-warning">Huỷ Đặt</button>
+		<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+	</div>
+</form>
+
+<script>
+	$(".nav-link").on("click", function(e){
+			e.preventDefault();
+			$('.modal-content').load($(this).attr('href'))
+				})
+		
+</script>

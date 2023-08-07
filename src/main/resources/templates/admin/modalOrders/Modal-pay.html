@@ -109,14 +109,14 @@
 		<div class="modal-footer" th:unless="${paySuccess}">
 			<a id="btn-pay" th:if="paySuccess" 
 				th:href="@{|/admin/orders/pay/${keyOrder}?idRoom=${idRoom}|}"
-				class="btn btn-success">Thanh toán</a>
+				class="btn btn-success">Xác nhận thanh toán</a>
 
 			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
 		</div>
 		<div class="modal-footer" th:if="${paySuccess}">
 			<a class="btn btn-success" th:href="@{|admin/order/print-bill/${keyOrder}|}">In hoá đơn </a>
 			<button id="btn-pay"  disabled="true"
-				class="btn btn-success">Thanh toán</button>
+				class="btn btn-success">Đã thanh toán</button>
 
 			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
 		</div>
