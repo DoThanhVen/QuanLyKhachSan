@@ -63,6 +63,7 @@ public class OrderRoomController {
 		typeroom = typeroomMap.get(key);
 		priceRoom = Format.formatNumber(typeroom.getPrice());
 		roomEmpty = roomDAO.getRoomEmptyByType(key);
+		
 		System.out.println(typeroom.getName());
 		model.addAttribute("nameRoom", typeroom.getName());
 		model.addAttribute("emptyRooms", roomEmpty);

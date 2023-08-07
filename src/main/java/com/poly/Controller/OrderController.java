@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ import com.poly.Service.ParamService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class OrderController {
@@ -66,6 +68,7 @@ public class OrderController {
 	OrderService orderService;
 	@Autowired
 	PromotionDAO promotionDAO;
+
 	@RequestMapping("/admin/orders")
 	public String HomeOrder(Model model) {
 		String type = paramService.getString("type", "");
@@ -77,7 +80,7 @@ public class OrderController {
 		int roomOverdue = getSizeHashMapByType(roomMap, "4");
 		int roomNotClean = getSizeHashMapByType(roomMap, "5");
 		int roomFix = getSizeHashMapByType(roomMap, "6");
-		
+
 		switch (type) {
 		case "1": {
 			rm = cloneHashMapByType(roomMap, type);
@@ -110,7 +113,7 @@ public class OrderController {
 		default:
 			rm = roomMap;
 		}
-		
+
 		model.addAttribute("roomAvailable", roomAvailable);
 		model.addAttribute("roomUnAvailable", roomUnAvailable);
 		model.addAttribute("roomReserved", roomReserved);
@@ -118,7 +121,7 @@ public class OrderController {
 		model.addAttribute("roomNotClean", roomNotClean);
 		model.addAttribute("roomFix", roomFix);
 		model.addAttribute("sizeAll", roomMap.size());
-		
+
 		model.addAttribute("rooms", rm);
 		return "admin/order";
 	}
@@ -133,8 +136,6 @@ public class OrderController {
 		});
 		return rm;
 	}
-	
-	
 
 	public int getSizeHashMapByType(RoomMap roomMap, String type) {
 		RoomMap rm = new RoomMap();
@@ -157,7 +158,7 @@ public class OrderController {
 		Customer customer = new Customer();
 		ServiceroomMap serviceroom = new ServiceroomMap();
 		Room room = roomDAO.findByKey(id);
-		System.out.println(room.getName());
+
 		Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
 		String keyOrder = "";
 		String totalTime = "";
@@ -169,7 +170,7 @@ public class OrderController {
 		// phòng đang trống
 		case "1": {
 			url = "modal-open-room";
-			
+
 			break;
 		}
 		// phòng đang ở
@@ -180,7 +181,7 @@ public class OrderController {
 			keyOrder = orderDao.findKey(order);
 			customer = customerDAO.findByCustomer(order.getCustomer());
 			serviceroom = order.getServiceOrder();
-			if(order.getServiceOrder() != null) {
+			if (order.getServiceOrder() != null) {
 				serviceRoomMap = serviceRoomDao.findServiceNotOrder(serviceRoomMap, serviceroom);
 			}
 			totalTime = Format.checkDate(order.getTimeCheckInDate(), new Date());
@@ -224,10 +225,18 @@ public class OrderController {
 	}
 
 	// create order
-	@RequestMapping("/admin/orders/create/{id}")
+	@RequestMapping(path = "/admin/orders/create/{id}", method = RequestMethod.POST)
 	public String createOrder(@PathVariable("id") String idRom, @ModelAttribute("order") Order o,
-			@ModelAttribute("customer") Customer customer) {
-
+			@Valid @ModelAttribute("customer") Customer customer, BindingResult error,Model model) {
+		if (error.hasErrors()) {
+			Room room = roomDAO.findByKey(idRom);
+			Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
+			model.addAttribute("typeRoom", typeroom);
+			model.addAttribute("roomOrder", room);
+			model.addAttribute("priceRoom", Format.formatNumber(typeroom.getPrice()));
+			System.out.println("lỗi");
+			return "admin/modalOrders/modal-open-room";
+		}
 		Order order = new Order();
 		Date date = new Date();
 		// find room need open and update status
@@ -260,15 +269,15 @@ public class OrderController {
 
 		roomDAO.update(idRom, room);
 		orderDao.create(order);
-
+		System.out.println("create");
 		return "redirect:/admin/orders";
 	}
 
-	// request update order
+	// request update order	
 	@RequestMapping("/update/detail-room-serivce/{id}")
-	public String updateOrder(@PathVariable("id") String id, Model model, @ModelAttribute("customer") Customer customer) {
-		
-		
+	public String updateOrder(@PathVariable("id") String id, Model model,
+			@ModelAttribute("customer") Customer customer) {
+
 		model.addAttribute("id", id);
 		HttpSession session = request.getSession();
 		session.setAttribute("message", "Sửa thành công phòng " + id);
@@ -287,7 +296,6 @@ public class OrderController {
 		Order order = map.get(key);
 
 		ServiceroomMap serviceroomMap = new ServiceroomMap();
-		
 
 		if (order.getServiceOrder() == null) {
 			for (String keySerivce : list) {
@@ -311,9 +319,10 @@ public class OrderController {
 		orderDao.update(key, order);
 		return "redirect:/admin/orders";
 	}
-	
+
 	@RequestMapping("/admin/orders/pay-form/{keyOrder}")
 	public String payFormOrder(@PathVariable("keyOrder") String keyOrder, Model model) {
+		System.out.println(keyOrder);
 		Order order = orderDao.findByKey(keyOrder);
 		String idRoom = paramService.getString("idRoom", "");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM:ss dd-MM-yyyy");
@@ -326,16 +335,19 @@ public class OrderController {
 		Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
 		model.addAttribute("customer", customer);
 		PromotionMap promotionMap = promotionDAO.findAll();
+		double totalPS = 0;
+		if(servicerRoomOrder != null ) {
+			totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
+		}
 		
-		double totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
 		String totalPriceService = Format.formatNumber(totalPS);
-		
+
 		double totalMoneyR = orderService.totalMoneyRoom(order.getTimeCheckInDate(), new Date(), typeroom.getPrice());
 		String totalMoneyRoom = Format.formatNumber(totalMoneyR);
-		
+
 		double totalMoney = totalPS + totalMoneyR;
 		String totalMoneyString = Format.formatNumber(totalMoney);
-		
+
 		model.addAttribute("roomOrder", room);
 		model.addAttribute("time", date);
 		model.addAttribute("order", order);
@@ -351,7 +363,7 @@ public class OrderController {
 		model.addAttribute("idRoom", idRoom);
 		return "admin/modalOrders/Modal-pay";
 	}
-	
+
 	@RequestMapping("/admin/orders/pay/{keyOrder}")
 	public String payOrder(@PathVariable("keyOrder") String keyOrder, Model model) {
 		Order order = orderDao.findByKey(keyOrder);
@@ -366,26 +378,25 @@ public class OrderController {
 		Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
 		model.addAttribute("customer", customer);
 		PromotionMap promotionMap = promotionDAO.findAll();
-		
+
 		double totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
 		String totalPriceService = Format.formatNumber(totalPS);
-		
+
 		double totalMoneyR = orderService.totalMoneyRoom(order.getTimeCheckInDate(), new Date(), typeroom.getPrice());
 		String totalMoneyRoom = Format.formatNumber(totalMoneyR);
-		
+
 		double totalMoney = totalPS + totalMoneyR;
 		String totalMoneyString = Format.formatNumber(totalMoney);
-		
-		
+
 		Date dateCheckout = new Date();
 		order.setTimeCheckOutDate(dateCheckout);
 		order.setStatus("1");
-		
+
 		room.setStatus("1");
 		System.out.println("pay");
 //		roomDAO.update(idRoom, room);
 //		orderDao.update(keyOrder, order);
-		
+
 		model.addAttribute("paySuccess", "Thanh toán thành công");
 		model.addAttribute("roomOrder", room);
 		model.addAttribute("time", date);
@@ -402,6 +413,7 @@ public class OrderController {
 		model.addAttribute("idRoom", idRoom);
 		return "admin/modalOrders/Modal-pay";
 	}
+
 	// subtring list service
 	public static List<String> splitString(String string) {
 		List<String> substrings = new ArrayList<>();

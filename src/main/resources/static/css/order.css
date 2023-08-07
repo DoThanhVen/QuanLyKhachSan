@@ -220,8 +220,15 @@
 .order-time-in {
 	margin: 0;
 }
-
-
+#form {
+	
+}
+.body-content {
+	background-color: #f0f0f0;
+}
+.body-content-title {
+	text-align: center;
+}
 
 
 
