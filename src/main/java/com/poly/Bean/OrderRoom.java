@@ -26,4 +26,6 @@ public class OrderRoom {
 	private Date dateCancel;
 	@NotNull
 	private int numberPeople;
+	
+	
 }
