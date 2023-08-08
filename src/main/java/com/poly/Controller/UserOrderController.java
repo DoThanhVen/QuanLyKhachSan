@@ -74,42 +74,47 @@ public class UserOrderController {
 						Room roomOrder = roomDAO.findByKey(room);
 						if (roomOrder.getStatus().equals("1")) {
 							if (dateDAO.checkDate(dateDAO.getDate(checkIn), dateDAO.getDate(checkOut)) > 0) {
-								if (numberPeople == null || numberPeople.isEmpty()) {
-									message = "Vui lòng nhập số lượng người ở!";
-								} else {
-									if (isNumber(numberPeople)) {
-										try {
-											// ROOM
-											RoomMap roomMap = new RoomMap();
-											roomMap.put(room, roomOrder);
-											// CUSTOMER ORDER
-											OrderRoom order = new OrderRoom();
-											roomOrder.setStatus("3");
-											order.setDateCheckIn(dateDAO.getDate(checkIn));
-											order.setDateCheckOut(dateDAO.getDate(checkOut));
-											order.setDateAt(new Date());
-											order.setTypeOrder(false);
-											order.setDateCancel(null);
-											order.setNameCustomer(account.getUsername());
-											order.setPhoneCustomer(account.getPhone());
-											order.setCCCDCustomer(account.getCccd());
-											order.setNumberPeople(Integer.parseInt(numberPeople));
-											order.setDateCancel(new Date());
-											order.setStatus("1");
-											order.setRoom(roomMap);
-											orderRoomDAO.create(order);
-											// SET STATUS ROOM
-											roomDAO.update(room, roomOrder);
-											message = "Bạn đã đặt phòng " + roomOrder.getName() + " thành công!";
-											response.setSuccess(true);
-										} catch (Exception e) {
-											message = "Đặt phòng thất bại!";
-											e.printStackTrace();
-										}
+								if(dateDAO.checkDate(dateDAO.getDate(checkIn),new Date()) >= 0){
+									if (numberPeople == null || numberPeople.isEmpty()) {
+										message = "Vui lòng nhập số lượng người ở!";
 									} else {
-										message = "Số lượng người ở không hợp lệ!";
+										if (isNumber(numberPeople)) {
+											try {
+												// ROOM
+												RoomMap roomMap = new RoomMap();
+												roomMap.put(room, roomOrder);
+												// CUSTOMER ORDER
+												OrderRoom order = new OrderRoom();
+												roomOrder.setStatus("3");
+												order.setDateCheckIn(dateDAO.getDate(checkIn));
+												order.setDateCheckOut(dateDAO.getDate(checkOut));
+												order.setDateAt(new Date());
+												order.setTypeOrder(false);
+												order.setDateCancel(null);
+												order.setNameCustomer(account.getUsername());
+												order.setPhoneCustomer(account.getPhone());
+												order.setCCCDCustomer(account.getCccd());
+												order.setNumberPeople(Integer.parseInt(numberPeople));
+												order.setDateCancel(new Date());
+												order.setStatus("1");
+												order.setRoom(roomMap);
+												orderRoomDAO.create(order);
+												// SET STATUS ROOM
+												roomDAO.update(room, roomOrder);
+												message = "Bạn đã đặt phòng " + roomOrder.getName() + " thành công!";
+												response.setSuccess(true);
+											} catch (Exception e) {
+												message = "Đặt phòng thất bại!";
+												e.printStackTrace();
+											}
+										} else {
+											message = "Số lượng người ở không hợp lệ!";
+										}
 									}
+								}else {
+									message = "Ngày nhận phòng không hợp lệ!";
 								}
+								
 							} else {
 								message = "Thời gian nhận trả phòng không hợp lệ!";
 							}

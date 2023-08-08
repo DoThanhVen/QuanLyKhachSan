@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -116,31 +117,33 @@ public class OrderRoomController {
 		model.addAttribute("keyOrderRoom", keyOrderRoom);
 		return "admin/modalOrders/modal-edit-order-room";
 	}
+
 	// create order room
 	@RequestMapping(path = "/admin/orders/create-order-room", method = RequestMethod.POST)
-	public String createOrderRoom(@Valid @ModelAttribute("orderRoom") OrderRoom orderRoom, BindingResult errors, Model model) {
+	public String createOrderRoom(@Valid @ModelAttribute("orderRoom") OrderRoom orderRoom, BindingResult errors,
+			Model model) {
 		String keyRoom = paramService.getString("keyRoom", "");
 		String keyTypeRoom = paramService.getString("keyTypeRoom", "create");
 		String dateCheckIn = paramService.getString("CheckIn", "");
 		String dateCheckOut = paramService.getString("CheckOut", "");
-		
-		// check error 
-		if(errors.hasErrors() || dateCheckIn.equals("") || dateCheckOut.equals("") || keyRoom.equals("none")) {
-			
-			if(dateCheckIn.equals("")) {
+
+		// check error
+		if (errors.hasErrors() || dateCheckIn.equals("") || dateCheckOut.equals("") || keyRoom.equals("none")) {
+
+			if (dateCheckIn.equals("")) {
 				String messageErrorCheckIn = "Ngày checkin không thể trống";
-				
+
 				model.addAttribute("messageErrorCheckIn", messageErrorCheckIn);
 			}
-			if(dateCheckOut.equals("")) {
+			if (dateCheckOut.equals("")) {
 				String messageErrorCheckOut = "Ngày checkout không thể trống";
 				model.addAttribute("messageErrorCheckOut", messageErrorCheckOut);
 			}
-			if(keyRoom.equals("none")) {
+			if (keyRoom.equals("none")) {
 				String messageErrorKeyRoom = "Bạn chưa chọn phòng";
 				model.addAttribute("messageErrorKeyRoom", messageErrorKeyRoom);
 			}
-			
+
 			RoomMap roomEmpty = new RoomMap();
 			TyperoomMap typeroomMap = typeroomDAO.findAll();
 			Typeroom typeroom = new Typeroom();
@@ -314,5 +317,4 @@ public class OrderRoomController {
 		orderDAO.create(order);
 		return "redirect:/admin/orders";
 	}
-
 }
