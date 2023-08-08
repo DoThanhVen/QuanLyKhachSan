@@ -32,12 +32,12 @@
 	height: 1px;
 	left: 0;
 	bottom: 0;
-	background-color: red;
+	background-color: green;
 	transition: all .5s ease;
 }
 
 .nav-tabs .nav-item .nav-link.active {
-	color: red;
+	color: green;
 }
 
 .nav-tabs .nav-item .nav-link.active::after {

@@ -41,14 +41,14 @@
 						<th></th>
 					</tr>
 					<tbody>
-						<tr th:each="room : ${listRoom}" th:if="${room[6] == '1'}">
-							<td th:text="*{#dates.format(room[0], 'HH:mm:ss dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[1], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[2], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{room[3]}"></td>
-							<td th:text="*{room[4]}"></td>
-							<td th:text="*{{#numbers.formatDecimal(room[5],0,'COMMA',0,'POINT')}}"></td>
-							<td><a class="btn btn-danger">Hủy Phòng</a></td>
+						<tr th:each="room : ${listRoom}" th:if="${room[8] == '1'}">
+							<td th:text="${room[1]}"></td>
+							<td th:text="${room[2]}"></td>
+							<td th:text="${room[3]}"></td>
+							<td th:text="${room[4]}"></td>
+							<td th:text="${room[5]}"></td>
+							<td th:text="${#numbers.formatDecimal(room[6], 0, 'COMMA', 0, 'POINT')}"></td>
+							<td><a th:id="${room[0]}" class="btn btn-danger cancel-room" th:value="${room[0]}">Hủy Phòng</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -65,13 +65,13 @@
 						<th>Giá Phòng</th>
 					</tr>
 					<tbody>
-						<tr th:each="room : ${listRoom}" th:if="${room[6] == '2'}">
-							<td th:text="*{#dates.format(room[0], 'HH:mm:ss dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[1], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[2], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{room[3]}"></td>
-							<td th:text="*{room[4]}"></td>
-							<td th:text="*{{#numbers.formatDecimal(room[5],0,'COMMA',0,'POINT')}}"></td>
+						<tr th:each="room : ${listRoom}" th:if="${room[8] == '2'}">
+							<td th:text="${room[1]}"></td>
+							<td th:text="${room[2]}"></td>
+							<td th:text="${room[3]}"></td>
+							<td th:text="${room[4]}"></td>
+							<td th:text="${room[5]}"></td>
+							<td th:text="${#numbers.formatDecimal(room[6], 0, 'COMMA', 0, 'POINT')}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -87,17 +87,17 @@
 						<th>Loại Phòng</th>
 						<th>Mã Phòng</th>
 						<th>Giá Phòng</th>
-						<th></th>
+						<th>Ngày Hủy Phòng</th>
 					</tr>
 					<tbody>
-						<tr th:each="room : ${listRoom}" th:if="${room[6] == '4'}">
-							<td th:text="*{#dates.format(room[0], 'HH:mm:ss dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[1], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{#dates.format(room[2], 'dd/MM/yyyy')}"></td>
-							<td th:text="*{room[3]}"></td>
-							<td th:text="*{room[4]}"></td>
-							<td th:text="*{{#numbers.formatDecimal(room[5],0,'COMMA',0,'POINT')}}"></td>
-							<td><a class="btn btn-success">Đặt Lại</a></td>
+						<tr th:each="room : ${listRoom}" th:if="${room[8] == '0'}">
+							<td th:text="${room[1]}"></td>
+							<td th:text="${room[2]}"></td>
+							<td th:text="${room[3]}"></td>
+							<td th:text="${room[4]}"></td>
+							<td th:text="${room[5]}"></td>
+							<td th:text="${#numbers.formatDecimal(room[6], 0, 'COMMA', 0, 'POINT')}"></td>
+							<td th:text="${room[9]}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -105,5 +105,26 @@
 		</div>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $(".cancel-room").click(function() {
+	    	var roomId = $(this).attr("value");
+ 	        $.ajax({
+	            url: "/user/cancelRoom/" + roomId,
+	            type: "POST",
+	            success: function(response) {
+	                if (response.success === true) {
+	                    thongBao('Thông Báo!', response.message, 'success', true);
+	                } else {
+	                    thongBao('Thông Báo!', response.message, 'error', false);
+	                }
+	            },
+	            error: function(xhr) {
+	                console.log(xhr.responseText);
+	            }
+	        }); 
+	    });
+	});
+	</script>
 </body>
 </html>

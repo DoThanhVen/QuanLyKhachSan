@@ -52,9 +52,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		String name = oauth2.getPrincipal().getAttribute("name");
 		String password = Long.toHexString(System.currentTimeMillis());
 		session.setAttribute("username", email);
-		session.setAttribute("admin", true);
-		session.setAttribute("statusLogin", true);
-		UserDetails user = User.withUsername(email).password(pe.encode(password)).roles("ADMIN").build();
+		session.setAttribute("admin", false);
+		UserDetails user = User.withUsername(email).password(pe.encode(password)).roles("GUEST").build();
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}

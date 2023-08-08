@@ -1,5 +1,6 @@
 package com.poly.DAO;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.http.HttpEntity;
@@ -70,12 +71,25 @@ public class OrderRoomDAO {
 		}
 		return null;
 	}
+
 	public String findKeyRom(OrderRoom orderRoom) {
 		String keyRoom = "";
-	
 		for (Entry<String, Room> o : orderRoom.getRoom().entrySet()) {
 			keyRoom = o.getKey();
 		}
 		return keyRoom;
+	}
+
+	public OrderRoomMap getAllRoomForCustomer(String username) {
+		OrderRoomMap findAll = findAll();
+		OrderRoomMap newMap = new OrderRoomMap();
+		for (Map.Entry<String, OrderRoom> roomEntry : findAll.entrySet()) {
+			String orderID = roomEntry.getKey();
+			OrderRoom orderValue = roomEntry.getValue();
+			if (username.equals(orderValue.getNameCustomer()) && !orderValue.isTypeOrder()) {
+				newMap.put(orderID, roomEntry.getValue());
+			}
+		}
+		return newMap;
 	}
 }

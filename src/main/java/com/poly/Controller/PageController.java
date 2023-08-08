@@ -22,20 +22,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.poly.Bean.Account;
-import com.poly.Bean.CustomerOrder;
-import com.poly.Bean.Room;
-import com.poly.Bean.RoomMap;
-import com.poly.Bean.Serviceroom;
-import com.poly.Bean.ServiceroomMap;
-import com.poly.Bean.Typeroom;
-import com.poly.Bean.TyperoomMap;
-import com.poly.DAO.AccountDAO;
-import com.poly.DAO.CustomerOrderDAO;
-import com.poly.DAO.GetDateDAO;
-import com.poly.DAO.RoomDAO;
-import com.poly.DAO.ServiceroomDAO;
-import com.poly.DAO.TyperoomDAO;
+import com.poly.Bean.*;
+import com.poly.DAO.*;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -48,22 +36,23 @@ public class PageController {
 	@Autowired
 	RoomDAO roomdao;
 	@Autowired
-	CustomerOrderDAO customerOrderDAO;
-	@Autowired
 	AccountDAO accountDAO;
 	@Autowired
 	HttpSession session;
 	@Autowired
 	GetDateDAO dateDAO;
+	@Autowired
+	OrderRoomDAO orderRoomDAO;
+	@Autowired
+	GetDateDAO getDateDAO;
 
 	// CUSTOMER
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("typerooms", typeroomdao.findAll());
-		boolean status = (boolean) session.getAttribute("statusLogin");
-		if (status == false) {
-			if ((String) session.getAttribute("username") != null) {
-				Account account = accountDAO.findByUsername((String) session.getAttribute("username"));
+		if ((String) session.getAttribute("username") != null) {
+			Account account = accountDAO.findByUsername((String) session.getAttribute("username"));
+			if (account != null) {
 				for (String role : account.getRole()) {
 					if (role.equals("ADMIN")) {
 						session.setAttribute("admin", true);
@@ -86,41 +75,33 @@ public class PageController {
 
 	@GetMapping("/order-history")
 	public String orderHistory(Model model) {
-		HashMap<String, Object> dataMap = customerOrderDAO
-				.findAllRoomCustomer((String) session.getAttribute("username"));
+		OrderRoomMap dataMap = orderRoomDAO.getAllRoomForCustomer((String) session.getAttribute("username"));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Gson gson = new Gson();
-		List<Object> list = new ArrayList<>();
-		for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
-			String key = entry.getKey();
-			JsonObject jsonObject = gson.toJsonTree(entry.getValue()).getAsJsonObject();
-			String idCustomer = jsonObject.get("idCustomer").getAsString();
-			String idRoom = jsonObject.get("idRoom").getAsString();
-			String idTypeRoom = jsonObject.get("idTypeRoom").getAsString();
-			String timeCheckInDateStr = jsonObject.get("timeCheckInDate").getAsString();
-			String timeCheckOutDateStr = jsonObject.get("timeCheckOutDate").getAsString();
-			String timeOrderRoomStr = jsonObject.get("timeOrderRoom").getAsString();
-			String statusOrder = jsonObject.get("statusOrder").getAsString();
-			Double numberDays = jsonObject.get("numberDays").getAsDouble();
-			try {
-				long timeCheckInMillis = Long.parseLong(timeCheckInDateStr);
-				long timeCheckOutMillis = Long.parseLong(timeCheckOutDateStr);
-				long timeOrderRoomMillis = Long.parseLong(timeOrderRoomStr);
-
-				Date timeCheckInDate = new Date(timeCheckInMillis);
-				Date timeCheckOutDate = new Date(timeCheckOutMillis);
-				Date timeOrderRoom = new Date(timeOrderRoomMillis);
-
-				list.add(new Object[] { timeOrderRoom, timeCheckInDate, timeCheckOutDate,
-						typeroomdao.findByKey(idTypeRoom).getName(), roomdao.findByKey(idRoom).getName(),
-						typeroomdao.findByKey(idTypeRoom).getPrice()
-								* dateDAO.checkDate(timeCheckInDate, timeCheckOutDate),
-						statusOrder });
-			} catch (Exception e) {
-				e.printStackTrace();
+		System.out.println("Độ dài MAP: " + dataMap.size());
+		List<Object> listOrder = new ArrayList<>();
+		for (Map.Entry<String, OrderRoom> entry : dataMap.entrySet()) {
+			OrderRoom orderRoom = entry.getValue();
+			String timeCheckInDateStr = dateFormat.format(orderRoom.getDateCheckIn());
+			String timeCheckOutDateStr = dateFormat.format(orderRoom.getDateCheckOut());
+			String timeOrderRoomStr = dateFormat.format(orderRoom.getDateAt());
+			String timeCancelStr = dateFormat.format(orderRoom.getDateCancel());
+			String nameRoom = "";
+			String keyTypeRoom = "";
+			String statusRoom = "";
+			String statusOrder = orderRoom.getStatus();
+			for (Room room : orderRoom.getRoom().values()) {
+				nameRoom = room.getName();
+				keyTypeRoom = room.getTyperoom();
+				statusRoom = room.getStatus();
 			}
+			String nameTypeRoom = typeroomdao.findByKey(keyTypeRoom).getName();
+			Long price = (long) (getDateDAO.checkDate(orderRoom.getDateCheckIn(), orderRoom.getDateCheckOut())
+					* typeroomdao.findByKey(keyTypeRoom).getPrice());
+			System.out.println("Trạng Thái Phòng: " + statusRoom);
+			listOrder.add(new Object[] { entry.getKey(), timeOrderRoomStr, timeCheckInDateStr, timeCheckOutDateStr,
+					nameTypeRoom, nameRoom, price, statusRoom, statusOrder, timeCancelStr });
 		}
-		model.addAttribute("listRoom", list);
+		model.addAttribute("listRoom", listOrder);
 		return "user/order-history";
 	}
 

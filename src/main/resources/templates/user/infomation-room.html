@@ -70,13 +70,6 @@
 			<li class="price">Giá phòng: <a
 				th:text="*{#numbers.formatDecimal(price,0,'COMMA',0,'POINT')}"></a>đ/Ngày
 			</li>
-			<th:block th:if="*{name == 'Queen' || name == 'Superior'}">
-				<li class="quantity menu-item">Số lượng người ở: 1-4 người</li>
-			</th:block>
-			<th:block th:if="*{name != 'Queen' && name != 'Superior'}">
-				<li class="quantity menu-item">Số lượng người ở: 1-2 người</li>
-			</th:block>
-
 			<li class="acreage">Diện tích: 20m<sup>2</sup></li>
 			<li>Tiện nghi:
 				<ul class="menu list-group convenient">
@@ -101,6 +94,10 @@
 				<label for="check-out">Ngày Trả Phòng:</label> <input type="date"
 					id="check-out" name="dateCheckout" class="date-input">
 			</div>
+			<div class="check-out mt-3">
+				<label for="numberPeople">Số Người Ở:</label> <input type="text"
+					id="numberPeople" class="date-input" placeholder="Số người">
+			</div>
 			<div class="mt-2">DANH SÁCH PHÒNG TRỐNG</div>
 			<div class="list-room-none mt-3">
 				<div th:if="${sizeRoom > 0}">
@@ -114,13 +111,43 @@
 				</div>
 			</div>
 			<b th:text="${message}" style="color: red"></b>
-			<button th:if="${sizeRoom > 0}"
-				th:formaction="@{|/user/orderRoom|}" type="submit" id="order-room"
+			<button th:if="${sizeRoom > 0}" id="order-room"
 				class="mt-3">Đặt Phòng</button>
-			<button th:if="${sizeRoom == 0}" type="submit"
+			<button th:if="${sizeRoom == 0}"
 				id="order-room" class="mt-3" disabled>Hết Phòng</button>
 		</div>
 	</form>
 	<div id="footer" th:replace="@{user/footer}"></div>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#order-room").click(function() {
+			var dateCheckIn = $("#check-in").val();
+			var dateCheckOut = $("#check-out").val();
+			var idRoom = $(".checkedRoom").val();
+			var numberPeople = $("#numberPeople").val();
+			
+			$.ajax({
+				type : "POST",
+				url : "/user/orderRoom",
+				data : {
+					dateCheckIn : dateCheckIn,
+					dateCheckOut : dateCheckOut,
+					idRoom : idRoom,
+					numberPeople : numberPeople
+				},
+				success : function(data) {
+					if(data.success === true){
+						thongBao('Thông Báo',data.message,'success',true);	
+					}else{
+						thongBao('Thông Báo',data.message,'error',false);
+					}
+				},
+				error : function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		});
+	});
+	</script>
 </body>
 </html>
