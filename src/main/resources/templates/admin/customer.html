@@ -10,8 +10,7 @@
 <body>
 	<div id="header" th:replace="@{admin/menu}"></div>
 	<div class="container">
-		<div class="heading">Thông Tin Khách Hàng</div>
-		<div style="color: red; text-align: center">[[${message}]]</div>
+		<div class="heading">Thông Tin Khách Hàng</div>>
 		<form th:object="${form}">
 			<div class="formImage" th:if="*{image}">
 				<img style="width: 300px" th:src="*{image}" id="imgload"
@@ -27,7 +26,7 @@
 			</div>
 			<div class="mb-3">
 				<label for="security">CCCD/CMND:</label> <input type="text" name
-					id="security" th:field="*{cccd}">
+					id="cccd" th:field="*{cccd}">
 			</div>
 			<div class="mb-3">
 				<label>Giới Tính:</label><input type="radio" th:field="*{gender}"
@@ -44,8 +43,7 @@
 					id="address" th:field="*{address}">
 			</div>
 			<button type="submit"
-				th:formaction="@{|/admin/updateCustomer/${key}|}"
-				class="btn btn-success">Edit</button>
+				class="btn btn-success" id="changeInfo" th:value="${key}">Edit</button>
 			<button type="submit"
 				th:formaction="@{|/admin/deleteCustomer/${key}|}"
 				class="btn btn-danger">Delete</button>
@@ -78,17 +76,69 @@
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
 	<script type="text/javascript">
-		document.querySelector("#inputImage").addEventListener("change",
-				readFile);
+	function isValidPhoneNumber(phoneNumber) {
+		  const phoneRegex = /^(0|\+84)(\s|\.|_|-)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.|_|-)?(\d{3})(\s|\.|_|-)?(\d{3})$/;
+		  return phoneRegex.test(phoneNumber);
+	}
+	
+	function isValidID(citizenID) {
+		  // Loại bỏ khoảng trắng nếu có
+		  citizenID = citizenID.replace(/\s/g, '');
 
-		function readFile() {
-			const FR = new FileReader();
-			FR.addEventListener("load", function(evt) {
-				document.querySelector("#imgload").src = evt.target.result;
-				document.querySelector("#srcImg").value = evt.target.result;
-			});
-			FR.readAsDataURL(this.files[0]);
+		  const regex = /^\d{10}$|^\d{12}$/;
+		  return regex.test(citizenID);
 		}
+	
+		$(document).ready(function() {
+			$("#changeInfo").click(function() {
+				var roomId = $(this).attr("value");
+				 const username = $("#username").val();
+				const fullname = $("#fullname").val(); 
+				const cccd = $("#cccd").val();
+				const phone = $("#phone").val();
+				const address = $("#address").val();
+				const gender = $("input[name='gender']:checked").val();
+				
+				if(isValidPhoneNumber(phone) === false){
+					thongBao('Thông Báo','Số điện thoại không hợp lệ!',
+					'error',false);
+					return;
+				}
+				
+				if(isValidID(cccd) === false){
+					thongBao('Thông Báo','CMND/CCCD không hợp lệ!',
+					'error',false);
+					return;
+				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/admin/updateCustomer/"+roomId,
+					data:{
+						username : username,
+						fullname : fullname,
+						cccd : cccd,
+						phone : phone,
+						address : address,
+						gender : gender
+					},
+					success : function(response) {
+						if (response.success === true) {
+							thongBao('Thông Báo',response.message,
+									'success',false);
+							redirectURL("/admin/customer");
+						} else {
+							thongBao('Thông Báo',response.message,
+									'error',false);
+						}
+						console.log(response);
+					},
+					error : function(xhr, status, error) {
+						console.error(error);
+					}
+				}); 
+			});
+		});
 	</script>
 </body>
 </html>

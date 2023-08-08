@@ -28,6 +28,8 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
 	integrity="sha512-********************" crossorigin="anonymous" />
+	<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
 
 </head>
 <body>
@@ -43,8 +45,7 @@
 				onclick="redirectURL('/admin/customer')">Khách Hàng</a></li>
 			<li class="menu-item"><a
 				onclick="redirectURL('/admin/management')">Quản Lý</a></li>
-			<li class="menu-item"><a
-				onclick="redirectURL('/admin/orders')">Order</a></li>
+			<li class="menu-item"><a onclick="redirectURL('/admin/orders')">Order</a></li>
 		</ul>
 		<div class="contact" th:if="${session.username}">
 			<ul>
@@ -57,7 +58,17 @@
 	</nav>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
 	<script>
+	function thongBao(title, message, status,reload) {
+	    swal(title, message, status);
+	    if(reload === true){
+		    $(".swal2-confirm, .swal2-styled").on("click", function() {
+	            location.reload();
+	         });	
+	    }
+	  }
             //SHOW MENU
             const buttonMenu = document.querySelector('.bx-list-ul');
             const menu = document.querySelector('.menu');

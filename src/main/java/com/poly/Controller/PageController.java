@@ -77,7 +77,6 @@ public class PageController {
 	public String orderHistory(Model model) {
 		OrderRoomMap dataMap = orderRoomDAO.getAllRoomForCustomer((String) session.getAttribute("username"));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println("Độ dài MAP: " + dataMap.size());
 		List<Object> listOrder = new ArrayList<>();
 		for (Map.Entry<String, OrderRoom> entry : dataMap.entrySet()) {
 			OrderRoom orderRoom = entry.getValue();
@@ -97,7 +96,6 @@ public class PageController {
 			String nameTypeRoom = typeroomdao.findByKey(keyTypeRoom).getName();
 			Long price = (long) (getDateDAO.checkDate(orderRoom.getDateCheckIn(), orderRoom.getDateCheckOut())
 					* typeroomdao.findByKey(keyTypeRoom).getPrice());
-			System.out.println("Trạng Thái Phòng: " + statusRoom);
 			listOrder.add(new Object[] { entry.getKey(), timeOrderRoomStr, timeCheckInDateStr, timeCheckOutDateStr,
 					nameTypeRoom, nameRoom, price, statusRoom, statusOrder, timeCancelStr });
 		}
