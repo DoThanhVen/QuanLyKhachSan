@@ -229,7 +229,9 @@
 .body-content-title {
 	text-align: center;
 }
-
+.form-message {
+	color: red;
+}
 
 
 

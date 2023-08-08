@@ -17,6 +17,7 @@ public class OrderRoom {
 	private String nameCustomer;
 	@NotBlank
 	private String phoneCustomer;
+
 	private String CCCDCustomer;
 	private RoomMap room;
 	private Date dateAt;

@@ -59,7 +59,7 @@
 										th:object="${typeRoom.value}" class="nav-item"><a
 										th:class="nav-link"
 										th:classappend="${keyTR.equals(typeRoom.key)} ? active : ''"
-										th:href="@{|/admin/orders/form-order-room/${typeRoom.key}|}">[[${typeRoom.value.name}]]</a></li>
+										th:href="@{|/admin/orders/form-order-room?keyTypeRoom=${typeRoom.key}|}">[[${typeRoom.value.name}]]</a></li>
 								</ul>
 								<!-- Tab panes -->
 								<div class="tab-content">
@@ -107,8 +107,8 @@
 						<h4>Thông tin khác hàng</h4>
 						<div class="col-6">
 							<div class="form-group" hidden="true">
-								<label for="keyTypeRoom">Tên khách hàng: </label> <input
-									name="${keyTypeRoom}" class="form-group-item" />
+								<label for="keyTypeRoom">Loại phòng </label> <input
+									th:value="${keyTypeRoom}" class="form-group-item" />
 							</div>
 							<div class="form-group">
 								<label for="name">Tên khách hàng: </label> <input
@@ -133,9 +133,9 @@
 			</div>
 			<!-- Modal footer -->
 			<div class="modal-footer">
-				<button th:formaction="@{/admin/orders/create-order-room}"
+				<button th:formaction="@{/admin/orders/form-order-room}"
 					class="btn btn-success">Đặt phòng</button>
-				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+				<a th:href="@{/admin/orders}" class="btn btn-danger">Đóng</a>
 			</div>
 		</form>
 	</div>

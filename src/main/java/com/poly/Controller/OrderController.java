@@ -170,7 +170,6 @@ public class OrderController {
 		// phòng đang trống
 		case "1": {
 			url = "modal-open-room";
-
 			break;
 		}
 		// phòng đang ở
@@ -181,7 +180,7 @@ public class OrderController {
 			keyOrder = orderDao.findKey(order);
 			customer = customerDAO.findByCustomer(order.getCustomer());
 			serviceroom = order.getServiceOrder();
-			if (order.getServiceOrder() != null) {
+			if (order.getServiceOrder() != null && serviceRoomMap != null) {
 				serviceRoomMap = serviceRoomDao.findServiceNotOrder(serviceRoomMap, serviceroom);
 			}
 			totalTime = Format.checkDate(order.getTimeCheckInDate(), new Date());
@@ -199,7 +198,7 @@ public class OrderController {
 		}
 		// phòng chưa dọn
 		case "5": {
-			url = "modal-detail-room";
+			url = "modal-clean-room";
 			break;
 		}
 		// phòng đang sửa
@@ -266,7 +265,7 @@ public class OrderController {
 		order.setServiceOrder(null);
 		order.setTimeCheckOutDate(null);
 		order.setUserCreate("datnvpk02264@gamil.com");
-
+		
 		roomDAO.update(idRom, room);
 		orderDao.create(order);
 		System.out.println("create");
@@ -338,6 +337,9 @@ public class OrderController {
 		double totalPS = 0;
 		if(servicerRoomOrder != null ) {
 			totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
+		}else {
+			System.out.println("null service room");
+			
 		}
 		
 		String totalPriceService = Format.formatNumber(totalPS);
@@ -392,10 +394,10 @@ public class OrderController {
 		order.setTimeCheckOutDate(dateCheckout);
 		order.setStatus("1");
 
-		room.setStatus("1");
+		room.setStatus("5");
 		System.out.println("pay");
-//		roomDAO.update(idRoom, room);
-//		orderDao.update(keyOrder, order);
+		roomDAO.update(idRoom, room);
+		orderDao.update(keyOrder, order);
 
 		model.addAttribute("paySuccess", "Thanh toán thành công");
 		model.addAttribute("roomOrder", room);
@@ -413,7 +415,13 @@ public class OrderController {
 		model.addAttribute("idRoom", idRoom);
 		return "admin/modalOrders/Modal-pay";
 	}
-
+	@RequestMapping("/admin/orders/clean-room/{keyRoom}")
+	public String cleanRoom(@PathVariable("keyRoom") String keyRoom) {
+		Room room = roomDAO.findByKey(keyRoom);
+		room.setStatus("1");
+		roomDAO.update(keyRoom, room);
+		return "redirect:/admin/orders";
+	}
 	// subtring list service
 	public static List<String> splitString(String string) {
 		List<String> substrings = new ArrayList<>();

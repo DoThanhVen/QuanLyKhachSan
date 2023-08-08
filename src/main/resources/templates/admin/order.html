@@ -86,7 +86,7 @@
 						data-bs-toggle="dropdown">Tuỳ chọn khác</button>
 					<ul class="dropdown-menu">
 						<li><a id="btn-order-room" class="dropdown-item"
-							th:href="@{/admin/orders/form-order-room/create}">Đặt phòng</a></li>
+							th:href="@{/admin/orders/form-order-room}">Đặt phòng</a></li>
 					</ul>
 				</div>
 
@@ -151,12 +151,12 @@
 							</div>
 						</a>
 						<!-- 5 phòng chưa dọn -->
-						<a th:case="'5'" class="detail-room purpleColor"
+						<a th:case="'5'" class="detail-room purpleColor" id="clean-room"
 							th:href="@{|/admin/orders/detail-room/${room.key}?status=5|}">
 							<div class="detail-room-item">
 								<p>Phòng [[*{name}]]</p>
 								<i class="fa-solid fa-broom"></i>
-
+							
 							</div>
 						</a>
 						<!-- 5 phòng đang sửa -->
@@ -194,32 +194,23 @@
 	<div id="footer" th:replace="~{user/footer}"></div>
 	<!-- The Modal -->
 	<div class="modal fade" id="myModal">
-		<div class="modal-dialog modal-xl">
+		<div class="modal-dialog modal-sm">
 			<div class="modal-content"></div>
 		</div>
 	</div>
 </body>
-<!-- <script type="text/javascript">
+<script type="text/javascript">
 	$(document).ready(function() {
-				$(".detail-room").on(
+				$("#clean-room").on(
 						'click',
 						function(e) {
 							e.preventDefault();
 							$('#myModal').modal('show').find('.modal-content')
 									.load($(this).attr('href'))
 						})
-
-
-						$('#btn-order-room').on("click", function(e){
-							console.log("clcik")
-							e.preventDefault();
-							$('#myModal').modal('show').find('.modal-content')
-									.load($(this).attr('href'))
-							})
-							
 					}
 				)
-</script> -->
+</script> 
 
 <script type="text/javascript">
 	const messageTimeOut = setTimeout(closeMessage, 3000)
