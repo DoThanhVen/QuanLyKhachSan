@@ -170,10 +170,8 @@
 				<div class="modal-footer">
 					<a id="btn-pay"
 						th:href="@{|/admin/orders/pay-form/${keyOrder}?idRoom=${id}}|"
-						class="btn btn-success">Thanh toán</a>
-
-					<a th:href="@{/admin/orders}" class="btn btn-danger"
-						>Trở về</a>
+						class="btn btn-success">Thanh toán</a> <a
+						th:href="@{/admin/orders}" class="btn btn-danger">Trở về</a>
 				</div>
 			</div>
 		</form>
@@ -205,9 +203,11 @@ $(document).ready(
 				
 				},
 				); 
+				
 			})
 						
 		)
+	
 </script>
 
 </html>
