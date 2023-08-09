@@ -171,7 +171,7 @@ public class PageController {
 			String timeCheckInDateStr = dateFormat.format(orderRoom.getDateCheckIn());
 			String timeCheckOutDateStr = dateFormat.format(orderRoom.getDateCheckOut());
 			String timeOrderRoomStr = dateFormat.format(orderRoom.getDateAt());
-			String timeCancelStr = dateFormat.format(orderRoom.getDateCancel());
+			String timeCancelStr = "";
 			String nameCustomer = "";
 			if(accountDAO.findByUsername(orderRoom.getNameCustomer()) != null) {
 				nameCustomer = accountDAO.findByUsername(orderRoom.getNameCustomer()).getFullname();

@@ -49,25 +49,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>273</td>
-							<td>12.000.000đ</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>273</td>
-							<td>12.000.000đ</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td>273</td>
-							<td>12.000.000đ</td>
-						</tr>
-						<tr>
-							<th scope="row">4</th>
-							<td>273</td>
-							<td>12.000.000đ</td>
+						<tr th:each="thongKe : ${listThongKe}">
+							<th>[[${thongKe[0]}]]</th>
+							<th>[[${thongKe[1]}]]</th>
+							<th th:text="${#numbers.formatDecimal(thongKe[2],0,'COMMA',0,'POINT')}"></th>
 						</tr>
 					</tbody>
 				</table>

@@ -74,7 +74,7 @@ public class UserOrderController {
 						Room roomOrder = roomDAO.findByKey(room);
 						if (roomOrder.getStatus().equals("1")) {
 							if (dateDAO.checkDate(dateDAO.getDate(checkIn), dateDAO.getDate(checkOut)) > 0) {
-								if(dateDAO.checkDate(dateDAO.getDate(checkIn),new Date()) >= 0){
+								if(dateDAO.checkDate(dateDAO.getDate(checkIn),new Date()) >= 0 || dateDAO.checkDate(new Date(),dateDAO.getDate(checkIn)) >= 0){
 									if (numberPeople == null || numberPeople.isEmpty()) {
 										message = "Vui lòng nhập số lượng người ở!";
 									} else {

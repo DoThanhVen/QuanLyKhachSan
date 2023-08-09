@@ -25,6 +25,10 @@ public class GetDateDAO {
 		long timeCheckOut = dateCheckOut.getTime();
 		long differenceInMillis = timeCheckOut - timeCheckIn;
 		long daysDifference = differenceInMillis / (24 * 60 * 60 * 1000);
-		return daysDifference;
+		if (daysDifference == 0) {
+			return 1;
+		} else {
+			return daysDifference;
+		}
 	}
 }
