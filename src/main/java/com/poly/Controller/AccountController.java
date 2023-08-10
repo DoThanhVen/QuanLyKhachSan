@@ -306,7 +306,6 @@ public class AccountController {
 		System.out.println("lỗi");
 		return "redirect:/sign-in";
 	}
-
 	@RequestMapping("/oauth2/login/success")
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
