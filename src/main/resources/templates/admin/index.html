@@ -14,32 +14,29 @@
 		<div class="container">
 			<div class="this-month">
 				<div class="card total">
-					<div class="heading">Doanh Thu Tháng Này</div>
+					<div class="heading">Doanh Thu Tổng</div>
 					<div class="circle-top"></div>
 					<div class="circle-bottom"></div>
-					<b class="total"><i class='bx bx-money'></i>100.000đ</b>
+					<b class="total"
+						th:text="${#numbers.formatDecimal(totalAll,0,'COMMA',0,'POINT')}"></b><i
+						style="font-size: 30px; color: yellow" class='bx bx-money'></i>
 				</div>
 				<div class="card user">
-					<div class="heading">Khách Hàng Tháng Này</div>
+					<div class="heading">Khách Hàng Tổng</div>
 					<div class="circle-top"></div>
 					<div class="circle-bottom"></div>
-					<b class="person"><i class='bx bx-user'></i>372 Người</b>
-				</div>
-				<div class="card room-none">
-					<div class="heading">Số Phòng Còn Trống</div>
-					<div class="circle-top"></div>
-					<div class="circle-bottom"></div>
-					<b class="room-none"><i class='bx bx-door-open'></i>120 Phòng</b>
-				</div>
-				<div class="card room-checked">
-					<div class="heading">Số Phòng Đã Đặt</div>
-					<div class="circle-top"></div>
-					<div class="circle-bottom"></div>
-					<b class="room-checked"><i class='bx bx-window-close'></i>72
-						Phòng</b>
+					<b class="person">[[${sumPeople}]] Người</b><i
+						style="font-size: 30px; color: grey" class='bx bx-user'></i>
 				</div>
 			</div>
-			<div class="every-month">
+			<div class="mt-3">
+				<label for="check-in">Từ:</label> <input type="date" id="check-in"
+					name="dateCheckin" class="date-input"> <label
+					for="check-out">Đến:</label> <input type="date" id="check-out"
+					name="dateCheckout" class="date-input">
+				<button id="filter" class="btn btn-primary">Tìm Kiếm</button>
+			</div>
+			<div class="every-month" id="result-container">
 				<table class="table">
 					<thead>
 						<tr>
@@ -50,9 +47,11 @@
 					</thead>
 					<tbody>
 						<tr th:each="thongKe : ${listThongKe}">
-							<th>[[${thongKe[0]}]]</th>
-							<th>[[${thongKe[1]}]]</th>
-							<th th:text="${#numbers.formatDecimal(thongKe[2],0,'COMMA',0,'POINT')}"></th>
+							<td>[[${thongKe[0]}]]</td>
+							<td>[[${thongKe[1]}]]</td>
+							<td
+								th:text="${#numbers.formatDecimal(thongKe[2],0,'COMMA',0,'POINT')}">
+							</th>
 						</tr>
 					</tbody>
 				</table>
@@ -60,5 +59,82 @@
 		</div>
 	</div>
 	<div id="footer" th:replace="@{user/footer}"></div>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$("#filter")
+									.click(
+											function() {
+												var dateForm = $("#check-in")
+														.val();
+												var dateTo = $("#check-out")
+														.val();
+
+												$
+														.ajax({
+															type : "GET",
+															url : "/admin/thongKe/filter",
+															data : {
+																dateForm : dateForm,
+																dateTo : dateTo
+															},
+															success : function(
+																	response) {
+																if (response.success === true) {
+																	thongBao(
+																			'Thông Báo',
+																			response.message,
+																			'success',
+																			false);
+																	var data = response.data;
+																	var resultContainer = $("#result-container");
+
+																	var table = $("<table class='table'>");
+																	table
+																			.append("<thead><tr><th scope='col'>Doanh Thu Ngày</th><th scope='col'>Số Lượng Khách</th><th scope='col'>Tổng Doanh Thu</th></tr></thead>");
+
+																	var tbody = $("<tbody>");
+																	for (var i = 0; i < data.length; i++) {
+																		var row = $("<tr>");
+																		row
+																				.append("<td>"
+																						+ data[i][0]
+																						+ "</td>");
+																		row
+																				.append("<td>"
+																						+ data[i][1]
+																						+ "</td>");
+																		row
+																				.append("<td>"
+																						+ data[i][2]
+																						+ "</td>");
+																		tbody
+																				.append(row);
+																	}
+
+																	table
+																			.append(tbody);
+																	resultContainer
+																			.html(table);
+																} else {
+																	thongBao(
+																			'Thông Báo',
+																			response.message,
+																			'error',
+																			false);
+																}
+															},
+															error : function(
+																	xhr,
+																	status,
+																	error) {
+																console
+																		.error(error);
+															}
+														});
+											});
+						});
+	</script>
 </body>
 </html>

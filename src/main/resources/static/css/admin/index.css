@@ -146,11 +146,12 @@ b {
 
 .this-month .card div.heading {
 	position: absolute;
-	color: blue;
+	color: black;
 	font-size: 26px;
 	font-weight: 500;
 	width: 100%;
 	text-align: center;
+	top:20%;
 }
 
 .this-month .card b {

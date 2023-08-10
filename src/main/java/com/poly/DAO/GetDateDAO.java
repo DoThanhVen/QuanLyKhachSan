@@ -31,4 +31,11 @@ public class GetDateDAO {
 			return daysDifference;
 		}
 	}
+
+	public boolean checkDateFilter(Date checkIn, Date from, Date to) {
+		if (checkDate(from, checkIn) >= 1 && checkDate(checkIn, to) >= 1) {
+			return true;
+		}
+		return false;
+	}
 }
