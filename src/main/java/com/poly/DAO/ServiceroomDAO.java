@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.poly.Bean.Typeroom;
+import com.poly.Bean.TyperoomMap;
 import com.poly.Bean.Customer;
 import com.poly.Bean.CustomerMap;
 import com.poly.Bean.Serviceroom;
@@ -33,14 +36,40 @@ public class ServiceroomDAO {
 	}
 
 	public String create(Serviceroom data) {
+		ServiceroomMap roommap = findAll();
+		if (roommap == null) {
+			HttpEntity<Serviceroom> entity = new HttpEntity<>(data);
+			JsonNode resp = rest.postForObject(url, entity, JsonNode.class);
+			return resp.get("name").asText();
+		} else {
+			for (Serviceroom service : roommap.values()) {
+				if (service.getName().toLowerCase().equals(data.getName().toLowerCase())) {
+					return null;
+				}
+			}
+		}
 		HttpEntity<Serviceroom> entity = new HttpEntity<>(data);
 		JsonNode resp = rest.postForObject(url, entity, JsonNode.class);
 		return resp.get("name").asText();
 	}
 
 	public Serviceroom update(String key, Serviceroom data) {
-		rest.put(getUrl(key), data);
-		return data;
+		ServiceroomMap roommap = findAll();
+		if (roommap == null) {
+			rest.put(getUrl(key), data);
+			return data;
+		} else {
+			for (Serviceroom service : roommap.values()) {
+				if (data.getName().equals(service.getName())) {
+					String currentKey = findKeyByName(service.getName());
+					if (currentKey.equals(key)) {
+						rest.put(getUrl(key), data);
+						return data;
+					}
+				}
+			}
+			return null;
+		}
 	}
 
 	public void delete(String key) {
@@ -84,9 +113,36 @@ public class ServiceroomDAO {
 
 	public double totalPriceServiceOrder(ServiceroomMap serviceroomMap) {
 		double total = 0;
-			for(Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
-				total += entry.getValue().getPrice();
-			}
+		for (Entry<String, Serviceroom> entry : serviceroomMap.entrySet()) {
+			total += entry.getValue().getPrice();
+		}
 		return total;
+	}
+
+	public String findKeyByName(String name) {
+		String jsonStr = rest.getForObject(url, String.class);
+		JsonObject jsonObject = JsonParser.parseString(jsonStr).getAsJsonObject();
+		for (String key : jsonObject.keySet()) {
+			JsonObject object = jsonObject.getAsJsonObject(key);
+			if (object.has("name") && name.equals(object.get("name").getAsString())) {
+				return key;
+			}
+		}
+		return null;
+	}
+
+	public ServiceroomMap findByname(String name) {
+		ServiceroomMap roomMap = findAll();
+		ServiceroomMap roomMapnew = new ServiceroomMap();
+		if (roomMap != null) {
+			for (Serviceroom room : roomMap.values()) {
+				if (room.getName().toLowerCase().contains(name.toLowerCase())) {
+					String key = findKeyByName(room.getName());
+					roomMapnew.put(key, room);
+				}
+			}
+			return roomMapnew;
+		}
+		return null;
 	}
 }

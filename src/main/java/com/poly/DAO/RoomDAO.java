@@ -20,6 +20,9 @@ import com.poly.Bean.Account;
 import com.poly.Bean.AccountMap;
 import com.poly.Bean.Room;
 import com.poly.Bean.RoomMap;
+import com.poly.Bean.Serviceroom;
+import com.poly.Bean.ServiceroomMap;
+import com.poly.Bean.Typeroom;
 
 @Repository
 public class RoomDAO {
@@ -39,20 +42,47 @@ public class RoomDAO {
 	}
 
 	public String create(Room data) {
+		RoomMap roommap = findAll();
+		if (roommap == null) {
+			HttpEntity<Room> entity = new HttpEntity<>(data);
+			JsonNode resp = rest.postForObject(url, entity, JsonNode.class);
+			return resp.get("name").asText();
+		} else {
+			for (Room service : roommap.values()) {
+				if (service.getName().toLowerCase().equals(data.getName().toLowerCase())) {
+					return null;
+				}
+			}
+		}
+
 		HttpEntity<Room> entity = new HttpEntity<>(data);
 		JsonNode resp = rest.postForObject(url, entity, JsonNode.class);
 		return resp.get("name").asText();
 	}
 
 	public Room update(String key, Room data) {
-		rest.put(getUrl(key), data);
-		return data;
+		RoomMap roommap = findAll();
+		if (roommap == null) {
+			rest.put(getUrl(key), data);
+			return data;
+		} else {
+			for (Room service : roommap.values()) {
+				if (data.getName().equals(service.getName())) {
+					String currentKey = findKeyByName(service.getName());
+					if (currentKey.equals(key)) {
+						rest.put(getUrl(key), data);
+						return data;
+					}
+				}
+			}
+			return null;
+		}
 	}
 
 	public void delete(String key) {
 		rest.delete(getUrl(key));
 	}
-	
+
 	public RoomMap findByKeyRoom(String keyRoom) {
 		RoomMap roomMap = findAll();
 		if (roomMap.containsKey(keyRoom)) {
@@ -60,40 +90,42 @@ public class RoomDAO {
 		}
 		return null;
 	}
-	
 
 	public String getKeyRoomOpen() {
 		RoomMap roomMap = findAll();
 		return null;
 	}
+
 	public RoomMap getRoomEmpty() {
 		RoomMap roomMapNew = new RoomMap();
 		RoomMap roomMap = findAll();
 		for (Entry<String, Room> room : roomMap.entrySet()) {
-			if(room.getValue().getStatus().equals("1")) {
-				roomMapNew.put(room.getKey(), room.getValue());
-			}
-		}
-		return roomMapNew;
-	}
-	public RoomMap getRoomEmptyByType(String typeRoom) {
-		RoomMap roomMapNew = new RoomMap();
-		RoomMap roomMap = findAll();
-		for (Entry<String, Room> room : roomMap.entrySet()) {
-			if(room.getValue().getStatus().equals("1") && room.getValue().getTyperoom().equals(typeRoom)) {
+			if (room.getValue().getStatus().equals("1")) {
 				roomMapNew.put(room.getKey(), room.getValue());
 			}
 		}
 		return roomMapNew;
 	}
 
-	public HashMap<String,Room> findByTypeRoom(String typeRoom) {
-		HashMap<String,Room> listRooms = new HashMap<>();
+	public RoomMap getRoomEmptyByType(String typeRoom) {
+		RoomMap roomMapNew = new RoomMap();
+		RoomMap roomMap = findAll();
+		for (Entry<String, Room> room : roomMap.entrySet()) {
+			if (room.getValue().getStatus().equals("1") && room.getValue().getTyperoom().equals(typeRoom)) {
+				roomMapNew.put(room.getKey(), room.getValue());
+			}
+		}
+		return roomMapNew;
+	}
+
+	public HashMap<String, Room> findByTypeRoom(String typeRoom) {
+		HashMap<String, Room> listRooms = new HashMap<>();
 		String jsonStr = rest.getForObject(url, String.class);
 		JsonObject jsonObject = JsonParser.parseString(jsonStr).getAsJsonObject();
-		for(String key : jsonObject.keySet()) {
+		for (String key : jsonObject.keySet()) {
 			JsonObject object = jsonObject.getAsJsonObject(key);
-			if (object.get("typeroom").getAsString().equals(typeRoom) && object.get("status").getAsString().equals("1")) {
+			if (object.get("typeroom").getAsString().equals(typeRoom)
+					&& object.get("status").getAsString().equals("1")) {
 				Room room = findByKey(key);
 				listRooms.put(key, room);
 			}
@@ -109,6 +141,21 @@ public class RoomDAO {
 			if (object.has("name") && name.equals(object.get("name").getAsString())) {
 				return key;
 			}
+		}
+		return null;
+	}
+
+	public RoomMap findByname(String name) {
+		RoomMap roomMap = findAll();
+		RoomMap roomMapnew = new RoomMap();
+		if (roomMap != null) {
+			for (Room room : roomMap.values()) {
+				if (room.getName().toLowerCase().contains(name.toLowerCase())) {
+					String key = findKeyByName(room.getName());
+					roomMapnew.put(key, room);
+				}
+			}
+			return roomMapnew;
 		}
 		return null;
 	}

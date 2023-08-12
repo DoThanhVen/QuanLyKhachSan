@@ -174,16 +174,79 @@ public class PageController {
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/management")
-	public String typeRoom1(Model model, @ModelAttribute("servfind") Serviceroom serviceroom,
-			@ModelAttribute("roomfind") Room room) {
-		TyperoomMap type = typeroomdao.findAll();
-		ServiceroomMap serv = serviceroomDAO.findAll();
-		model.addAttribute("listtype", type);
-		RoomMap roommap = roomdao.findAll();
-		model.addAttribute("listtype", type);
-		model.addAttribute("listroom", roommap);
-		model.addAttribute("listserv", serv);
-		model.addAttribute("typefind", new Typeroom());
+	public String typeRoom2(Model model, @RequestParam("option") Optional<String> getoption,
+			@RequestParam("keyword") Optional<String> getkeyword, @ModelAttribute("typefind") Typeroom typeroom,
+			@ModelAttribute("servfind") Serviceroom serviceroom, @ModelAttribute("roomfind") Room room) {
+		String option = getoption.orElse("");
+		String keyword = getkeyword.orElse("");
+		if (option == "" && keyword == "") {
+			RoomMap roommap = roomdao.findAll();
+			HashMap<String, Room> listRoomMap = new HashMap<>();
+			for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+				Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+				Room roomSave = roomdao.findByKey(roomCheck.getKey());
+				if (typeRoom != null) {
+					roomSave.setTyperoom(typeRoom.getName());
+				}
+				listRoomMap.put(roomCheck.getKey(), roomSave);
+			}
+			model.addAttribute("listroom", listRoomMap);
+			TyperoomMap type = typeroomdao.findAll();
+			ServiceroomMap serv = serviceroomDAO.findAll();
+			model.addAttribute("listserv", serv);
+			model.addAttribute("listtype", type);
+			model.addAttribute("typefind", new Typeroom());
+		} else if (option == "" && keyword != "") {
+			RoomMap roommap = roomdao.findByname(keyword);
+			HashMap<String, Room> listRoomMap = new HashMap<>();
+			System.out.println("haha" + roommap);
+			if (roommap == null) {
+				listRoomMap = roomdao.findAll();
+			} else {
+				for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+					Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+					Room roomSave = roomdao.findByKey(roomCheck.getKey());
+					if (typeRoom != null) {
+						roomSave.setTyperoom(typeRoom.getName());
+					}
+					listRoomMap.put(roomCheck.getKey(), roomSave);
+				}
+			}
+			model.addAttribute("listroom", listRoomMap);
+		} else if (option.equals("Room")) {
+			RoomMap roommap = null;
+			HashMap<String, Room> listRoomMap = new HashMap<>();
+			if (keyword.equals("")) {
+				roommap = roomdao.findAll();
+			} else {
+				roommap = roomdao.findByname(keyword);
+			}
+			for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+				Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+				Room roomSave = roomdao.findByKey(roomCheck.getKey());
+				if (typeRoom != null) {
+					roomSave.setTyperoom(typeRoom.getName());
+				}
+				listRoomMap.put(roomCheck.getKey(), roomSave);
+			}
+			model.addAttribute("listroom", listRoomMap);
+		} else if (option.equals("Typeroom")) {
+			TyperoomMap typeroomMap = null;
+			if (keyword.equals("")) {
+				typeroomMap = typeroomdao.findAll();
+			} else {
+				typeroomMap = typeroomdao.findByname(keyword);
+			}
+			model.addAttribute("listtype", typeroomMap);
+		} else if (option.equals("Service")) {
+			ServiceroomMap roommap = null;
+			if (keyword.equals("")) {
+				roommap = serviceroomDAO.findAll();
+			} else {
+				roommap = serviceroomDAO.findByname(keyword);
+			}
+			model.addAttribute("listserv", roommap);
+		}
 		return "admin/management";
 	}
 
@@ -195,11 +258,20 @@ public class PageController {
 		TyperoomMap type = typeroomdao.findAll();
 		ServiceroomMap serv = serviceroomDAO.findAll();
 		RoomMap roommap = roomdao.findAll();
+		HashMap<String, Room> listRoomMap = new HashMap<>();
+		for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+			Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+			Room roomSave = roomdao.findByKey(roomCheck.getKey());
+			if (typeRoom != null) {
+				roomSave.setTyperoom(typeRoom.getName());
+			}
+			listRoomMap.put(roomCheck.getKey(), roomSave);
+		}
 		Typeroom typefind = typeroomdao.findByKey(kw);
 		Room roomfind = roomdao.findByKey(kw);
 		Serviceroom servfind = serviceroomDAO.findByKey(kw);
 		model.addAttribute("listtype", type);
-		model.addAttribute("listroom", roommap);
+		model.addAttribute("listroom", listRoomMap);
 		model.addAttribute("listserv", serv);
 		if (roomfind == null && typefind == null && servfind != null) {
 			model.addAttribute("servfind", servfind);

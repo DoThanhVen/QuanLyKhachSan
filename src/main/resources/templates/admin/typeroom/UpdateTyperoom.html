@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<link rel="stylesheet" href="/css/admin/type-room.css">
-	<style>
-		span {
-			color: red;
-
+<script type="text/javascript">
+	function ValidateUpdateType() {
+		var name = document.frmUpdateType.name.value;
+		var price = document.frmUpdateType.price.value;
+		var des = document.frmUpdateType.description.value;
+		if (name == '') {
+			document.getElementById("errnameUpdateType").innerHTML = "Tên không được để trống"
+			return false;
+		} else if (price == '') {
+			document.getElementById("errpriceUpdateType").innerHTML = "Giá không được để trống"
+			return false;
+		} else if (des == '') {
+			document.getElementById("errdescUpdateType").innerHTML = "Mô tả không được để trống"
+			return false;
+		} else {
+			return true;
 		}
-	</style>
-	<script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
-</head>
-
-<body>
+	}
+</script>
 	<div class="modal fade" id="modalRegisterFormupdate" tabindex="-1" aria-labelledby="myModalLabel"
 		aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -23,27 +24,30 @@
 				<div class="modal-header text-center">
 					<h4 class="modal-title w-100 font-weight-bold">Cập nhật loại phòng</h4>
 				</div>
-				<form th:object="${typefind}" enctype="multipart/form-data" method="post">
+				<form th:object="${typefind}" enctype="multipart/form-data" method="post" name="frmUpdateType" onsubmit="return ValidateUpdateType()">
 					<div class="mb-3">
 						<label for="fullname">Tên Loại Phòng:</label> <input type="text" name id="fullname"
-							th:field="*{name}" placeholder> <span th:errors="*{name}" />
+							th:field="*{name}" >
 					</div>
+					<span id="errnameUpdateType" style="color: red"></span>
 					<div class="mb-3">
 						<label for="price">Giá Loại Phòng:</label> <input type="text" name id="price"
-							th:field="*{price}" placeholder> <span th:errors="*{price}" />
+							th:field="*{price}" > 
 					</div>
+					<span id="errpriceUpdateType" style="color: red"></span>
 					<div class="mb-3">
 						<label for="price">Mô tả:</label>
 						<textarea id="motatypeupdate" th:field="*{description}" />
 					</div>
+					<span id="errdescUpdateType" style="color: red"></span>
 					<div class="mb-3">
 						<label class="btn btn-primary" for="imageInputUpdate">Chọn Ảnh</label>
 					</div>
 					<div class="mb-3">
 						<p id="selectedImageCountUpdate">Số ảnh đã chọn: 0</p>
 					</div>
-					<input type="file" name="imagesUpdate" id="imageInputUpdate" accept="image/*" multiple style="display: none"
-						onchange="countSelectedImages()">
+					<input type="file" name="imagesUpdate" id="imageInputUpdate" accept="image/*" multiple
+						style="display: none" onchange="countSelectedImages()" >
 					<button type="submit" class="btn btn-success"
 						th:formaction="@{|/updateTyperoom/${key}|}">Lưu</button>
 				</form>
@@ -84,17 +88,13 @@
 
 		}
 	</script>
+	<script>
+		window.addEventListener("load", function () {
+			let params = new URLSearchParams(window.location.search);
+			var paramID = params.get("id");
+			if (paramID != null) {
+				$('#modalRegisterFormupdate').modal('show');
+			}
+		})
 
-</body>
-<script>
-	window.addEventListener("load", function () {
-		let params = new URLSearchParams(window.location.search);
-		var paramID = params.get("id");
-		if (paramID != null) {
-			$('#modalRegisterFormupdate').modal('show');
-		}
-	})
-
-</script>
-
-</html>
+	</script>
