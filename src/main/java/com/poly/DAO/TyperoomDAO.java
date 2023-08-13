@@ -103,4 +103,15 @@ public class TyperoomDAO {
 		return null;
 	}
 
+	public String findNameByKey(String key) {
+		Typeroom typeroom = findByKey(key);
+
+		return typeroom.getName();
+	}
+
+	public double findPrice(String key) {
+		Typeroom typeroom = findByKey(key);
+
+		return typeroom.getPrice();
+	}
 }

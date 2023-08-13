@@ -156,13 +156,6 @@ public class PageController {
 		return "user/order-history";
 	}
 
-	// ADMIN
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@GetMapping("/admin/index")
-	public String adminHome() {
-		return "admin/index";
-	}
-
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping("/admin/customer")
 	public String managerCustomr(Model model) {

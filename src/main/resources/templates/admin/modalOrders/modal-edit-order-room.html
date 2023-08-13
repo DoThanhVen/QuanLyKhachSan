@@ -8,7 +8,7 @@
 
 <title>Document</title>
 <link rel="stylesheet" href="/css/admin/index.css">
-
+<link rel="stylesheet" href="/css/order.css" type="text/css">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="/css/order.css" type="text/css">
 </head>
 <body>
-	<div id="header" th:replace="~{admin/menu}"></div>
+	<div id="header" th:replace="@{admin/menu}"></div>
 
 
 	<div class="container body-content" style="min-height: 460px">
@@ -39,11 +39,12 @@
 		</div>
 		<div class="body-content-title">
 			<h1>Phòng đã đặt</h1>
-
 		</div>
 
 		<!-- The Modal -->
-		<form th:object="${orderRoom}" method="POST"
+		<form th:object="${orderRoom}" method="POST"  id="form" style="width: 100% !important; border: 0.5px solid #3333
+			; padding: 30px;
+		"
 			th:action="@{|/admin/orders/update-order-room/${keyRoom}|}">
 			<!-- Modal body -->
 			<div class="modal-body">
@@ -53,7 +54,7 @@
 
 						<h4>Thông tin phòng</h4>
 						<div class="col">
-							<div class="form-group">
+							<div th:if="*{status} == '1'" class="form-group">
 								<p>Loại phòng :</p>
 
 								<ul class="nav nav-pills"
@@ -104,21 +105,29 @@
 
 
 						</div>
-						<div class="col">
-
+						
+						<div class="col" th:if="*{status} != '1'">
 							<div class="form-group">
-								<label for="CCCD">Ngày nhận phòng</label> <input
-									th:value="${dateCheckIn}" name="CheckIn" type="date"
-									class="form-group-item" />
-									 <span
-									class="form-message">[[${messageErrorCheckIn}]]</span>
+								<label for="CCCD">Ngày nhận phòng</label> <input disabled="disabled"
+									th:value="${dateCheckIn}" name="CheckIn" type="date" 
+									class="form-group-item" /> <span class="form-message">[[${messageErrorCheckIn}]]</span>
+							</div>
+							<div class="form-group">
+								<label for="numberPeople">Ngày trả phòng</label> <input disabled="disabled"
+									th:value="${dateCheckOut}" name="CheckOut" type="date"
+									class="form-group-item" /> <span class="form-message">[[${messageErrorCheckOut}]]</span>
+							</div>
+						</div>
+						<div class="col" th:if="*{status} == '1'">
+							<div class="form-group">
+								<label for="CCCD">Ngày nhận phòng</label> <input 
+									th:value="${dateCheckIn}" name="CheckIn" type="date" 
+									class="form-group-item" /> <span class="form-message">[[${messageErrorCheckIn}]]</span>
 							</div>
 							<div class="form-group">
 								<label for="numberPeople">Ngày trả phòng</label> <input
 									th:value="${dateCheckOut}" name="CheckOut" type="date"
-									class="form-group-item" />
-									 <span
-									class="form-message">[[${messageErrorCheckOut}]]</span>
+									class="form-group-item" /> <span class="form-message">[[${messageErrorCheckOut}]]</span>
 							</div>
 						</div>
 					</div>
@@ -146,7 +155,7 @@
 							</div>
 							<div class="form-group">
 								<label for="CCCD">CCCD: </label> <input
-									th:field="*{CCCDCustomer}" class="form-group-item" />  <span
+									th:field="*{CCCDCustomer}" class="form-group-item" /> <span
 									class="form-message">[[${messageCCCDCustomer}]]</span>
 							</div>
 
@@ -156,20 +165,24 @@
 				</div>
 			</div>
 			<!-- Modal footer -->
-			<div class="modal-footer">
-				<button name="type" type="submit" value="open"
+			
+			<div th:if="*{status} == '1'" class="modal-footer" style="justify-content: flex-start;">
+				<button name="type" type="submit" value="open" style="width: 102px; margin: 0 6px"
 					class="btn btn-success">Mở phòng</button>
-				<button name="type" type="submit" value="save"
+				<button name="type" type="submit" value="save" style="margin: 0 6px"
 					class="btn btn-primary">Lưu lại</button>
-				<button
+				<button style="margin: 0 6px"
 					th:formaction="@{|/admin/orders/cancel-order-room/${keyOrderRoom}|}"
 					class="btn btn-warning">Huỷ Đặt</button>
-				<a th:href="@{/admin/orders}" class="btn btn-danger">Trở về</a>
+				<a style="margin: 0 6px" th:href="@{/admin/orders}" class="btn btn-danger">Trở về</a>
 			</div>
-		</form>
+			<div th:if="*{status} != '1'" class="modal-footer" style="justify-content: flex-start;">
+				<a style="margin: 0 6px" th:href="@{/admin/order-room/all-order-room}" class="btn btn-danger">Trở về</a>
+			</div>
+		
 		</form>
 	</div>
-	<div id="footer" th:replace="~{user/footer}"></div>
+	<div id="footer" th:replace="@{user/footer}"></div>
 </body>
 <script type="text/javascript">
 	const messageTimeOut = setTimeout(closeMessage, 3000)

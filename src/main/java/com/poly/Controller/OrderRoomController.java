@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.poly.Bean.Customer;
 import com.poly.Bean.CustomerMap;
+import com.poly.Bean.DateCheck;
 import com.poly.Bean.Order;
 import com.poly.Bean.OrderRoom;
 import com.poly.Bean.OrderRoomMap;
@@ -25,6 +27,7 @@ import com.poly.Bean.RoomMap;
 import com.poly.Bean.Typeroom;
 import com.poly.Bean.TyperoomMap;
 import com.poly.DAO.CustomerDAO;
+import com.poly.DAO.GetDateDAO;
 import com.poly.DAO.OrderDAO;
 import com.poly.DAO.OrderRoomDAO;
 import com.poly.DAO.RoomDAO;
@@ -52,31 +55,119 @@ public class OrderRoomController {
 	OrderDAO orderDAO;
 	@Autowired
 	SessionService sessionService;
+	@Autowired
+	GetDateDAO dateDAO;
+
+	// order room
+	@RequestMapping("/admin/order-room")
+	public String orderRoom(@ModelAttribute("date") DateCheck check) {
+	
+			String dateStart = Format.formatDate(new Date());
+			check.setDateStart(dateStart);
+		
+		return "admin/OrderRoom";
+	}
+
+	@RequestMapping("/admin/order-room/check-room")
+	public String checkRoom(Model model, @Valid @ModelAttribute("date") DateCheck check, BindingResult errors) {
+		if (errors.hasErrors()) {
+			return "admin/OrderRoom";
+		}
+		Date dateStart = Format.getTypeDate(check.getDateStart());
+		Date dateEnd = Format.getTypeDate(check.getDateEnd());
+		Long checkDate2 = dateDAO.checkDate(dateStart, dateEnd);
+		Long checkDate = dateDAO.checkDate(new Date(), dateStart);
+		if (checkDate < 0) {
+			model.addAttribute("messageErrorCheckIn", "Ngày không hợp lệ");
+			return "admin/OrderRoom";
+		}
+		if (checkDate2 < 0) {
+			model.addAttribute("messageErrorCheckOut", "Ngày không hợp lệ");
+			return "admin/OrderRoom";
+		} 
+
+		RoomMap roomMap = orderRoomDAO.getAllRoomByDateCheck(dateStart, dateEnd);
+
+
+		model.addAttribute("counter", 0);
+		model.addAttribute("rooms", roomMap);
+		return "admin/OrderRoom";
+	}
+	
+	@RequestMapping("/admin/order-room/all-order-room")
+	public String getAllOrderRoom(Model model) {
+		OrderRoomMap orderRoomMap = orderRoomDAO.findAll();
+		model.addAttribute("noempty", "noempty");
+		model.addAttribute("counter", 0);
+		String date = Format.formatDate(new Date());
+		model.addAttribute("startDate", date);
+		model.addAttribute("orderRoomMap", orderRoomMap);
+		return "admin/OrderRoom";
+	}
+
+	@RequestMapping("/admin/order-room/check-room-noempty")
+	public String checkRoomNoEmpty(Model model, @Valid @ModelAttribute("date") DateCheck check, BindingResult errors) {
+		if (errors.hasErrors()) {
+			return "admin/OrderRoom";
+		}
+		
+		OrderRoomMap orderRoomMap = orderRoomDAO.findAll();
+		
+		Date dateStart = Format.getTypeDate(check.getDateStart());
+		Date dateEnd = Format.getTypeDate(check.getDateEnd());
+		Long checkDate2 = dateDAO.checkDate(dateStart, dateEnd);
+		Long checkDate = dateDAO.checkDate(new Date(), dateStart);
+		if (checkDate < 0) {
+			model.addAttribute("messageErrorCheckIn", "Ngày không hợp lệ");
+			return "admin/OrderRoom";
+		}
+		if (checkDate2 < 0) {
+			model.addAttribute("messageErrorCheckOut", "Ngày không hợp lệ");
+			return "admin/OrderRoom";
+		} 
+		
+		model.addAttribute("counter", 0);
+		model.addAttribute("orderRoomMap", orderRoomMap);
+		return "admin/OrderRoom";
+	}
+	
+	// check today
+	@RequestMapping("/admin/order-room/check-room-by-date")
+	public String checkToday(Model model) {
+		String date = paramService.getString("startDate","");
+		OrderRoomMap orderRoomMap = orderRoomDAO.findAll();
+		if(date.equals("")) {
+			model.addAttribute("messageErrorDate", "Ngày không hợp lệ");
+			model.addAttribute("noempty", "noempty");
+			model.addAttribute("orderRoomMap", orderRoomMap);
+			return "admin/OrderRoom";
+		}
+		
+		orderRoomMap = orderRoomDAO.getRoombyDate(date);
+		model.addAttribute("noempty", "noempty");
+		model.addAttribute("counter", 0);
+		model.addAttribute("startDate", date);
+		model.addAttribute("orderRoomMap", orderRoomMap);
+		return "admin/OrderRoom";
+	}
 
 	// open form create order room
-	@RequestMapping("/admin/orders/form-order-room")
-	public String formOrderRoom(@ModelAttribute("orderRoom") OrderRoom orderRoom, Model model) {
-		String keyTypeRoom = paramService.getString("keyTypeRoom", "");
-		RoomMap roomEmpty = new RoomMap();
-		TyperoomMap typeroomMap = typeroomDAO.findAll();
-		Typeroom typeroom = new Typeroom();
-		String priceRoom = "";
-		String key = "";
-		if (keyTypeRoom.equals("")) {
-			key = typeroomMap.keySet().stream().findFirst().get();
-		} else {
-			key = keyTypeRoom;
-		}
-		typeroom = typeroomMap.get(key);
-		priceRoom = Format.formatNumber(typeroom.getPrice());
-		roomEmpty = roomDAO.getRoomEmptyByType(key);
+	@RequestMapping("/admin/orders/form-order-room/{keyRoom}")
+	public String formOrderRoom(@ModelAttribute("orderRoom") OrderRoom orderRoom,
+			@PathVariable("keyRoom") String keyRoom, Model model, @ModelAttribute("date") DateCheck dateCheck) {
 
-		System.out.println(typeroom.getName());
-		model.addAttribute("nameRoom", typeroom.getName());
-		model.addAttribute("emptyRooms", roomEmpty);
-		model.addAttribute("typeRooms", typeroomMap);
-		model.addAttribute("priceRoom", priceRoom);
-		model.addAttribute("keyTR", key);
+		Room room = roomDAO.findByKey(keyRoom);
+		String keyTypeRoom = room.getTyperoom();
+
+		Typeroom typeroom = typeroomDAO.findByKey(keyTypeRoom);
+
+		String priceRoom = Format.formatNumber(typeroom.getPrice());
+
+		model.addAttribute("nameTypeRoom", typeroom.getName());
+		model.addAttribute("priceTypeRoom", priceRoom);
+		model.addAttribute("room", room);
+		model.addAttribute("keyRoom", keyRoom);
+
 		return "admin/modalOrders/modal-order-room";
 	}
 
@@ -86,7 +177,7 @@ public class OrderRoomController {
 
 		String keyTypeRoom = paramService.getString("keyTypeRoom", "");
 		OrderRoom orderRoom = orderRoomDAO.findByIdRoom(keyRoom);
-
+		System.out.println(orderRoom.getStatus());
 		String keyOrderRoom = orderRoomDAO.findKey(orderRoom);
 		RoomMap roomEmpty = new RoomMap();
 		TyperoomMap typeroomMap = typeroomDAO.findAll();
@@ -121,70 +212,81 @@ public class OrderRoomController {
 		model.addAttribute("keyOrderRoom", keyOrderRoom);
 		return "admin/modalOrders/modal-edit-order-room";
 	}
+	// open form edit order room
+		@RequestMapping("/admin/orders/form-edit-order-room2/{keyOrderRoom}")
+		public String formEditOrderRoom2(Model model, @PathVariable("keyOrderRoom") String keyOrderRoom) {
 
-	// create order room
-	@RequestMapping(path = "/admin/orders/form-order-room", method = RequestMethod.POST)
-	public String createOrderRoom(@Valid @ModelAttribute("orderRoom") OrderRoom orderRoom, BindingResult errors,
-			Model model) {
-		String keyRoom = paramService.getString("keyRoom", "");
-		String keyTypeRoom = paramService.getString("keyTypeRoom", "create");
-		String dateCheckIn = paramService.getString("CheckIn", "");
-		String dateCheckOut = paramService.getString("CheckOut", "");
-
-		// check error
-		if (errors.hasErrors() || dateCheckIn.equals("") || dateCheckOut.equals("") || keyRoom.equals("none")) {
-
-			if (dateCheckIn.equals("")) {
-				String messageErrorCheckIn = "Ngày checkin không thể trống";
-
-				model.addAttribute("messageErrorCheckIn", messageErrorCheckIn);
+			String keyTypeRoom = paramService.getString("keyTypeRoom", "");
+			OrderRoom orderRoom = orderRoomDAO.findByKey(keyOrderRoom);
+			if(orderRoom != null) {
+				System.out.println("null");
 			}
-			if (dateCheckOut.equals("")) {
-				String messageErrorCheckOut = "Ngày checkout không thể trống";
-				model.addAttribute("messageErrorCheckOut", messageErrorCheckOut);
-			}
-			if (keyRoom.equals("none")) {
-				String messageErrorKeyRoom = "Bạn chưa chọn phòng";
-				model.addAttribute("messageErrorKeyRoom", messageErrorKeyRoom);
-			}
-
+			String keyRoom = orderRoomDAO.findKeyRom(orderRoom);
 			RoomMap roomEmpty = new RoomMap();
 			TyperoomMap typeroomMap = typeroomDAO.findAll();
 			Typeroom typeroom = new Typeroom();
 			String priceRoom = "";
 			String key = "";
-			if (keyTypeRoom.equals("create")) {
+			Room room = roomDAO.findByKey(keyRoom);
+			if (keyTypeRoom.equals("")) {
 				key = typeroomMap.keySet().stream().findFirst().get();
 			} else {
 				key = keyTypeRoom;
 			}
 			typeroom = typeroomMap.get(key);
 			priceRoom = Format.formatNumber(typeroom.getPrice());
-			roomEmpty = roomDAO.getRoomEmptyByType(key);
+			String dateCheckIn = Format.formatDate(orderRoom.getDateCheckIn());
+			String dateCheckOut = Format.formatDate(orderRoom.getDateCheckOut());
+			String dateAt = Format.formatTime(orderRoom.getDateAt());
 
+			roomEmpty = roomDAO.getRoomEmptyByType(key);
+			model.addAttribute("room", room);
 			model.addAttribute("nameRoom", typeroom.getName());
 			model.addAttribute("emptyRooms", roomEmpty);
 			model.addAttribute("typeRooms", typeroomMap);
 			model.addAttribute("priceRoom", priceRoom);
 			model.addAttribute("keyTR", key);
+			model.addAttribute("orderRoom", orderRoom);
+			model.addAttribute("keyRoom", keyRoom);
+			model.addAttribute("dateCheckIn", dateCheckIn);
+			model.addAttribute("dateCheckOut", dateCheckOut);
+			model.addAttribute("dateAt", dateAt);
+			model.addAttribute("keyOrderRoom", keyOrderRoom);
+			return "admin/modalOrders/modal-edit-order-room";
+		}
+	// create order room
+	@RequestMapping(path = "/admin/orders/create-order-room/{keyRoom}", method = RequestMethod.POST)
+	public String createOrderRoom(@PathVariable("keyRoom") String keyRoom,
+			@Valid @ModelAttribute("orderRoom") OrderRoom orderRoom, BindingResult errors, Model model,
+			@ModelAttribute("date") DateCheck check) {
 
+		if (errors.hasErrors()) {
+			Room room = roomDAO.findByKey(keyRoom);
+			String keyTypeRoom = room.getTyperoom();
+			Typeroom typeroom = typeroomDAO.findByKey(keyTypeRoom);
+			String priceRoom = Format.formatNumber(typeroom.getPrice());
+			System.out.println("Lỗi");
+			model.addAttribute("nameTypeRoom", typeroom.getName());
+			model.addAttribute("priceTypeRoom", priceRoom);
+			model.addAttribute("room", room);
+			model.addAttribute("keyRoom", keyRoom);
+			model.addAttribute("date", check);
 			return "admin/modalOrders/modal-order-room";
 		}
 
-		// get value from form order room
-
-		// convert String date checkin and checkout to type date
-		Date checkInDate = Format.getTypeDate(dateCheckIn);
-		Date checkOutDate = Format.getTypeDate(dateCheckOut);
-//		
-//		// create room map
+//		// get value from form order room
+//
+//		// convert String date checkin and checkout to type date
+		Date checkInDate = Format.getTypeDate(check.getDateStart());
+		Date checkOutDate = Format.getTypeDate(check.getDateEnd());
+////		
+////		// create room map
 		Room room = roomDAO.findByKey(keyRoom);
 		RoomMap roomMap = new RoomMap();
 		roomMap.put(keyRoom, room);
-		room.setStatus("3");
 		roomDAO.update(keyRoom, room);
-//		
-//		// set value to order room
+////		
+////		// set value to order room
 		orderRoom.setDateAt(new Date());
 		orderRoom.setDateCheckIn(checkInDate);
 		orderRoom.setDateCheckOut(checkOutDate);
@@ -194,6 +296,12 @@ public class OrderRoomController {
 		orderRoomDAO.create(orderRoom);
 
 		return "redirect:/admin/orders";
+	}
+
+	@RequestMapping(path = "/admin/orders/create-order-room/{keyRoom}", method = RequestMethod.GET)
+	public String forwardCreateOrderRoom() {
+
+		return "redirect:/admin/order-room";
 	}
 
 	// update Order room
@@ -207,12 +315,18 @@ public class OrderRoomController {
 		String dateCheckOut = paramService.getString("CheckOut", "");
 		String keyRoomNew = paramService.getString("keyRoomNew", "");
 		String keyRoomOld = paramService.getString("keyRoom", "");
-		
-		Room room = roomDAO.findByKey(keyRoomOld);
 
-		if (errors.hasErrors() || dateCheckIn.equals("") || dateCheckOut.equals("") ||  typeAction.equals("open")&& orderRoom.getCCCDCustomer().equals("")) {
+		Room room = roomDAO.findByKey(keyRoomOld);
+		Date date = Format.getTypeDate(dateCheckIn);
+		Long isDateCheckIn = dateDAO.checkDate(new Date(), date);
+		if (errors.hasErrors() || dateCheckIn.equals("") || dateCheckOut.equals("")
+				|| typeAction.equals("open") && orderRoom.getCCCDCustomer().equals("") || isDateCheckIn < 0) {
 			if (dateCheckIn.equals("")) {
 				String messageErrorCheckIn = "Ngày checkin không thể trống";
+				model.addAttribute("messageErrorCheckIn", messageErrorCheckIn);
+			}
+			if (isDateCheckIn < 0) {
+				String messageErrorCheckIn = "Ngày checkin không hợp lệ";
 				model.addAttribute("messageErrorCheckIn", messageErrorCheckIn);
 			}
 			if (dateCheckOut.equals("")) {
@@ -279,7 +393,7 @@ public class OrderRoomController {
 		if (keyRoomNew.equals("")) {
 			System.out.println("không chọn gì");
 			Room roomOld = roomDAO.findByKey(keyRoomOld);
-			roomOld.setStatus("3");
+			roomOld.setStatus("3");	
 			roomMap.put(keyRoomOld, roomOld);
 			roomDAO.update(keyRoomOld, roomOld);
 			url = keyRoomOld;
@@ -309,7 +423,7 @@ public class OrderRoomController {
 		orderRoomDAO.update(keyOrderRoom, orderRoom);
 
 		if (typeAction.equals("open")) {
-			
+
 			orderRoom.setStatus("2");
 			orderRoomDAO.update(keyOrderRoom, orderRoom);
 
@@ -346,7 +460,7 @@ public class OrderRoomController {
 			order.setStatus("0");
 			order.setUserCreate("datnv02264@fpt.edu.vn");
 			order.setNumberPeople(orderRoom.getNumberPeople());
-			
+
 			orderDAO.create(order);
 			return "redirect:/admin/orders";
 		}
@@ -369,19 +483,6 @@ public class OrderRoomController {
 		orderRoom.setStatus("0");
 		orderRoom.setDateCancel(new Date());
 
-		// update properties room
-		Room room = roomDAO.findByKey(keyRoomOld);
-		room.setStatus("1");
-
-		// create OrderRoomMap and RoomMap
-		OrderRoomMap orderRoomMap = new OrderRoomMap();
-		RoomMap roomMap = new RoomMap();
-
-		orderRoomMap.put(keyOrderRoom, orderRoom);
-		roomMap.put(keyRoomOld, room);
-
-		// update to firebase
-		roomDAO.update(keyRoomOld, room);
 		orderRoomDAO.update(keyOrderRoom, orderRoom);
 		return "redirect:/admin/orders";
 	}
@@ -427,4 +528,5 @@ public class OrderRoomController {
 		orderDAO.create(order);
 		return "redirect:/admin/orders";
 	}
+
 }

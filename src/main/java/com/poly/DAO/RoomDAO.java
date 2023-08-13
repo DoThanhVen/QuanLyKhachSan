@@ -159,4 +159,15 @@ public class RoomDAO {
 		}
 		return null;
 	}
+	
+	public RoomMap getAllRoomEmpty() {
+        RoomMap roomMapNew = new RoomMap();
+        RoomMap roomMap = findAll();
+        for (Entry<String, Room> room : roomMap.entrySet()) {
+            if(!room.getValue().getStatus().equals("2") && !room.getValue().getStatus().equals("6")) {
+                roomMapNew.put(room.getKey(), room.getValue());
+            }
+        }
+        return roomMapNew;
+    }
 }

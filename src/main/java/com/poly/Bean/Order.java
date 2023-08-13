@@ -24,5 +24,5 @@ public class Order {
 	private String userCreate;
 	private PromotionMap promoMap;
 	private OrderRoomMap orderRoom;
-	
+	private double total;
 }

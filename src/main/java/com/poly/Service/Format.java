@@ -55,7 +55,6 @@ public class Format {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Date new : "+dateTime);
 		return dateTime;
 	}
 }

@@ -27,17 +27,20 @@
 <link rel="stylesheet" href="/css/order.css" type="text/css">
 </head>
 <body>
-	<div id="header" th:replace="~{admin/menu}"></div>
-	<div class="container body-content" style="min-height: 460px">
+	<div id="header" th:replace="@{admin/menu}"></div>
+	<div class="container body-content" style="min-height: 460px;">
 		<div class="body-content-title">
 			<h1>Mở phòng</h1>
 		</div>
-		<form th:object="${order}" id="form" method="POST">
+		<form th:object="${order}" id="form" method="POST"
+			style="border: 0.5px solid #3333; padding: 40px;">
 			<div class="modal-body">
 				<div class="row">
 					<div class="col">
-						<h4>Thông tin phòng<span></span></h4>
-						 <i>(phòng trống)</i> 
+						<h4>
+							Thông tin phòng<span></span>
+						</h4>
+						<i>(phòng trống)</i>
 						<p>
 							Tên phòng:<b style="margin-left: 10px;">[[${roomOrder.name}]]</b>
 						</p>
@@ -64,13 +67,14 @@
 							<div class="form-group">
 								<label for="name">Tên khách hàng: </label> <input
 									id="nameCustomer" class="form-input form-group-item"
-									th:field="${customer.name}" />
-									 <span th:errors="${customer.name}" class="form-message"></span>
+									th:field="${customer.name}" /> <span
+									th:errors="${customer.name}" class="form-message"></span>
 							</div>
 							<div class="form-group">
 								<label for="phone">Số điện thoại: </label> <input
 									id="phoneCustomer" class="form-input form-group-item"
-									th:field="${customer.phone}" /> <span th:errors="${customer.phone}" class="form-message"></span>
+									th:field="${customer.phone}" /> <span
+									th:errors="${customer.phone}" class="form-message"></span>
 							</div>
 
 						</div>
@@ -90,14 +94,20 @@
 				</div>
 			</div>
 
-			<div class="modal-footer">
-				<button th:formaction="@{|/admin/orders/create/${id}|}"
-					class="btn btn-success">Mở phòng</button>
-				<a th:href="@{/admin/orders}" class="btn btn-danger">Trờ về</a>
+			<div class="modal-footer ">
+				<div class="modal-footer-item">
+					<button th:formaction="@{|/admin/orders/create/${id}|}" style="
+					height: 40px; width: 120px; text-align: center;
+					display: flex; justify-content: center;
+					align-items: center;
+					"
+						class="btn btn-success">Mở phòng</button>
+					<a th:href="@{/admin/orders}" class="btn btn-danger">Trờ về</a>
+				</div>
 			</div>
 		</form>
 	</div>
-	<div id="footer" th:replace="~{user/footer}"></div>
+	<div id="footer" th:replace="@{user/footer}"></div>
 </body>
 <!-- <script type="text/javascript">
 	const messageTimeOut = setTimeout(closeMessage, 3000)

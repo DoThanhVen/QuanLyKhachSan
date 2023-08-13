@@ -112,7 +112,6 @@ public class AccountController {
 		LoginResponse response = new LoginResponse();
 		response.setSuccess(true);
 		response.setMessage("Đăng nhập thành công!");
-
 		return ResponseEntity.ok(response);
 	}
 
@@ -124,12 +123,12 @@ public class AccountController {
 		response.setSuccess(false);
 		Account account = dao.findByUsername((String) session.getAttribute("username"));
 		String passLogin = (String) session.getAttribute("password");
-		if (dao.findByUsername((String) session.getAttribute("username")) == null) {
+		if (account == null) {
 			message = "Tài khoản không tồn tại!";
 		} else {
 			if (!pe.matches(passLogin, account.getPassword())) {
 				message = "Mật khẩu không chính xác!";
-			}else {
+			} else {
 				response.setSuccess(true);
 			}
 		}

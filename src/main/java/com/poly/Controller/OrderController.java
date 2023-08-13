@@ -25,6 +25,7 @@ import com.poly.Bean.Customer;
 import com.poly.Bean.CustomerMap;
 import com.poly.Bean.Order;
 import com.poly.Bean.OrderMap;
+import com.poly.Bean.OrderRoomMap;
 import com.poly.Bean.PromotionMap;
 import com.poly.Bean.Room;
 import com.poly.Bean.RoomMap;
@@ -34,6 +35,7 @@ import com.poly.Bean.Typeroom;
 import com.poly.DAO.CustomerDAO;
 
 import com.poly.DAO.OrderDAO;
+import com.poly.DAO.OrderRoomDAO;
 import com.poly.DAO.PromotionDAO;
 import com.poly.DAO.RoomDAO;
 import com.poly.DAO.ServiceroomDAO;
@@ -68,12 +70,15 @@ public class OrderController {
 	OrderService orderService;
 	@Autowired
 	PromotionDAO promotionDAO;
+	@Autowired 
+	OrderRoomDAO orderRoomDAO;
 
 	@RequestMapping("/admin/orders")
 	public String HomeOrder(Model model) {
 		String type = paramService.getString("type", "");
 		RoomMap roomMap = roomDAO.findAll();
 		RoomMap rm = new RoomMap();
+		RoomMap roomMapOrder = orderRoomDAO.getRoomOrderToday();
 		int roomAvailable = getSizeHashMapByType(roomMap, "1");
 		int roomUnAvailable = getSizeHashMapByType(roomMap, "2");
 		int roomReserved = getSizeHashMapByType(roomMap, "3");
@@ -92,7 +97,9 @@ public class OrderController {
 			break;
 		}
 		case "3": {
-			rm = cloneHashMapByType(roomMap, type);
+			 
+			rm = roomMapOrder;
+			model.addAttribute("typeOrderRoom", "Đặt phòng");
 			break;
 		}
 		case "4": {
@@ -121,7 +128,7 @@ public class OrderController {
 		model.addAttribute("roomNotClean", roomNotClean);
 		model.addAttribute("roomFix", roomFix);
 		model.addAttribute("sizeAll", roomMap.size());
-
+		model.addAttribute("sizeRoomOrder", roomMapOrder.size());
 		model.addAttribute("rooms", rm);
 		return "admin/order";
 	}
@@ -233,7 +240,7 @@ public class OrderController {
 			model.addAttribute("typeRoom", typeroom);
 			model.addAttribute("roomOrder", room);
 			model.addAttribute("priceRoom", Format.formatNumber(typeroom.getPrice()));
-			System.out.println("lỗi");
+			
 			return "admin/modalOrders/modal-open-room";
 		}
 		Order order = new Order();
@@ -264,7 +271,7 @@ public class OrderController {
 		order.setNumberPeople(o.getNumberPeople());
 		order.setServiceOrder(null);
 		order.setTimeCheckOutDate(null);
-		order.setUserCreate("datnvpk02264@gamil.com");
+		order.setUserCreate((String) session.getAttribute("username"));
 		
 		roomDAO.update(idRom, room);
 		orderDao.create(order);
@@ -380,20 +387,21 @@ public class OrderController {
 		Typeroom typeroom = typeroomDAO.findByKey(room.getTyperoom());
 		model.addAttribute("customer", customer);
 		PromotionMap promotionMap = promotionDAO.findAll();
-
-		double totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
-		String totalPriceService = Format.formatNumber(totalPS);
-
+		double totalPS = 0;
 		double totalMoneyR = orderService.totalMoneyRoom(order.getTimeCheckInDate(), new Date(), typeroom.getPrice());
+		if(servicerRoomOrder != null) {
+			 totalPS = serviceRoomDao.totalPriceServiceOrder(servicerRoomOrder);
+		}
+		String totalPriceService = Format.formatNumber(totalPS);
 		String totalMoneyRoom = Format.formatNumber(totalMoneyR);
-
 		double totalMoney = totalPS + totalMoneyR;
 		String totalMoneyString = Format.formatNumber(totalMoney);
+		
 
 		Date dateCheckout = new Date();
 		order.setTimeCheckOutDate(dateCheckout);
 		order.setStatus("1");
-
+		order.setTotal(totalMoney);
 		room.setStatus("5");
 		System.out.println("pay");
 		roomDAO.update(idRoom, room);

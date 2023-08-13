@@ -8,14 +8,12 @@
 
 <title>Document</title>
 <link rel="stylesheet" href="/css/admin/index.css">
-
+<link rel="stylesheet" href="/css/layout.css" type="text/css">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 
 <script src="https://code.jquery.com/jquery-3.7.0.js"
 	integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
@@ -27,17 +25,20 @@
 <link rel="stylesheet" href="/css/order.css" type="text/css">
 </head>
 <body>
-	<div id="header" th:replace="~{admin/menu}"></div>
+	<div id="header" th:replace="@{admin/menu}"></div>
 
-	<div  class="container body-content" style="min-height: 460px">
+	<div class="container body-content"
+		style="min-height: 460px; margin-top: 10px; min-height: 460px; background-color: #fff; padding: 60px; margin-top: 20px !important;">
 		<div class="body-content-title">
 			<h1>Trả phòng</h1>
 		</div>
 		<!-- The Modal -->
-		<form th:object="${order}" >
+		<form th:object="${order}" id="form">
 
 			<!-- Modal body -->
-			<div class="modal-body">
+			<div class="modal-body"
+				style="border: 1px solid #3333; padding: 20px"
+			>
 				<div class="row">
 					<h4 class="modal-title">Thông tin phòng [[${roomOrder.name}]]</h4>
 					<div class="col">
@@ -93,67 +94,76 @@
 								th:field="*{numberPeople}" class="form-group-item" />
 						</div>
 					</div>
-					<div class="col">
-						<div class="form-service">
-							<div class="form-group-serviced">
-								<p>Dịch vụ bạn sử dụng :</p>
-								<div class="container mt-3">
-									<table class="table">
-										<thead>
-											<tr>
-												<th>Tên dịch vụ</th>
-												<th>Giá</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr class="sv"></tr>
-											<tr class="sv" th:each="so : ${serviceOrder}"
-												th:object="${so.value}" th:value="${so.key}">
-												<td th:text="*{name}"></td>
-												<td th:text="*{price}"></td>
-												<td></td>
-											</tr>
-										</tbody>
-									</table>
+					<div class="row">
+						<div class="col">
+							<div class="form-service">
+								<div class="form-group-serviced">
+									<p>Dịch vụ bạn sử dụng :</p>
+									<div class="container mt-3">
+										<table class="table" style="width: 100% !important;">
+											<thead>
+												<tr>
+													<th>Tên dịch vụ</th>
+													<th>Giá</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="sv"></tr>
+												<tr class="sv" th:each="so : ${serviceOrder}"
+													th:object="${so.value}" th:value="${so.key}">
+													<td th:text="*{name}"></td>
+													<td th:text="*{price}"></td>
+													<td></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="info-bill">
-							<p>Tổng tiền phòng :[[${totalMoneyRoom}]] VND</p>
-							<p>Tổng dịch vụ : [[${totalPriceService}]] VND</p>
-							<p>Tiền khuyến mãi :</p>
-							<p>Tổng thành tiền : [[${totalMoney}]] VND</p>
-						</div>
-						<div th:if="${paySuccess}">
-							<p th:text="${paySuccess}"></p>
-						</div>
 
+
+						</div>
+						<div class="col">
+							<div class="info-bill">
+								<p>Tổng tiền phòng :[[${totalMoneyRoom}]] VND</p>
+								<p>Tổng dịch vụ : [[${totalPriceService}]] VND</p>
+								<p>Tiền khuyến mãi :</p>
+								<p>Tổng thành tiền : [[${totalMoney}]] VND</p>
+							</div>
+							<div th:if="${paySuccess}">
+								<p th:text="${paySuccess}"></p>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- Modal footer -->
 
 				<div class="modal-footer" th:unless="${paySuccess}">
-					<a id="btn-pay" th:if="paySuccess"
-						th:href="@{|/admin/orders/pay/${keyOrder}?idRoom=${idRoom}|}"
-						class="btn btn-success">Xác nhận thanh toán</a>
-
-					<a th:href="@{/admin/orders}" class="btn btn-danger"
-						>Trở về</a>
+					<div class="modal-footer-item">
+						<a id="btn-pay" th:if="paySuccess"
+							th:href="@{|/admin/orders/pay/${keyOrder}?idRoom=${idRoom}|}"
+							class="btn btn-success">Xác nhận thanh toán</a> <a
+							th:href="@{/admin/orders}" class="btn btn-danger">Trở về</a>
+					</div>
 				</div>
 				<div class="modal-footer" th:if="${paySuccess}">
-					<a class="btn btn-success"
-						th:href="@{|admin/order/print-bill/${keyOrder}|}">In hoá đơn </a>
-					<button id="btn-pay" disabled="true" class="btn btn-success">Đã
-						thanh toán</button>
+					<div class="modal-footer-item">
+					
+						<a class="btn btn-success"
+							th:href="@{|/admin/order/print-bill/${keyOrder}|}">In hoá đơn
+						</a>
+						<button id="btn-pay" disabled="true" style="width: 130px"
+						 class="btn btn-success">Đã
+							thanh toán</button>
 
-					<a th:href="@{/admin/orders}" class="btn btn-danger"
-						>Trở về</a>
+						<a th:href="@{/admin/orders}" class="btn btn-danger">Trở về</a>
+					</div>
 				</div>
 			</div>
 		</form>
 	</div>
-	<div id="footer" th:replace="~{user/footer}"></div>
+<div id="footer" th:replace="@{user/footer}"></div>
 </body>
 <!-- <script type="text/javascript">
 	const messageTimeOut = setTimeout(closeMessage, 3000)
@@ -162,5 +172,12 @@
 		$('.message').fadeOut();
 	} 
 </script> -->
+<!-- <label>Khuyễn mãi: </label> <select>
+								<option>-----Khuyễn mãi-----</option>
+								<option th:each="item : ${promotionMap}"
+									th:oject="${item.value}">Khuyễn mãi [[*{value}]] %
+									[[*{name}]]</option>
+							</select> -->
+
 </html>
 

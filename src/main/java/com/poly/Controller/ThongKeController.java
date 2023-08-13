@@ -32,7 +32,7 @@ public class ThongKeController {
 	@Autowired
 	HttpSession session;
 
-	@RequestMapping("/admin/thongKe")
+	@RequestMapping("/admin/index")
 	public String thongKeAll(Model model) {
 		OrderMap listOrder = orderDAO.findAll();
 		Double total = 0.0;
@@ -42,7 +42,7 @@ public class ThongKeController {
 		Map<Integer, Boolean> uniqueMonths = new HashMap<>();
 		Map<Integer, Boolean> uniqueYears = new HashMap<>();
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-		
+
 		for (Map.Entry<String, Order> entryOrder : listOrder.entrySet()) {
 			int month = entryOrder.getValue().getTimeCheckInDate().getMonth() + 1;
 			int year = entryOrder.getValue().getTimeCheckInDate().getYear() + 1900;
@@ -57,22 +57,20 @@ public class ThongKeController {
 						Order order = entryOrder.getValue();
 						if ((order.getTimeCheckInDate().getMonth() + 1) == month
 								&& (order.getTimeCheckInDate().getYear() + 1900) == year) {
-							for (Room entryRoom : order.getRoom().values()) {
-								Typeroom typeRoom = typeRoomDAO.findByKey(entryRoom.getTyperoom());
-								total += (typeRoom.getPrice()
-										* dateDAO.checkDate(order.getTimeCheckInDate(), order.getTimeCheckOutDate()));
+								total += order.getTotal();
+							if (order.getServiceOrder() != null) {
+								for (Serviceroom entryService : order.getServiceOrder().values()) {
+									total += entryService.getPrice();
+								}
+								sumPeople += order.getNumberPeople();
 							}
-							for (Serviceroom entryService : order.getServiceOrder().values()) {
-								total += entryService.getPrice();
-							}
-							sumPeople += order.getNumberPeople();
 						}
 					}
 				}
 				sumPeopleAll += sumPeople;
 				totalAll += total;
 				String time = String.valueOf(month) + "/" + String.valueOf(year);
-				String formattedPrice = numberFormat.format(total)+" VNĐ";
+				String formattedPrice = numberFormat.format(total) + " VNĐ";
 				if (total != 0) {
 					listThongKe.add(new Object[] { time, sumPeople, formattedPrice });
 				}
@@ -82,7 +80,7 @@ public class ThongKeController {
 		}
 		model.addAttribute("listThongKe", listThongKe);
 		session.setAttribute("listThongKe", listThongKe);
-		model.addAttribute("totalAll", numberFormat.format(totalAll)+" VNĐ");
+		model.addAttribute("totalAll", numberFormat.format(totalAll) + " VNĐ");
 		model.addAttribute("sumPeople", sumPeopleAll);
 		return "admin/index";
 	}
@@ -169,26 +167,25 @@ public class ThongKeController {
 					for (Map.Entry<String, DayInfo> entry : dayInfoMap.entrySet()) {
 						String day = entry.getKey();
 						DayInfo dayInfo = entry.getValue();
-						String formattedPrice = numberFormat.format(dayInfo.getTotal())+" VNĐ";
-						listThongKe.add(new Object[] { day, dayInfo.getSumPeople(),
-								formattedPrice });
+						String formattedPrice = numberFormat.format(dayInfo.getTotal()) + " VNĐ";
+						listThongKe.add(new Object[] { day, dayInfo.getSumPeople(), formattedPrice });
 					}
 					Collections.sort(listThongKe, new Comparator<Object[]>() {
-					    @Override
-					    public int compare(Object[] o1, Object[] o2) {
-					    	String time1Str = (String) o1[0];
-					        String time2Str = (String) o2[0];
-					        
-					        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					        try {
-					            Date time1 = dateFormat.parse(time1Str);
-					            Date time2 = dateFormat.parse(time2Str);
-					            return time1.compareTo(time2);
-					        } catch (Exception e) {
-					            e.printStackTrace();
-					        }
-					        return 0;
-					    }
+						@Override
+						public int compare(Object[] o1, Object[] o2) {
+							String time1Str = (String) o1[0];
+							String time2Str = (String) o2[0];
+
+							SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+							try {
+								Date time1 = dateFormat.parse(time1Str);
+								Date time2 = dateFormat.parse(time2Str);
+								return time1.compareTo(time2);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							return 0;
+						}
 					});
 					response.put("success", true);
 					response.put("message", "Dữ liệu đã được tải thành công!");
