@@ -63,8 +63,8 @@ public class UserOrderController {
 			message = "Vui lòng đăng nhập để đặt phòng!";
 		} else {
 			Account account = accDAO.findByUsername((String) session.getAttribute("username"));
-			if (account.getPhone() == null || account.getAddress() == null || account.getCccd() == null
-					|| account.getFullname() == null || account.getPhone() == null) {
+			if (account.getPhone() == "" || account.getAddress() == "" || account.getCccd() == ""
+					|| account.getFullname() == "") {
 				message = "Thông tin quý khách chưa được cập nhật!";
 			} else {
 				if (checkIn == null || checkIn.isEmpty() || checkOut.isEmpty() || checkOut == null) {

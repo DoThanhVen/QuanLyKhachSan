@@ -108,8 +108,7 @@ public class PageController {
 			Long price = (long) (getDateDAO.checkDate(orderRoom.getDateCheckIn(), orderRoom.getDateCheckOut())
 					* typeroomdao.findByKey(keyTypeRoom).getPrice());
 			try {
-				if (orderRoom.getStatus().equals("2")
-						&& dateDAO.checkDate(dateFormat.parse(timeCheckOutDateStr), new Date()) >= 1) {
+				if (dateDAO.checkDate(dateFormat.parse(timeCheckOutDateStr), new Date()) >= 1) {
 					listRoomDaO.add(new Object[] { entry.getKey(), timeOrderRoomStr, timeCheckInDateStr,
 							timeCheckOutDateStr, nameTypeRoom, nameRoom, numberFormat.format(price) + " VNĐ",
 							statusRoom, statusOrder, timeCancelStr });
