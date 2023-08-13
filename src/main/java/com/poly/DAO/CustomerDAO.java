@@ -50,11 +50,6 @@ public class CustomerDAO {
 	}
 
 	public Customer update(String key, Customer data) {
-		// Mã hóa mật khẩu trước khi cập nhật vào Firebase
-//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		String encodedPassword = passwordEncoder.encode(data.getPassword());
-//		data.setPassword(encodedPassword);
-
 		HttpEntity<Customer> entity = new HttpEntity<>(data);
 		rest.put(getUrl(key), entity);
 		return data;

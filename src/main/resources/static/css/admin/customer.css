@@ -113,5 +113,9 @@ td img {
 
 .formImage {
 	text-align: center;
-	padding:10px;
+	padding: 10px;
+}
+
+.form-search-customer {
+	display: flex;
 }

@@ -1,9 +1,15 @@
 package com.poly.Controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +29,25 @@ public class CustomerController {
 	AccountDAO dao;
 	@Autowired
 	HttpSession session;
+
+	@PostMapping("/admin/findCustomer")
+	public String findCustomer(Model model, @RequestParam("keyword") String keyword) {
+		AccountMap listAccount = null;
+		Account account = new Account("", "", "", "", new String[] {}, false, "", "", "");
+		model.addAttribute("form", account);
+		try {
+			if(keyword == null || keyword == "") {
+				listAccount = dao.findAll();
+			}else {
+				listAccount = dao.findByName(keyword);
+			}
+			System.out.println("Size: "+listAccount.size());
+			model.addAttribute("listUser", listAccount);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "admin/customer";
+	}
 
 	@RequestMapping("/admin/updateCustomer/{id}")
 	@ResponseBody

@@ -14,6 +14,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.poly.Bean.Account;
 import com.poly.Bean.AccountMap;
+import com.poly.Bean.Serviceroom;
+import com.poly.Bean.ServiceroomMap;
 
 import jakarta.servlet.http.HttpSession;
 import net.minidev.json.JSONObject;
@@ -39,9 +41,9 @@ public class AccountDAO {
 
 	public String create(Account data) {
 		// Mã hóa mật khẩu trước khi lưu vào Firebase
-//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		String encodedPassword = passwordEncoder.encode(data.getPassword());
-//		data.setPassword(encodedPassword);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(data.getPassword());
+		data.setPassword(encodedPassword);
 
 		HttpEntity<Account> entity = new HttpEntity<>(data);
 		JsonNode resp = rest.postForObject(url, entity, JsonNode.class);
@@ -50,9 +52,9 @@ public class AccountDAO {
 
 	public Account update(String key, Account data) {
 		// Mã hóa mật khẩu trước khi cập nhật vào Firebase
-//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		String encodedPassword = passwordEncoder.encode(data.getPassword());
-//		data.setPassword(encodedPassword);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(data.getPassword());
+		data.setPassword(encodedPassword);
 
 		HttpEntity<Account> entity = new HttpEntity<>(data);
 		rest.put(getUrl(key), entity);
@@ -85,6 +87,17 @@ public class AccountDAO {
 			}
 		}
 		return null;
+	}
+	
+	public AccountMap findByName(String name) {
+		AccountMap accountMap = findAll();
+		AccountMap accountMapNew = new AccountMap();
+		for (Map.Entry<String, Account> key : accountMap.entrySet()) {
+			if(key.getValue().getFullname().toLowerCase().contains(name.toLowerCase())) {
+				accountMapNew.put(key.getKey(), key.getValue());	
+			}
+		}
+		return accountMapNew;
 	}
 
 }
