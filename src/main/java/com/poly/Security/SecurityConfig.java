@@ -53,22 +53,18 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
 				.authorizeHttpRequests((request) -> request.anyRequest().permitAll());
 		// Giao diện đăng nhập
-		http.formLogin(f -> f
-			    .loginPage("/sign-in")
-			    .loginProcessingUrl("/auth/login")
-			    .successHandler((request, response, authentication) -> {
-			        HttpSession session = request.getSession();
-			        session.setAttribute("username", request.getParameter("username"));
-			        session.setAttribute("password", request.getParameter("password"));
-			        response.sendRedirect("/auth/login/success");
-			    })
-			    .failureHandler((request, response, exception) -> {
-			        HttpSession session = request.getSession();
-			        session.setAttribute("username", request.getParameter("username"));
-			        session.setAttribute("password", request.getParameter("password"));
-			        response.sendRedirect("/auth/login/error");
-			    }));
-
+		http.formLogin(f -> f.loginPage("/sign-in").loginProcessingUrl("/auth/login")
+				.successHandler((request, response, authentication) -> {
+					HttpSession session = request.getSession();
+					session.setAttribute("username", request.getParameter("username"));
+					session.setAttribute("password", request.getParameter("password"));
+					response.sendRedirect("/auth/login/success");
+				}).failureHandler((request, response, exception) -> {
+					HttpSession session = request.getSession();
+					session.setAttribute("username", request.getParameter("username"));
+					session.setAttribute("password", request.getParameter("password"));
+					response.sendRedirect("/auth/login/error");
+				}));
 
 		http.rememberMe(rememberme -> rememberme.rememberMeParameter("remember"));
 
