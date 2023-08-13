@@ -37,8 +37,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (account == null) {
 			throw new UsernameNotFoundException("Không tìm thấy tài khoản với username: " + username);
 		} else {
-			session.setAttribute("username", account.getUsername());
-			session.setAttribute("password", account.getPassword());
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			for (String role : account.getRole()) {
 				authorities.add(new SimpleGrantedAuthority("ROLE_" + role));

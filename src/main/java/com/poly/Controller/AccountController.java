@@ -53,6 +53,8 @@ public class AccountController {
 	MailServiceImplement mailServiceImplement;
 	@Autowired
 	PasswordUtil passwordUtil;
+	@Autowired
+	BCryptPasswordEncoder pe;
 
 	@GetMapping("/sign-up")
 	public String signUp() {
@@ -88,7 +90,7 @@ public class AccountController {
 		response.setSuccess(false);
 		String key = dao.findKeyByUsername((String) session.getAttribute("username"));
 		Account account = dao.findByKey(key);
-		if (account.getPassword().equals(password)) {
+		if (pe.matches(password, account.getPassword())) {
 			if (newpassword.equals(repassword)) {
 				account.setPassword(newpassword);
 				dao.update(key, account);
@@ -120,12 +122,15 @@ public class AccountController {
 		LoginResponse response = new LoginResponse();
 		String message = "";
 		response.setSuccess(false);
+		Account account = dao.findByUsername((String) session.getAttribute("username"));
+		String passLogin = (String) session.getAttribute("password");
 		if (dao.findByUsername((String) session.getAttribute("username")) == null) {
 			message = "Tài khoản không tồn tại!";
 		} else {
-			if (!dao.findByUsername((String) session.getAttribute("username")).getPassword()
-					.equals((String) session.getAttribute("password"))) {
+			if (!pe.matches(passLogin, account.getPassword())) {
 				message = "Mật khẩu không chính xác!";
+			}else {
+				response.setSuccess(true);
 			}
 		}
 		response.setMessage(message);
@@ -306,6 +311,7 @@ public class AccountController {
 		System.out.println("lỗi");
 		return "redirect:/sign-in";
 	}
+
 	@RequestMapping("/oauth2/login/success")
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
