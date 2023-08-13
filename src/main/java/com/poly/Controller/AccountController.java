@@ -10,8 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -26,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.api.Authentication;
 import com.poly.Bean.Account;
 import com.poly.Bean.AccountMap;
 import com.poly.Bean.MailInformation;
@@ -106,7 +109,7 @@ public class AccountController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/auth/login/success")
+	@RequestMapping("/auth/login/success")
 	@ResponseBody
 	public ResponseEntity<LoginResponse> success(Model model) {
 		LoginResponse response = new LoginResponse();
@@ -308,12 +311,14 @@ public class AccountController {
 	@RequestMapping("/auth/access/denied")
 	public String denied(Model model) {
 		System.out.println("lỗi");
-		return "redirect:/sign-in";
+		return "redirect:/";
 	}
 
 	@RequestMapping("/oauth2/login/success")
 	public String googleSucces(OAuth2AuthenticationToken oauth2) {
 		service.loginFromOAuth2(oauth2);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("tên " + auth.getPrincipal().toString());
 		return "redirect:/";
 	}
 

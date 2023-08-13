@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,9 +28,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private AccountDAO accountDAO;
 	@Autowired
-	BCryptPasswordEncoder pe;
-	@Autowired
 	HttpSession session;
+	
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -41,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			for (String role : account.getRole()) {
 				authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
 			}
-			return new User(account.getUsername(), pe.encode(account.getPassword()), authorities);
+			return new User(account.getUsername(), passwordEncoder().encode(account.getPassword()), authorities);
 		}
 	}
 
@@ -51,7 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		String password = Long.toHexString(System.currentTimeMillis());
 		session.setAttribute("username", email);
 		session.setAttribute("admin", false);
-		UserDetails user = User.withUsername(email).password(pe.encode(password)).roles("GUEST").build();
+		UserDetails user = User.withUsername(email).password(passwordEncoder().encode(password)).roles("GUEST").build();
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}

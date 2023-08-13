@@ -1,9 +1,18 @@
 package com.poly.Security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -13,34 +22,53 @@ import org.springframework.security.oauth2.client.web.HttpSessionOAuth2Authoriza
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.poly.Service.UserDetailsServiceImpl;
+
 import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig {
+	@Autowired
+	UserDetailsServiceImpl customUserDetailService;
+
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(customUserDetailService)
+				.passwordEncoder(passwordEncoder()).and().build();
+
+	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		// CSRF, CORS
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
-		// Phân quyền sử dụng
-//		http.authorizeRequests().antMatchers("/home/index", "/auth/login/**", "/login/oauth2/code/**","/account/**").permitAll()
-//				.anyRequest().authenticated();
 				.authorizeHttpRequests((request) -> request.anyRequest().permitAll());
 		// Giao diện đăng nhập
-		http.formLogin(f -> f.loginPage("/sign-in").loginProcessingUrl("/auth/login")// ACTION
-				.defaultSuccessUrl("/auth/login/success", false).failureHandler((request, response, exception) -> {
-					HttpSession session = request.getSession();
-					session.setAttribute("username", request.getParameter("username"));
-					session.setAttribute("password", request.getParameter("password"));
-					response.sendRedirect("/auth/login/error");
-				}).successHandler((request, response, exception) -> {
-					HttpSession session = request.getSession();
-					session.setAttribute("username", request.getParameter("username"));
-					session.setAttribute("password", request.getParameter("password"));
-					response.sendRedirect("/auth/login/success");
-				}));
+		http.formLogin(f -> f
+			    .loginPage("/sign-in")
+			    .loginProcessingUrl("/auth/login")
+			    .successHandler((request, response, authentication) -> {
+			        HttpSession session = request.getSession();
+			        session.setAttribute("username", request.getParameter("username"));
+			        session.setAttribute("password", request.getParameter("password"));
+			        response.sendRedirect("/auth/login/success");
+			    })
+			    .failureHandler((request, response, exception) -> {
+			        HttpSession session = request.getSession();
+			        session.setAttribute("username", request.getParameter("username"));
+			        session.setAttribute("password", request.getParameter("password"));
+			        response.sendRedirect("/auth/login/error");
+			    }));
+
 
 		http.rememberMe(rememberme -> rememberme.rememberMeParameter("remember"));
 
@@ -62,10 +90,5 @@ public class SecurityConfig {
 	@Bean
 	public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> getToken() {
 		return new DefaultAuthorizationCodeTokenResponseClient();
-	}
-
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 }

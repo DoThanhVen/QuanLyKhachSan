@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ public class ThongKeController {
 	HttpSession session;
 
 	@RequestMapping("/admin/index")
+	@Secured("ROLE_ADMIN")
 	public String thongKeAll(Model model) {
 		OrderMap listOrder = orderDAO.findAll();
 		Double total = 0.0;
@@ -57,7 +60,7 @@ public class ThongKeController {
 						Order order = entryOrder.getValue();
 						if ((order.getTimeCheckInDate().getMonth() + 1) == month
 								&& (order.getTimeCheckInDate().getYear() + 1900) == year) {
-								total += order.getTotal();
+							total += order.getTotal();
 							if (order.getServiceOrder() != null) {
 								for (Serviceroom entryService : order.getServiceOrder().values()) {
 									total += entryService.getPrice();

@@ -79,6 +79,7 @@ public class PageController {
 		return "user/infomation-room";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/order-history")
 	public String orderHistory(Model model) {
 		OrderRoomMap dataMap = orderRoomDAO.getAllRoomForCustomer((String) session.getAttribute("username"));
@@ -156,7 +157,7 @@ public class PageController {
 		return "user/order-history";
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin/customer")
 	public String managerCustomr(Model model) {
 		Account account = new Account("", "", "", "", new String[] {}, false, "", "", "");
@@ -165,7 +166,7 @@ public class PageController {
 		return "admin/customer";
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin/management")
 	public String typeRoom2(Model model, @RequestParam("option") Optional<String> getoption,
 			@RequestParam("keyword") Optional<String> getkeyword, @ModelAttribute("typefind") Typeroom typeroom,
@@ -243,7 +244,7 @@ public class PageController {
 		return "admin/management";
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin/management/{key}")
 	public String typeRoom(Model model, @ModelAttribute("typefind") Typeroom typeroom,
 			@ModelAttribute("servfind") Serviceroom serviceroom, @ModelAttribute("roomfind") Room room,
@@ -277,7 +278,7 @@ public class PageController {
 	}
 
 	// History check in
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping("/admin/orders/history-checkin")
 	public String historyCheckin(Model model) {
 		OrderRoomMap dataMap = orderRoomDAO.getAllRoomForCustomer((String) session.getAttribute("username"));
@@ -314,7 +315,7 @@ public class PageController {
 		return "admin/history-checkin";
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin/room")
 	public String managerRoom() {
 		return "admin/room";

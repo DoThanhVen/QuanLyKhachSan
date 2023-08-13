@@ -76,13 +76,12 @@
 	                    username: username,
 	                    password: password
 	                },
-	                success: function(data) {
-	                	if(data.success === false){
-			                thongBao('Thông Báo!',data.message,'error',true);	
-	                	}else{
-	                		redirectURL('/');
-	                	}
-	                    console.log(data);
+	                success: function(response) {
+	                	if (response.success === true) {
+	                		redirectURL("/");
+	                    } else {
+	                    	thongBao('Thông Báo!',response.message,'error',true);
+	                    }
 	                },
 					error : function(xhr, status, error) {
 						thongBao('Thông Báo!',error,'error',true);
