@@ -58,11 +58,15 @@ public class TyperoomController {
 			typeroom.setPrice(price);
 			typeroom.setDescription(description);
 			typeroom.setImages(listImages);
-			typeroomdao.create(typeroom);
+			String isCheck=typeroomdao.create(typeroom);
+			if (isCheck == (null)) {
+				return "redirect:/admin/management?option=Typeroom&status=false";
+			}
+			return "redirect:/admin/management?option=Typeroom&status=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "redirect:/admin/management/";
+		return "redirect:/admin/management";
 	}
 
 	@PostMapping("/updateTyperoom/{key}")
@@ -93,7 +97,11 @@ public class TyperoomController {
 			typeroom.setPrice(price);
 			typeroom.setDescription(description);
 			typeroom.setImages(listImages);
-			typeroomdao.update(key, typeroom);
+			Typeroom isCheck= typeroomdao.update(key, typeroom);
+			if (isCheck == (null)) {
+				return "redirect:/admin/management?option=Typeroom&status=false";
+			}
+			return "redirect:/admin/management?option=Typeroom&status=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,6 +111,5 @@ public class TyperoomController {
 	@PostMapping("/deleteTyperoom/{key}")
 	public String deleteTyperoom(@PathVariable("key") String key) {
 		typeroomdao.delete(key);
-		return "redirect:/admin/management/";
-	}
+		return "redirect:/admin/management?option=Typeroom&status=true";	}
 }

@@ -177,7 +177,7 @@ public class OrderRoomController {
 
 		String keyTypeRoom = paramService.getString("keyTypeRoom", "");
 		OrderRoom orderRoom = orderRoomDAO.findByIdRoom(keyRoom);
-		System.out.println(orderRoom.getStatus());
+		
 		String keyOrderRoom = orderRoomDAO.findKey(orderRoom);
 		RoomMap roomEmpty = new RoomMap();
 		TyperoomMap typeroomMap = typeroomDAO.findAll();

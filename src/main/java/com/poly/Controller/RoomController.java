@@ -25,23 +25,23 @@ public class RoomController {
 		Room.setStatus("1");
 		String isCheck = Roomdao.create(Room);
 		if (isCheck == (null)) {
-			return "redirect:/admin/management?status=false";
+			return "redirect:/admin/management?option=Room&status=false";
 		}
-		return "redirect:/admin/management?status=true";
+		return "redirect:/admin/management??option=Room&status=true";
 	}
 
 	@PostMapping("/updateRoom/{key}")
 	public String updateRoom(Model model, @ModelAttribute Room Room, @PathVariable("key") String key) {
 		Room isCheck = Roomdao.update(key, Room);
 		if (isCheck == (null)) {
-			return "redirect:/admin/management?status=false";
+			return "redirect:/admin/management??option=Room&status=false";
 		}
-		return "redirect:/admin/management?status=true";
+		return "redirect:/admin/management??option=Room&status=true";
 	}
 
 	@PostMapping("/deleteRoom/{key}")
 	public String deleteRoom(@PathVariable("key") String key) {
 		Roomdao.delete(key);
-		return "redirect:/admin/management?status=true";
+		return "redirect:/admin/management??option=Room&status=true";
 	}
 }

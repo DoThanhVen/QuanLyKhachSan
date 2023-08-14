@@ -21,7 +21,7 @@ import com.poly.Bean.ServiceroomMap;
 @Repository
 public class ServiceroomDAO {
 	RestTemplate rest = new RestTemplate();
-	String url = "https://mdungapi-71439-default-rtdb.firebaseio.com/serviceroom.json";
+	String url = "https://dothanhven-java6-default-rtdb.firebaseio.com/serviceroom.json";
 
 	private String getUrl(String key) {
 		return url.replace(".json", "/" + key + ".json");

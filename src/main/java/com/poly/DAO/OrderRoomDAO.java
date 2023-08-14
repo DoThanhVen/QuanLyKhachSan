@@ -72,9 +72,10 @@ public class OrderRoomDAO {
 		}
 		return null;
 	}
+
 	public String findKeyByIdRoom(String idRoom) {
 		OrderRoomMap orderRoomMap = findAll();
-		for (Entry<String , OrderRoom> orderRoom : orderRoomMap.entrySet()) {
+		for (Entry<String, OrderRoom> orderRoom : orderRoomMap.entrySet()) {
 			if (orderRoom.getValue().getRoom().keySet().toString().equals("[" + idRoom + "]")
 					&& orderRoom.getValue().getStatus().equals("1")) {
 				return orderRoom.getKey();
@@ -82,7 +83,7 @@ public class OrderRoomDAO {
 		}
 		return null;
 	}
-	
+
 	public String findKey(OrderRoom orderRoom) {
 		OrderRoomMap orderRoomMap = findAll();
 		for (Entry<String, OrderRoom> o : orderRoomMap.entrySet()) {
@@ -229,13 +230,16 @@ public class OrderRoomDAO {
 		RoomMap roomMap = roomDAO.findAll();
 		RoomMap roomMapNew = new RoomMap();
 		OrderRoomMap orderRoomMap = findAll();
+
 		OrderRoomMap orderRoomMapNew = new OrderRoomMap();
-		for (Entry<String, OrderRoom> orderRoom : orderRoomMap.entrySet()) {
-			if (orderRoom.getValue().getStatus().equals("1")) {
-				orderRoomMapNew.put(orderRoom.getKey(), orderRoom.getValue());
+		if (orderRoomMap != null) {
+
+			for (Entry<String, OrderRoom> orderRoom : orderRoomMap.entrySet()) {
+				if (orderRoom.getValue().getStatus().equals("1")) {
+					orderRoomMapNew.put(orderRoom.getKey(), orderRoom.getValue());
+				}
 			}
 		}
-
 		for (Entry<String, Room> room : roomMap.entrySet()) {
 
 			for (Map.Entry<String, OrderRoom> orderRoom : orderRoomMapNew.entrySet()) {
@@ -253,8 +257,9 @@ public class OrderRoomDAO {
 		}
 		return roomMapNew;
 	}
+
 	public OrderRoomMap getRoombyDate(String date) {
-		
+
 		OrderRoomMap orderRoomMap = findAll();
 		OrderRoomMap orderRoomMapNew = new OrderRoomMap();
 		for (Entry<String, OrderRoom> orderRoom : orderRoomMap.entrySet()) {

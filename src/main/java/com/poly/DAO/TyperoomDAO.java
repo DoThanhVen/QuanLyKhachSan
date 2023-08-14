@@ -20,7 +20,7 @@ import com.poly.Bean.TyperoomMap;
 @Repository
 public class TyperoomDAO {
 	RestTemplate rest = new RestTemplate();
-	String url = "https://mdungapi-71439-default-rtdb.firebaseio.com/typeroom.json";
+	String url = "https://dothanhven-java6-default-rtdb.firebaseio.com/typeroom.json";
 
 	private String getUrl(String key) {
 		return url.replace(".json", "/" + key + ".json");

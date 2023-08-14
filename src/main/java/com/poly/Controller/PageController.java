@@ -173,13 +173,15 @@ public class PageController {
 		if (option == "" && keyword == "") {
 			RoomMap roommap = roomdao.findAll();
 			HashMap<String, Room> listRoomMap = new HashMap<>();
-			for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
-				Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
-				Room roomSave = roomdao.findByKey(roomCheck.getKey());
-				if (typeRoom != null) {
-					roomSave.setTyperoom(typeRoom.getName());
+			if (roommap != null) {
+				for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+					Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+					Room roomSave = roomdao.findByKey(roomCheck.getKey());
+					if (typeRoom != null) {
+						roomSave.setTyperoom(typeRoom.getName());
+					}
+					listRoomMap.put(roomCheck.getKey(), roomSave);
 				}
-				listRoomMap.put(roomCheck.getKey(), roomSave);
 			}
 			model.addAttribute("listroom", listRoomMap);
 			TyperoomMap type = typeroomdao.findAll();
@@ -210,15 +212,18 @@ public class PageController {
 			if (keyword.equals("")) {
 				roommap = roomdao.findAll();
 			} else {
+
 				roommap = roomdao.findByname(keyword);
 			}
-			for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
-				Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
-				Room roomSave = roomdao.findByKey(roomCheck.getKey());
-				if (typeRoom != null) {
-					roomSave.setTyperoom(typeRoom.getName());
+			if (roommap != null) {
+				for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+					Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+					Room roomSave = roomdao.findByKey(roomCheck.getKey());
+					if (typeRoom != null) {
+						roomSave.setTyperoom(typeRoom.getName());
+					}
+					listRoomMap.put(roomCheck.getKey(), roomSave);
 				}
-				listRoomMap.put(roomCheck.getKey(), roomSave);
 			}
 			model.addAttribute("listroom", listRoomMap);
 		} else if (option.equals("Typeroom")) {
@@ -249,13 +254,15 @@ public class PageController {
 		ServiceroomMap serv = serviceroomDAO.findAll();
 		RoomMap roommap = roomdao.findAll();
 		HashMap<String, Room> listRoomMap = new HashMap<>();
-		for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
-			Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
-			Room roomSave = roomdao.findByKey(roomCheck.getKey());
-			if (typeRoom != null) {
-				roomSave.setTyperoom(typeRoom.getName());
+		if (roommap != null) {
+			for (Map.Entry<String, Room> roomCheck : roommap.entrySet()) {
+				Typeroom typeRoom = typeroomdao.findByKey(roomCheck.getValue().getTyperoom());
+				Room roomSave = roomdao.findByKey(roomCheck.getKey());
+				if (typeRoom != null) {
+					roomSave.setTyperoom(typeRoom.getName());
+				}
+				listRoomMap.put(roomCheck.getKey(), roomSave);
 			}
-			listRoomMap.put(roomCheck.getKey(), roomSave);
 		}
 		Typeroom typefind = typeroomdao.findByKey(kw);
 		Room roomfind = roomdao.findByKey(kw);
